@@ -2,6 +2,9 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "engines": {
+    "node": "^24.0.0"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
@@ -9,17 +12,29 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "next": "15.5.4",
     "react": "19.1.0",
-    "react-dom": "19.1.0",
-    "next": "15.5.4"
+    "react-dom": "19.1.0"
   },
   "devDependencies": {
-    "typescript": "^5",
+    "@eslint/eslintrc": "^3",
+    "@microsoft/tsdoc": "^0.15.1",
+    "@microsoft/tsdoc-config": "^0.17.1",
+    "@next/eslint-plugin-next": "^15.5.4",
+    "@types/eslint-plugin-jsx-a11y": "^6.10.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
-    "@eslint/eslintrc": "^3"
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-n": "^17.23.1",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-tsdoc": "^0.4.0",
+    "eslint-plugin-unicorn": "^61.0.2",
+    "jiti": "^2.6.1",
+    "prettier": "^3.6.2",
+    "typescript": "^5",
+    "typescript-eslint": "^8.45.0"
   }
 }
