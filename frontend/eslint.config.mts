@@ -1,0 +1,241 @@
+import * as eslintNext from "@next/eslint-plugin-next";
+import { defineConfig } from "eslint/config";
+import globals from "globals";
+import n from "eslint-plugin-n";
+import unicorn from "eslint-plugin-unicorn";
+import react from "eslint-plugin-react";
+// import reactHooks from 'eslint-plugin-react-hooks';
+import a11y from "eslint-plugin-jsx-a11y";
+// import jest from "eslint-plugin-jest";
+import typescript from "typescript-eslint";
+// eslint-disable-next-line @typescript-eslint/no-require-imports, n/no-unpublished-require, unicorn/prefer-module
+// const cypress = require("eslint-plugin-cypress");
+import tsDoc from "eslint-plugin-tsdoc";
+import prettier from "eslint-config-prettier";
+import { Linter } from "eslint";
+import { fileURLToPath } from "node:url";
+import { dirname } from "node:path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+export default defineConfig([
+    n.configs["flat/recommended-module"],
+    unicorn.configs.recommended,
+    react.configs.flat.recommended,
+    react.configs.flat["jsx-runtime"],
+    // reactHooks.configs["recommended-latest"],
+    a11y.flatConfigs.recommended,
+    // jest.configs["flat/recommended"],
+    typescript.configs.strict,
+    // cypress.configs.recommended,
+    {
+        plugins: {
+            tsDoc,
+        },
+        files: [
+            "**/*.js",
+            "**/*.ts",
+            "**/*.jsx",
+            "**/*.tsx",
+            "**/*.mjs",
+            "**/*.mts",
+            "**/*.cjs",
+            "**/*.cts",
+        ],
+        ignores: [
+            "node_modules/**",
+            ".next/**",
+            "out/**",
+            "build/**",
+            "next-env.d.ts",
+        ],
+        languageOptions: {
+            ecmaVersion: 2025,
+            sourceType: "module",
+            parser: typescript.parser,
+            parserOptions: {
+                allowReserved: false,
+                ecmaFeatures: {
+                    jsx: true,
+                    impliedStrict: true,
+                },
+                projectService: true,
+                tsconfigRootDir: __dirname,
+                sourceType: "module",
+            },
+            globals: {
+                ...globals.node,
+                ...globals.browser,
+            },
+        },
+        rules: {
+            "n/no-unpublished-import": "off",
+            "n/no-missing-import": "off",
+            "prefer-const": "error",
+            "no-constant-binary-expression": "error",
+            strict: "error",
+            eqeqeq: "error",
+            "require-await": "warn",
+            "prefer-spread": "error",
+            "prefer-object-spread": "warn",
+            "prefer-exponentiation-operator": "error",
+            "prefer-arrow-callback": "error",
+            "no-with": "error",
+            "no-var": "error",
+            "no-unneeded-ternary": "error",
+            "no-redeclare": "error",
+            "no-new-wrappers": "warn",
+            "no-multi-str": "error",
+            "guard-for-in": "warn",
+            camelcase: "error",
+            "valid-typeof": "error",
+            "use-isnan": "error",
+            "prefer-rest-params": "error",
+            "prefer-promise-reject-errors": "error",
+            "prefer-object-has-own": "error",
+            "prefer-numeric-literals": "error",
+            "object-shorthand": "error",
+            "no-void": "error",
+            "no-useless-return": "error",
+            "no-useless-rename": "error",
+            "no-useless-escape": "error",
+            "no-useless-constructor": "error",
+            "no-useless-concat": "error",
+            "no-useless-computed-key": "error",
+            "no-useless-catch": "error",
+            "no-useless-call": "error",
+            "no-unused-labels": "error",
+            "no-unused-expressions": "error",
+            "no-underscore-dangle": "error",
+            "no-throw-literal": "error",
+            "no-shadow-restricted-names": "error",
+            "no-sequences": "error",
+            "no-return-assign": "error",
+            "no-octal-escape": "error",
+            "no-octal": "error",
+            "no-nonoctal-decimal-escape": "error",
+            "no-new-func": "error",
+            "no-new": "warn",
+            "no-magic-numbers": "warn",
+            "no-lonely-if": "warn",
+            "no-lone-blocks": "error",
+            "no-label-var": "error",
+            "no-invalid-this": "warn",
+            "no-implied-eval": "warn",
+            "no-implicit-coercion": "warn",
+            "no-global-assign": "error",
+            "no-extra-label": "error",
+            "no-extra-boolean-cast": "warn",
+            "no-extra-bind": "warn",
+            "no-eq-null": "error",
+            "no-empty-static-block": "error",
+            "no-empty-function": "warn",
+            "no-empty": "warn",
+            "no-else-return": "warn",
+            "no-delete-var": "error",
+            "no-case-declarations": "error",
+            "no-array-constructor": "warn",
+            "new-cap": "error",
+            "func-names": ["error", "always"],
+            "func-name-matching": "error",
+            "dot-notation": "warn",
+            "default-case-last": "error",
+            "default-case": "error",
+            curly: "warn",
+            "consistent-return": "warn",
+            "block-scoped-var": "error",
+            "require-atomic-updates": "error",
+            "no-useless-assignment": "warn",
+            "no-use-before-define": "error",
+            "no-unused-vars": "warn",
+            "no-unused-private-class-members": "warn",
+            "no-unsafe-optional-chaining": "error",
+            "no-unsafe-negation": "error",
+            "no-unsafe-finally": "error",
+            "no-unreachable-loop": "warn",
+            "no-unreachable": "warn",
+            "no-unmodified-loop-condition": "warn",
+            "no-unexpected-multiline": "error",
+            "no-undef": "error",
+            "no-unassigned-vars": "warn",
+            "no-this-before-super": "error",
+            "no-template-curly-in-string": "warn",
+            "no-sparse-arrays": "error",
+            "no-setter-return": "error",
+            "no-self-compare": "warn",
+            "no-self-assign": "error",
+            "no-prototype-builtins": "error",
+            "no-promise-executor-return": "error",
+            "no-obj-calls": "error",
+            "no-new-native-nonconstructor": "error",
+            "no-misleading-character-class": "error",
+            "no-loss-of-precision": "error",
+            "no-irregular-whitespace": "warn",
+            "no-invalid-regexp": "error",
+            "no-inner-declarations": "error",
+            "no-import-assign": "error",
+            "no-func-assign": "error",
+            "no-fallthrough": "error",
+            "no-ex-assign": "error",
+            "no-empty-pattern": "error",
+            "no-empty-character-class": "error",
+            "no-duplicate-imports": "warn",
+            "no-duplicate-case": "error",
+            "no-dupe-keys": "error",
+            "no-dupe-else-if": "error",
+            "no-dupe-class-members": "error",
+            "no-dupe-args": "error",
+            "no-debugger": "error",
+            "no-constructor-return": "error",
+            "no-constant-condition": "warn",
+            "no-const-assign": "error",
+            "no-cond-assign": "error",
+            "no-compare-neg-zero": "error",
+            "no-class-assign": "error",
+            "grouped-accessor-pairs": "warn",
+            "no-await-in-loop": "warn",
+            "no-async-promise-executor": "error",
+            "getter-return": "error",
+            "for-direction": "warn",
+            "constructor-super": "error",
+            "array-callback-return": "warn",
+            // "no-unsafe-declaration-merging": "error",
+        },
+        settings: {
+            react: {
+                version: "detect",
+            },
+        },
+    },
+    prettier,
+    eslintNext.flatConfig.recommended as Linter.FlatConfig,
+]);
+
+/*
+import { dirname } from "path";
+import { fileURLToPath } from "url";
+import { FlatCompat } from "@eslint/eslintrc";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
+
+const eslintConfig = [
+  ...compat.extends("next/core-web-vitals", "next/typescript"),
+  {
+    ignores: [
+      "node_modules/**",
+      ".next/**",
+      "out/**",
+      "build/**",
+      "next-env.d.ts",
+    ],
+  },
+];
+
+export default eslintConfig;
+*/
