@@ -1,4 +1,4 @@
-import * as eslintNext from "@next/eslint-plugin-next";
+import eslintNext from "@next/eslint-plugin-next";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
 import n from "eslint-plugin-n";
@@ -6,7 +6,7 @@ import unicorn from "eslint-plugin-unicorn";
 import react from "eslint-plugin-react";
 // import reactHooks from 'eslint-plugin-react-hooks';
 import a11y from "eslint-plugin-jsx-a11y";
-// import jest from "eslint-plugin-jest";
+import jest from "eslint-plugin-jest";
 import typescript from "typescript-eslint";
 // eslint-disable-next-line @typescript-eslint/no-require-imports, n/no-unpublished-require, unicorn/prefer-module
 // const cypress = require("eslint-plugin-cypress");
@@ -14,20 +14,29 @@ import tsDoc from "eslint-plugin-tsdoc";
 import prettier from "eslint-config-prettier";
 import { Linter } from "eslint";
 import { fileURLToPath } from "node:url";
-import { dirname } from "node:path";
+import path from "node:path";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
+const filename = fileURLToPath(import.meta.url);
+const cwd = path.dirname(filename);
 
 export default defineConfig([
+    {
+        ignores: [
+            "node_modules/**",
+            ".next/**",
+            "out/**",
+            "build/**",
+            "next-env.d.ts",
+        ],
+    },
     n.configs["flat/recommended-module"],
     unicorn.configs.recommended,
     react.configs.flat.recommended,
     react.configs.flat["jsx-runtime"],
     // reactHooks.configs["recommended-latest"],
     a11y.flatConfigs.recommended,
-    // jest.configs["flat/recommended"],
-    typescript.configs.strict,
+    jest.configs["flat/recommended"],
+
     // cypress.configs.recommended,
     {
         plugins: {
@@ -61,7 +70,7 @@ export default defineConfig([
                     impliedStrict: true,
                 },
                 projectService: true,
-                tsconfigRootDir: __dirname,
+                tsconfigRootDir: cwd,
                 sourceType: "module",
             },
             globals: {
@@ -204,38 +213,13 @@ export default defineConfig([
         },
         settings: {
             react: {
-                version: "detect",
+                version: "19.1.0",
             },
         },
     },
+
     prettier,
     eslintNext.flatConfig.recommended as Linter.FlatConfig,
+    eslintNext.flatConfig.coreWebVitals as Linter.FlatConfig,
+    typescript.configs.strict,
 ]);
-
-/*
-import { dirname } from "path";
-import { fileURLToPath } from "url";
-import { FlatCompat } from "@eslint/eslintrc";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const compat = new FlatCompat({
-  baseDirectory: __dirname,
-});
-
-const eslintConfig = [
-  ...compat.extends("next/core-web-vitals", "next/typescript"),
-  {
-    ignores: [
-      "node_modules/**",
-      ".next/**",
-      "out/**",
-      "build/**",
-      "next-env.d.ts",
-    ],
-  },
-];
-
-export default eslintConfig;
-*/
