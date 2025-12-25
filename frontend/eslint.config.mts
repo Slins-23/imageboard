@@ -1,4 +1,7 @@
-import eslintNext from "@next/eslint-plugin-next";
+// For more info, see https://github.com/storybookjs/eslint-plugin-storybook#configuration-flat-config-format
+import storybook from "eslint-plugin-storybook";
+
+import * as eslintNext from "@next/eslint-plugin-next";
 import { defineConfig } from "eslint/config";
 import globals from "globals";
 import n from "eslint-plugin-n";
@@ -11,6 +14,7 @@ import typescript from "typescript-eslint";
 // eslint-disable-next-line @typescript-eslint/no-require-imports, n/no-unpublished-require, unicorn/prefer-module
 // const cypress = require("eslint-plugin-cypress");
 import tsDoc from "eslint-plugin-tsdoc";
+import cypress from "eslint-plugin-cypress";
 import prettier from "eslint-config-prettier";
 import { Linter } from "eslint";
 import { fileURLToPath } from "node:url";
@@ -36,7 +40,7 @@ export default defineConfig([
     // reactHooks.configs["recommended-latest"],
     a11y.flatConfigs.recommended,
     jest.configs["flat/recommended"],
-
+    cypress.configs.recommended,
     // cypress.configs.recommended,
     {
         plugins: {
@@ -217,9 +221,8 @@ export default defineConfig([
             },
         },
     },
-
-    prettier,
     eslintNext.flatConfig.recommended as Linter.FlatConfig,
     eslintNext.flatConfig.coreWebVitals as Linter.FlatConfig,
     typescript.configs.strict,
+    prettier,
 ]);
