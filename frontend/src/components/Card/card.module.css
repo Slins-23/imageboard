@@ -1,10 +1,23 @@
 .card {
-    display: block;
-    position: relative;
-    width: 300px;
-    height: 300px;
-    background-color: blue;
-    outline: lightblue;
-    color: lightblue;
-    text-align: center;
+    width: 150px;
+    height: 150px;
+    padding: 2em;
+    background-color: var(--secondary);
+    border-style: solid;
+    border-color: var(--tertiary);
+    border-width: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.interest-tag {
+    font-size: 2rem;
+    color: var(--accent);
+}
+
+.interest-value {
+    font-size: 1.5rem;
+    color: var(--tertiary);
 }

@@ -1,7 +1,15 @@
 import type { Preview } from "@storybook/nextjs-vite";
+import "@/app/globals.css";
+import "./font.css";
 
 const preview: Preview = {
     parameters: {
+        backgrounds: {
+            options: {
+                dark: { name: "Dark", value: "var(--primary)" },
+            },
+        },
+        layout: "centered",
         controls: {
             matchers: {
                 color: /(background|color)$/i,
@@ -16,6 +24,12 @@ const preview: Preview = {
             test: "todo",
         },
     },
+    initialGlobals: {
+        backgrounds: {
+            value: "dark",
+        },
+    },
+    tags: ["autodocs"],
 };
 
 export default preview;
