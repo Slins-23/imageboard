@@ -41,6 +41,7 @@ export default defineConfig([
     a11y.flatConfigs.recommended,
     jest.configs["flat/recommended"],
     cypress.configs.recommended,
+    storybook.configs["flat/recommended"],
     // cypress.configs.recommended,
     {
         plugins: {
@@ -83,6 +84,8 @@ export default defineConfig([
             },
         },
         rules: {
+            "unicorn/prevent-abbreviations": "off",
+            "unicorn/filename-case": "off",
             "n/no-unpublished-import": "off",
             "n/no-missing-import": "off",
             "prefer-const": "error",

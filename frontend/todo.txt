@@ -1,0 +1,1 @@
+pass abstract arguments to components instead of hardcoding

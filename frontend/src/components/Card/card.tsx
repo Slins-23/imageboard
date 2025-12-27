@@ -1,5 +1,24 @@
-import scopedCard from "./card.module.css";
+import cardStyle from "./card.module.css";
 
-export default function Card() {
-    return <div className={`${scopedCard.card}`}>Hello</div>;
+interface CardParams {
+    interestTag: string;
+    interestValue: number;
+}
+
+export default function Card({
+    interestTag = "Anime",
+    interestValue = 0.95,
+}: CardParams) {
+    console.log(cardStyle);
+
+    return (
+        <div className={`${cardStyle.card}`}>
+            <span className={`${cardStyle["interest-tag"]}`}>
+                {interestTag}
+            </span>
+            <span className={`${cardStyle["interest-value"]}`}>
+                {interestValue}
+            </span>
+        </div>
+    );
 }

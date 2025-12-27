@@ -3,10 +3,14 @@ import Card from "./card.tsx";
 
 const meta: Meta<typeof Card> = {
     title: "Components/Card",
-    tags: ["autodocs"],
     component: Card,
 };
 
 export default meta;
 
-export const Primary: StoryObj<typeof meta> = {};
+export const Primary: StoryObj<typeof meta> = {
+    args: {
+        interestTag: "Anime",
+        interestValue: 0.95,
+    },
+};
