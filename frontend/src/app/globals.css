@@ -44,11 +44,16 @@ body {
 }
 
 body {
-    color: var(--foreground);
+    color: var(--accent);
     background: var(--background);
     font-family: "Fenix", Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+    color: inherit;
+    font-family: inherit;
 }
 
 * {

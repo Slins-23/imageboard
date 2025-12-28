@@ -1,36 +1,32 @@
-export interface ButtonArgs {
-    backgroundColor: string;
+import buttonStyle from "./button.module.css";
+
+interface ButtonArgs {
+    label: string;
     padding: number;
     borderRadius: number;
-    color: string;
     fontSize: number;
-    border: string;
     onClick?: () => void;
 }
 
 export default function button({
-    backgroundColor = "blue",
-    padding = 15,
-    borderRadius = 15,
-    color = "grey",
-    fontSize = 16,
-    border = "red solid 1px",
+    label = "Save changes",
+    padding = 0.5,
+    borderRadius = 0,
+    fontSize = 1.5,
     ...properties
 }: ButtonArgs) {
     return (
         <button
             type={"button"}
+            className={`${buttonStyle.button}`}
             style={{
-                backgroundColor,
-                padding,
-                borderRadius,
-                color,
-                fontSize,
-                border,
+                padding: `${padding / 2}em ${padding}em ${padding / 2}em ${padding}em`,
+                borderRadius: `${borderRadius}px`,
+                fontSize: `${fontSize}rem`,
             }}
             {...properties}
         >
-            Click
+            {label}
         </button>
     );
 }

@@ -1,0 +1,16 @@
+.notificationCount {
+    position: absolute;
+    background-color: var(--secondary);
+    width: 16px;
+    height: 16px;
+    font-size: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-style: solid;
+    border-color: var(--tertiary);
+    border-radius: 50%;
+    border-width: 1px;
+    color: var(--accent);
+    transition: 0.2s;
+}

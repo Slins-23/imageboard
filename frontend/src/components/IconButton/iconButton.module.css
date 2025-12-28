@@ -1,0 +1,31 @@
+.iconButton {
+    background-color: var(--secondary);
+    border-style: solid;
+    border-color: var(--tertiary);
+    border-width: 1px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+.iconButton:hover {
+    background-color: var(--tertiary);
+}
+
+.iconButton:hover > div {
+    background-color: var(--tertiary);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.iconButton--active {
+    background-color: var(--tertiary);
+}
+
+.iconButton--active > div {
+    background-color: var(--tertiary);
+    color: var(--accent);
+    border-color: var(--accent);
+}
