@@ -9,9 +9,9 @@ interface iconButtonArgs {
     ariaLabel: string;
     btnIcon: IconProp;
     isActive: boolean;
-    width: number;
-    height: number;
-    iconSize: number;
+    width: string;
+    height: string;
+    iconSize: string;
     iconWidthScale: number;
     iconHeightScale: number;
     hasNotifications: boolean;
@@ -23,9 +23,9 @@ export default function iconButton({
     ariaLabel = "home",
     btnIcon = faHouse,
     isActive = false,
-    width = 50,
-    height = 50,
-    iconSize = 25,
+    width = "50px",
+    height = "50px",
+    iconSize = "25px",
     iconWidthScale = 1,
     iconHeightScale = 1,
     hasNotifications = false,
@@ -47,8 +47,8 @@ export default function iconButton({
                 icon={btnIcon}
                 color="var(--accent)"
                 style={{
-                    fontSize: `${iconSize}px`,
-                    transform: `scale(${iconWidthScale},${iconHeightScale})`,
+                    fontSize: iconSize,
+                    scale: `${iconWidthScale} ${iconHeightScale}`,
                 }}
             />
 

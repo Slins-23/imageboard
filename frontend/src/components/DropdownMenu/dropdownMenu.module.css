@@ -1,0 +1,74 @@
+.wrapper {
+    position: relative;
+}
+
+.wrapper::after {
+    content: "▼";
+    position: absolute;
+    font-size: 0.9rem;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 0.2em;
+    pointer-events: none;
+    color: var(--tertiary);
+}
+
+.select {
+    appearance: none;
+    background-color: var(--secondary);
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--tertiary);
+    font-size: 1rem;
+    font-family: "Fenix, Verdana, Arial";
+    padding: 0.25em 1.5em 0.25em 0.5em;
+    color: var(--tertiary);
+}
+
+.select option {
+    color: var(--accent);
+}
+
+.select:hover,
+.select:focus,
+.select:active,
+.select:checked,
+.select:open {
+    color: var(--tertiary);
+}
+
+option:hover,
+option:focus,
+option:active,
+option:checked,
+option:open {
+    color: var(--tertiary);
+}
+
+.select option:checked,
+.select option:hover {
+    appearance: none;
+    color: var(--tertiary) !important;
+}
+
+/* .select:focus,
+.select:active,
+.select:hover {
+    color: var(--tertiary);
+}
+
+.select:focus > option,
+.select:active > option,
+.select:hover > option {
+    color: var(--tertiary);
+} */
+
+.hidden {
+    display: none;
+}
+
+.selected {
+    background-color: var(--secondary);
+    color: var(--tertiary);
+}

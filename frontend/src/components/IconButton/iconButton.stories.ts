@@ -33,9 +33,9 @@ export const HomeButton: Story = {
         ariaLabel: "homeBtn",
         btnIcon: faHouse,
         isActive: false,
-        width: 50,
-        height: 50,
-        iconSize: 25,
+        width: "50px",
+        height: "50px",
+        iconSize: "25px",
         iconWidthScale: 1,
         iconHeightScale: 1,
     },
@@ -46,7 +46,7 @@ export const TagsButton: Story = {
         btnId: "tagsBtn",
         ariaLabel: "tagsBtn",
         btnIcon: faTags,
-        iconSize: 28,
+        iconSize: "28px",
     },
 };
 
@@ -63,7 +63,7 @@ export const CreateButton: Story = {
         btnId: "createBtn",
         ariaLabel: "createBtn",
         btnIcon: faPlus,
-        iconSize: 30,
+        iconSize: "30px",
     },
 };
 
@@ -84,7 +84,7 @@ export const NotificationsButton: Story = {
         btnIcon: faBell,
         hasNotifications: true,
         unreadNotifications: 55,
-        iconSize: 30,
+        iconSize: "30px",
     },
 };
 
@@ -143,7 +143,7 @@ export const DownButton: Story = {
         btnId: "downBtn",
         ariaLabel: "downBtn",
         btnIcon: faAngleDown,
-        iconSize: 30,
+        iconSize: "30px",
         iconWidthScale: 1,
         iconHeightScale: 1.25,
     },

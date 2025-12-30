@@ -1,0 +1,10 @@
+.avatar-card {
+    background-color: var(--secondary);
+    border-radius: 50%;
+    border-style: solid;
+    border-width: 1px;
+    border-color: var(--tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
