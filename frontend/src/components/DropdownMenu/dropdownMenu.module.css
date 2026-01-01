@@ -1,11 +1,12 @@
 .wrapper {
     position: relative;
+    display: inline-block;
+    font-weight: 600;
 }
-
-.wrapper::after {
+.select::after {
     content: "▼";
     position: absolute;
-    font-size: 0.9rem;
+    font-size: 0.9em;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
@@ -14,61 +15,105 @@
     color: var(--tertiary);
 }
 
-.select {
-    appearance: none;
-    background-color: var(--secondary);
+.buttonWrapper {
+    width: 100%;
+    /*
+    box-sizing: border-box;
     border-width: 1px;
     border-style: solid;
     border-color: var(--tertiary);
-    font-size: 1rem;
-    font-family: "Fenix, Verdana, Arial";
+    */
+}
+
+.select {
+    /* width: 100%; */
     padding: 0.25em 1.5em 0.25em 0.5em;
-    color: var(--tertiary);
-}
-
-.select option {
-    color: var(--accent);
-}
-
-.select:hover,
-.select:focus,
-.select:active,
-.select:checked,
-.select:open {
-    color: var(--tertiary);
-}
-
-option:hover,
-option:focus,
-option:active,
-option:checked,
-option:open {
-    color: var(--tertiary);
-}
-
-.select option:checked,
-.select option:hover {
+    box-sizing: content-box;
     appearance: none;
-    color: var(--tertiary) !important;
-}
-
-/* .select:focus,
-.select:active,
-.select:hover {
+    border: 0;
+    background-color: var(--secondary);
+    font-size: 1em;
     color: var(--tertiary);
+    text-align: left;
+    cursor: pointer;
+    font-weight: inherit;
+    box-sizing: border-box;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--tertiary);
+    /* z-index: -1; */
 }
-
-.select:focus > option,
-.select:active > option,
-.select:hover > option {
-    color: var(--tertiary);
-} */
 
 .hidden {
-    display: none;
+    visibility: hidden;
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
 }
 
+/*
 .selected {
     background-color: var(--secondary);
     color: var(--tertiary);
 }
+
+.focused {
+    background-color: var(--accent) !important;
+    color: var(--tertiary);
+}
+*/
+
+/*
+.selected {
+    background-color: var(--secondary);
+    color: var(--tertiary);
+}
+*/
+
+.list li:hover,
+.list li:focus-visible,
+.list li:focus {
+    appearance: none;
+    border: 0;
+    background-color: var(--accent);
+    color: var(--tertiary);
+}
+
+.list li[aria-selected="true"] {
+    color: var(--tertiary);
+}
+
+.list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    /* min-width: 100%; */
+    /* display: block; */
+    white-space: nowrap;
+    background-color: var(--secondary);
+    border-width: 0px 1px 1px 1px;
+    border-color: var(--tertiary);
+    border-style: solid;
+    /* transform: translateY(-1px); */
+    font-weight: 600;
+    cursor: pointer;
+    /* z-index: 5; */
+    margin-top: -1px;
+}
+.list li {
+    display: block;
+    appearance: none;
+    font-size: 1em;
+    text-decoration: none;
+    padding: 0.25em 1.5em 0.25em 0.5em;
+    font-weight: 600;
+    /* transition: 0.2s; */
+}
+
+/*
+.list li:hover {
+    background-color: var(--accent);
+    color: var(--tertiary);
+    cursor: pointer;
+}
+*/

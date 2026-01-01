@@ -13,7 +13,10 @@ export const Primary: StoryObj<typeof meta> = {
         dropdownEntries: [
             { value: "One" },
             { value: "Two" },
-            { value: "Three", callback: () => console.log("Three clicked") },
+            {
+                value: "Three123456789123456789123456789123456789123456789aaaaaaaaaa",
+                callback: () => console.log("Three clicked"),
+            },
         ],
     },
 };
