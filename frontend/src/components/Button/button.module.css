@@ -4,6 +4,7 @@
     border-width: 1px;
     border-color: var(--tertiary);
     transition: 0.2s;
+    cursor: pointer;
 }
 
 .button:hover {

@@ -1,5 +1,5 @@
 import dropdownStyle from "./dropdownMenu.module.css";
-import { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { useState, useEffect, useRef, useLayoutEffect, useId } from "react";
 
 type DropdownEntry = {
     value: string;
@@ -26,47 +26,98 @@ export function DropdownMenu({
     const listRef = useRef<HTMLUListElement>(null);
     const [menuWidth, setMenuWidth] = useState<string>("auto");
 
+    const dropdownId = useId();
+
+    const currentWindowWidth = useRef(0);
+    const currentWindowHeight = useRef(0);
+
+    useEffect(() => {
+        currentWindowWidth.current = window.innerWidth;
+        currentWindowHeight.current = window.innerHeight;
+    }, []);
+
     useLayoutEffect(() => {
         const listElement = listRef.current;
-        if (!listElement) return;
+        if (!listElement) return undefined;
+
+        const currentWidth = listElement.getBoundingClientRect().width;
+        const finalWidth =
+            window.innerWidth <= currentWidth
+                ? window.innerWidth - 50
+                : currentWidth;
+
+        for (let i = 0; i < itemRefs.current?.length; i++) {
+            const itemRef = itemRefs.current[i];
+
+            if (itemRef) {
+                itemRef.style.width = `${finalWidth}px`;
+            }
+        }
+        setMenuWidth(`${finalWidth}px`);
 
         const observer = new ResizeObserver((entries) => {
-            console.log("Resize observer triggered");
             /*
             for (const entry of entries) {
                 setMenuWidth(`${entry.contentRect.width}px`);
             }
                 */
-
             // setMenuWidth(`${entries[0].contentRect.width}px`);
-
-            setMenuWidth(`${entries[0].borderBoxSize[0].inlineSize}px`);
+            // setMenuWidth(`${entries[0].borderBoxSize[0].inlineSize}px`);
         });
 
         observer.observe(listElement);
 
-        const handleResize = () => {
+        const handleResize = (event: Event) => {
             console.log("Resize function triggered (handleResize)");
             if (listElement) {
-                const currentWidth = listElement.getBoundingClientRect().width;
+                const previousWindowWidth = currentWindowWidth.current;
+                const previousWindowHeight = currentWindowHeight.current;
 
-                // Rounded down (FLOOR)
-                if (Math.round(currentWidth) - currentWidth < 0) {
-                    setMenuWidth(`${currentWidth}px`);
-                    // Rounded up (CEIL)
-                } else if (Math.round(currentWidth) - currentWidth > 0) {
-                    setMenuWidth(`${currentWidth}px`);
-                } else {
-                    setMenuWidth(`${currentWidth}px`);
+                currentWindowWidth.current = window.innerWidth;
+                currentWindowHeight.current = window.innerHeight;
+
+                const dWidth = currentWindowWidth.current - previousWindowWidth;
+                const dHeight =
+                    currentWindowHeight.current - previousWindowHeight;
+
+                // const currentWidth = listElement.getBoundingClientRect().width;
+                // // Rounded down (FLOOR)
+                // if (Math.round(currentWidth) - currentWidth < 0) {
+                //     setMenuWidth(`${currentWidth}px`);
+                //     // Rounded up (CEIL)
+                // } else if (Math.round(currentWidth) - currentWidth > 0) {
+                //     setMenuWidth(`${currentWidth}px`);
+                // } else {
+                //     setMenuWidth(`${currentWidth}px`);
+                // }
+
+                listElement.style.width = `${listElement.getBoundingClientRect().width + dWidth}px`;
+
+                /*
+                const currentWidth = listElement.getBoundingClientRect().width;
+                const finalWidth =
+                    window.innerWidth <= currentWidth
+                        ? window.innerWidth - 50
+                        : currentWidth;
+                */
+
+                for (let i = 0; i < itemRefs.current?.length; i++) {
+                    const itemRef = itemRefs.current[i];
+
+                    if (itemRef) {
+                        // itemRef.style.width = `${finalWidth}px`;
+                        itemRef.style.width = listElement.style.width;
+                    }
                 }
+                // setMenuWidth(`${finalWidth}px`);
+                setMenuWidth(listElement.style.width);
             }
         };
 
-        /*
         if (listRef.current) {
             const width = listRef.current.getBoundingClientRect().width;
             setMenuWidth(`${width}px`);
-        }*/
+        }
 
         window.addEventListener("resize", handleResize);
 
@@ -83,7 +134,7 @@ export function DropdownMenu({
     }
 
     useEffect(() => {
-        if (!isOpen) return;
+        if (!isOpen) return undefined;
 
         function closeDropdown(event: PointerEvent) {
             if (!rootNode.current?.contains(event.target as Node))
@@ -96,32 +147,7 @@ export function DropdownMenu({
             const itemCount: number = dropdownEntries.length;
 
             switch (event.code) {
-                ///*
                 case "ArrowUp": {
-                    /*
-                    if (focusedItemIdx.current > 0) {
-                        const previousFocusedItem =
-                            itemRefs.current[focusedItemIdx.current];
-
-                        if (previousFocusedItem !== null) {
-                            previousFocusedItem.className =
-                                previousFocusedItem.className.replace(
-                                    dropdownStyle.focused,
-                                    ""
-                                );
-                        }
-
-                        focusedItemIdx.current--;
-
-                        const newFocusedItem =
-                            itemRefs.current[focusedItemIdx.current];
-
-                        if (newFocusedItem !== null) {
-                            newFocusedItem.className += ` ${dropdownStyle.focused}`;
-                        }
-                    }
-                    */
-
                     if (focusedItemIdx.current > 0) {
                         focusedItemIdx.current--;
 
@@ -134,30 +160,6 @@ export function DropdownMenu({
                     break;
                 }
                 case "ArrowDown": {
-                    /*
-                    if (focusedItemIdx.current < itemCount - 1) {
-                        const previousFocusedItem =
-                            itemRefs.current[focusedItemIdx.current];
-
-                        if (previousFocusedItem !== null) {
-                            previousFocusedItem.className =
-                                previousFocusedItem.className.replace(
-                                    dropdownStyle.focused,
-                                    ""
-                                );
-                        }
-
-                        focusedItemIdx.current++;
-
-                        const newFocusedItem =
-                            itemRefs.current[focusedItemIdx.current];
-
-                        if (newFocusedItem !== null) {
-                            newFocusedItem.className += ` ${dropdownStyle.focused}`;
-                        }
-                    }
-                    */
-
                     if (focusedItemIdx.current < itemCount - 1) {
                         focusedItemIdx.current++;
 
@@ -169,37 +171,8 @@ export function DropdownMenu({
 
                     break;
                 }
-                //*/
                 case "Enter":
                 case "Space": {
-                    // Update only if selected item is not already selected
-                    /*
-                                        if (selectedItemIdx.current !== focusedItemIdx.current) {
-                        const oldSelectedItem =
-                            itemRefs.current[selectedItemIdx.current];
-
-                        if (oldSelectedItem) {
-                            oldSelectedItem.className =
-                                oldSelectedItem.className.replace(
-                                    dropdownStyle.selected,
-                                    ""
-                                );
-                        }
-
-                        selectedItemIdx.current = focusedItemIdx.current;
-
-                        const newSelectedItem =
-                            itemRefs.current[selectedItemIdx.current];
-
-                        if (newSelectedItem) {
-                            newSelectedItem.className += ` ${dropdownStyle.selected}`;
-                        }
-
-                        setValue(
-                            dropdownEntries[selectedItemIdx.current].value
-                        );
-                    }
-                    */
                     if (selectedItemIdx.current !== focusedItemIdx.current) {
                         selectedItemIdx.current = focusedItemIdx.current;
 
@@ -227,57 +200,37 @@ export function DropdownMenu({
     }, [isOpen]);
 
     return (
-        /*
-        <div className={`${dropdownStyle.wrapper}`}>
-            <select className={`${dropdownStyle.select}`}>
-                <option>One</option>
-                <option>Two</option>
-            </select>
-        </div>
-        */
-
         <div
             ref={rootNode}
-            className={`${dropdownStyle.wrapper}`}
+            className={dropdownStyle.wrapper}
             style={{ width: menuWidth, fontSize: "1rem" }}
         >
-            <div className={dropdownStyle.buttonWrapper}>
-                <button
-                    onClick={() => {
-                        setIsOpen(!isOpen);
-                    }}
-                    className={`${dropdownStyle.select}`}
-                    style={{
-                        width: "100%",
-                        borderBottomColor: isOpen
-                            ? "transparent"
-                            : "var(--tertiary)",
-                    }}
-                    // onKeyDown={(event) => {
-                    //     event.preventDefault();
-                    //     switch (event.code) {
-                    //         case "Space": {
-                    //             setIsOpen(!isOpen);
-                    //             break;
-                    //         }
-                    //         case "Enter": {
-                    //             setIsOpen(!isOpen);
-                    //             break;
-                    //         }
-                    //         default: {
-                    //             break;
-                    //         }
-                    //     }
-                    // }}
-                >
-                    {selectedValue}
-                </button>
-            </div>
-            <ul
-                ref={listRef}
-                className={`${dropdownStyle.list}${isOpen ? "" : " " + dropdownStyle.hidden}`}
+            <button
+                onClick={() => {
+                    setIsOpen(!isOpen);
+                }}
+                className={dropdownStyle.select}
+                style={{
+                    borderBottomColor: isOpen
+                        ? "transparent"
+                        : "var(--tertiary)",
+                }}
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+                aria-controls={dropdownId}
             >
-                {dropdownEntries.map((entry: DropdownEntry, idx) => {
+                {selectedValue}
+            </button>
+            <ul
+                id={dropdownId}
+                ref={listRef}
+                className={
+                    `${dropdownStyle.list}` +
+                    (isOpen ? "" : " " + dropdownStyle.hidden)
+                }
+                role="listbox"
+            >
+                {dropdownEntries.map((entry: DropdownEntry, idx: number) => {
                     const value: string = entry.value;
                     const callback: (() => void) | undefined = entry.callback;
 
@@ -288,21 +241,6 @@ export function DropdownMenu({
                             key={idx}
                             role="option"
                             aria-selected={selectedItemIdx.current === idx}
-                            /*
-                            className={
-                                (selectedItemIdx.current === idx
-                                    ? dropdownStyle.selected
-                                    : "") +
-                                (focusedItemIdx.current === idx
-                                    ? ` ${dropdownStyle.focused}`
-                                    : "")
-                            }
-                                    */
-                            // className={
-                            //     selectedItemIdx.current === idx
-                            //         ? dropdownStyle.selected
-                            //         : ""
-                            // }
                             value={value}
                             tabIndex={0}
                             onClick={() => {
@@ -312,26 +250,6 @@ export function DropdownMenu({
                                 focusedItemIdx.current = idx;
                                 setIsOpen(false);
                             }}
-                            // onKeyDown={(event) => {
-                            //     event.preventDefault();
-                            //     switch (event.code) {
-                            //         case "Space": {
-                            //             setValue(value);
-                            //             selectedItemIdx = idx;
-                            //             setIsOpen(false);
-                            //             break;
-                            //         }
-                            //         case "Enter": {
-                            //             setValue(value);
-                            //             selectedItemIdx = idx;
-                            //             setIsOpen(false);
-                            //             break;
-                            //         }
-                            //         default: {
-                            //             break;
-                            //         }
-                            //     }
-                            // }}
                         >
                             {value}
                         </li>

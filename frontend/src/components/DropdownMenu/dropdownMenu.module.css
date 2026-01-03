@@ -3,30 +3,10 @@
     display: inline-block;
     font-weight: 600;
 }
-.select::after {
-    content: "▼";
-    position: absolute;
-    font-size: 0.9em;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-right: 0.2em;
-    pointer-events: none;
-    color: var(--tertiary);
-}
-
-.buttonWrapper {
-    width: 100%;
-    /*
-    box-sizing: border-box;
-    border-width: 1px;
-    border-style: solid;
-    border-color: var(--tertiary);
-    */
-}
 
 .select {
-    /* width: 100%; */
+    position: relative;
+    width: 100%;
     padding: 0.25em 1.5em 0.25em 0.5em;
     box-sizing: content-box;
     appearance: none;
@@ -41,7 +21,22 @@
     border-width: 1px;
     border-style: solid;
     border-color: var(--tertiary);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
     /* z-index: -1; */
+}
+
+.select::after {
+    content: "▼";
+    position: absolute;
+    font-size: 0.9em;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    margin-right: 0.2em;
+    pointer-events: none;
+    color: var(--tertiary);
 }
 
 .hidden {
@@ -49,38 +44,6 @@
     pointer-events: none;
     height: 0;
     overflow: hidden;
-}
-
-/*
-.selected {
-    background-color: var(--secondary);
-    color: var(--tertiary);
-}
-
-.focused {
-    background-color: var(--accent) !important;
-    color: var(--tertiary);
-}
-*/
-
-/*
-.selected {
-    background-color: var(--secondary);
-    color: var(--tertiary);
-}
-*/
-
-.list li:hover,
-.list li:focus-visible,
-.list li:focus {
-    appearance: none;
-    border: 0;
-    background-color: var(--accent);
-    color: var(--tertiary);
-}
-
-.list li[aria-selected="true"] {
-    color: var(--tertiary);
 }
 
 .list {
@@ -100,6 +63,7 @@
     /* z-index: 5; */
     margin-top: -1px;
 }
+
 .list li {
     display: block;
     appearance: none;
@@ -107,13 +71,21 @@
     text-decoration: none;
     padding: 0.25em 1.5em 0.25em 0.5em;
     font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
     /* transition: 0.2s; */
 }
 
-/*
-.list li:hover {
+.list li:hover,
+.list li:focus-visible,
+.list li:focus {
+    appearance: none;
+    border: 0;
     background-color: var(--accent);
     color: var(--tertiary);
-    cursor: pointer;
 }
-*/
+
+.list li[aria-selected="true"] {
+    color: var(--tertiary);
+}

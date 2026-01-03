@@ -38,7 +38,7 @@ export default function iconButton({
             className={
                 `${buttonStyle.iconButton}` +
                 ` ` +
-                (isActive ? `${buttonStyle["iconButton--active"]}` : "")
+                (isActive && `${buttonStyle["iconButton--active"]}`)
             }
             style={{ width, height }}
             aria-label={`${ariaLabel}`}

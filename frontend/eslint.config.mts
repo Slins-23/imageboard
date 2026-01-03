@@ -133,7 +133,7 @@ export default defineConfig([
             "no-nonoctal-decimal-escape": "error",
             "no-new-func": "error",
             "no-new": "warn",
-            "no-magic-numbers": "warn",
+            "no-magic-numbers": "off",
             "no-lonely-if": "warn",
             "no-lone-blocks": "error",
             "no-label-var": "error",
@@ -216,6 +216,7 @@ export default defineConfig([
             "for-direction": "warn",
             "constructor-super": "error",
             "array-callback-return": "warn",
+            "unicorn/no-useless-undefined": "off",
             // "no-unsafe-declaration-merging": "error",
         },
         settings: {
