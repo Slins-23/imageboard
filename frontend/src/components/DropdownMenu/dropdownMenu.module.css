@@ -8,7 +8,6 @@
     position: relative;
     width: 100%;
     padding: 0.25em 1.5em 0.25em 0.5em;
-    box-sizing: content-box;
     appearance: none;
     border: 0;
     background-color: var(--secondary);
@@ -24,7 +23,6 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    /* z-index: -1; */
 }
 
 .select::after {
@@ -48,40 +46,28 @@
 
 .list {
     position: absolute;
-    top: 100%;
-    left: 0;
-    /* min-width: 100%; */
-    /* display: block; */
     white-space: nowrap;
     background-color: var(--secondary);
     border-width: 0px 1px 1px 1px;
     border-color: var(--tertiary);
     border-style: solid;
-    /* transform: translateY(-1px); */
-    font-weight: 600;
     cursor: pointer;
-    /* z-index: 5; */
+    z-index: 999;
     margin-top: -1px;
+    min-width: 7ch;
 }
 
 .list li {
-    display: block;
-    appearance: none;
     font-size: 1em;
-    text-decoration: none;
     padding: 0.25em 1.5em 0.25em 0.5em;
-    font-weight: 600;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    /* transition: 0.2s; */
 }
 
 .list li:hover,
 .list li:focus-visible,
 .list li:focus {
-    appearance: none;
-    border: 0;
     background-color: var(--accent);
     color: var(--tertiary);
 }

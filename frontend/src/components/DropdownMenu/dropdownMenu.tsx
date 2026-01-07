@@ -1,3 +1,5 @@
+"use client";
+
 import dropdownStyle from "./dropdownMenu.module.css";
 import { useState, useEffect, useRef, useLayoutEffect, useId } from "react";
 
@@ -10,9 +12,17 @@ type DropdownEntries = Array<DropdownEntry>;
 
 export function DropdownMenu({
     dropdownEntries,
+    responsive = true,
+    fontSize = "1rem",
+    width = "300px",
 }: {
     dropdownEntries: DropdownEntries;
+    responsive: boolean;
+    fontSize?: string;
+    width?: string;
 }) {
+    const dropdownId = useId();
+
     const [isOpen, setIsOpen] = useState(false);
     const [selectedValue, setValue] =
         dropdownEntries.length > 0
@@ -24,108 +34,9 @@ export function DropdownMenu({
     const focusedItemIdx = useRef(0);
 
     const listRef = useRef<HTMLUListElement>(null);
+
     const [menuWidth, setMenuWidth] = useState<string>("auto");
-
-    const dropdownId = useId();
-
-    const currentWindowWidth = useRef(0);
-    const currentWindowHeight = useRef(0);
-
-    useEffect(() => {
-        currentWindowWidth.current = window.innerWidth;
-        currentWindowHeight.current = window.innerHeight;
-    }, []);
-
-    useLayoutEffect(() => {
-        const listElement = listRef.current;
-        if (!listElement) return undefined;
-
-        const currentWidth = listElement.getBoundingClientRect().width;
-        const finalWidth =
-            window.innerWidth <= currentWidth
-                ? window.innerWidth - 50
-                : currentWidth;
-
-        for (let i = 0; i < itemRefs.current?.length; i++) {
-            const itemRef = itemRefs.current[i];
-
-            if (itemRef) {
-                itemRef.style.width = `${finalWidth}px`;
-            }
-        }
-        setMenuWidth(`${finalWidth}px`);
-
-        const observer = new ResizeObserver((entries) => {
-            /*
-            for (const entry of entries) {
-                setMenuWidth(`${entry.contentRect.width}px`);
-            }
-                */
-            // setMenuWidth(`${entries[0].contentRect.width}px`);
-            // setMenuWidth(`${entries[0].borderBoxSize[0].inlineSize}px`);
-        });
-
-        observer.observe(listElement);
-
-        const handleResize = (event: Event) => {
-            console.log("Resize function triggered (handleResize)");
-            if (listElement) {
-                const previousWindowWidth = currentWindowWidth.current;
-                const previousWindowHeight = currentWindowHeight.current;
-
-                currentWindowWidth.current = window.innerWidth;
-                currentWindowHeight.current = window.innerHeight;
-
-                const dWidth = currentWindowWidth.current - previousWindowWidth;
-                const dHeight =
-                    currentWindowHeight.current - previousWindowHeight;
-
-                // const currentWidth = listElement.getBoundingClientRect().width;
-                // // Rounded down (FLOOR)
-                // if (Math.round(currentWidth) - currentWidth < 0) {
-                //     setMenuWidth(`${currentWidth}px`);
-                //     // Rounded up (CEIL)
-                // } else if (Math.round(currentWidth) - currentWidth > 0) {
-                //     setMenuWidth(`${currentWidth}px`);
-                // } else {
-                //     setMenuWidth(`${currentWidth}px`);
-                // }
-
-                listElement.style.width = `${listElement.getBoundingClientRect().width + dWidth}px`;
-
-                /*
-                const currentWidth = listElement.getBoundingClientRect().width;
-                const finalWidth =
-                    window.innerWidth <= currentWidth
-                        ? window.innerWidth - 50
-                        : currentWidth;
-                */
-
-                for (let i = 0; i < itemRefs.current?.length; i++) {
-                    const itemRef = itemRefs.current[i];
-
-                    if (itemRef) {
-                        // itemRef.style.width = `${finalWidth}px`;
-                        itemRef.style.width = listElement.style.width;
-                    }
-                }
-                // setMenuWidth(`${finalWidth}px`);
-                setMenuWidth(listElement.style.width);
-            }
-        };
-
-        if (listRef.current) {
-            const width = listRef.current.getBoundingClientRect().width;
-            setMenuWidth(`${width}px`);
-        }
-
-        window.addEventListener("resize", handleResize);
-
-        return () => {
-            window.removeEventListener("resize", handleResize);
-            observer.disconnect();
-        };
-    }, [dropdownEntries]);
+    const [maxWidth, setMaxWidth] = useState<number | undefined>(undefined);
 
     function setItemRef(element: HTMLLIElement | null, index: number) {
         if (element && !itemRefs.current?.includes(element)) {
@@ -199,22 +110,141 @@ export function DropdownMenu({
         };
     }, [isOpen]);
 
+    if (responsive) {
+        const currentWindowWidth = useRef(0);
+        const currentWindowHeight = useRef(0);
+
+        const lastResizeDelay = useRef(200);
+        const resizeQueued = useRef(false);
+        const timeoutId = useRef<NodeJS.Timeout | number | null>(null);
+
+        useLayoutEffect(() => {
+            const listElement = listRef.current;
+            if (!listElement) return undefined;
+
+            currentWindowWidth.current = window.innerWidth;
+            currentWindowHeight.current = window.innerHeight;
+
+            if (listRef.current) {
+                const width = listRef.current.getBoundingClientRect().width;
+                setMaxWidth(width);
+                setMenuWidth(`${width}px`);
+            }
+
+            const handleResize = (fromRecursion: boolean) => {
+                console.log("Resize function triggered (handleResize)");
+
+                if (fromRecursion && !resizeQueued.current) {
+                    return undefined;
+                }
+
+                if (listElement) {
+                    const previousWindowWidth = currentWindowWidth.current;
+                    const previousWindowHeight = currentWindowHeight.current;
+
+                    currentWindowWidth.current = window.innerWidth;
+                    currentWindowHeight.current = window.innerHeight;
+
+                    const dWidth =
+                        currentWindowWidth.current - previousWindowWidth;
+                    const dHeight =
+                        currentWindowHeight.current - previousWindowHeight;
+
+                    // const currentWidth = listElement.getBoundingClientRect().width;
+                    // // Rounded down (FLOOR)
+                    // if (Math.round(currentWidth) - currentWidth < 0) {
+                    //     setMenuWidth(`${currentWidth}px`);
+                    //     // Rounded up (CEIL)
+                    // } else if (Math.round(currentWidth) - currentWidth > 0) {
+                    //     setMenuWidth(`${currentWidth}px`);
+                    // } else {
+                    //     setMenuWidth(`${currentWidth}px`);
+                    // }
+
+                    const listBoundingWidth =
+                        listElement.getBoundingClientRect().width;
+
+                    listElement.style.width = `${listBoundingWidth + dWidth}px`;
+
+                    /*
+                const currentWidth = listElement.getBoundingClientRect().width;
+                const finalWidth =
+                    window.innerWidth <= currentWidth
+                        ? window.innerWidth - 50
+                        : currentWidth;
+                */
+
+                    const computedListStyle = getComputedStyle(listElement);
+                    const totalBorderWidth =
+                        Number.parseFloat(computedListStyle.borderLeftWidth) +
+                        Number.parseFloat(computedListStyle.borderRightWidth);
+                    const listItemWidthStr = `${listBoundingWidth - totalBorderWidth}px`;
+
+                    for (const itemRef of itemRefs.current) {
+                        if (itemRef) {
+                            itemRef.style.width = listItemWidthStr;
+                        }
+                    }
+
+                    // setMenuWidth(`${finalWidth}px`);
+                    setMenuWidth(listElement.style.width);
+
+                    if (!fromRecursion && !resizeQueued.current) {
+                        resizeQueued.current = true;
+                        timeoutId.current = setTimeout(
+                            handleResize,
+                            lastResizeDelay.current,
+                            true
+                        );
+                    } else if (!fromRecursion && resizeQueued.current) {
+                        clearTimeout(timeoutId.current as number);
+                        timeoutId.current = setTimeout(
+                            handleResize,
+                            lastResizeDelay.current,
+                            true
+                        );
+                    } else if (fromRecursion && resizeQueued.current) {
+                        resizeQueued.current = false;
+                    }
+                }
+            };
+
+            const resizeCallback = () => handleResize(false);
+
+            window.addEventListener("resize", resizeCallback);
+
+            return () => {
+                window.removeEventListener("resize", resizeCallback);
+                // observer.disconnect();
+            };
+        }, [dropdownEntries]);
+    }
+
     return (
         <div
             ref={rootNode}
             className={dropdownStyle.wrapper}
-            style={{ width: menuWidth, fontSize: "1rem" }}
+            style={{ width: responsive ? menuWidth : width, fontSize }}
         >
             <button
                 onClick={() => {
                     setIsOpen(!isOpen);
                 }}
                 className={dropdownStyle.select}
-                style={{
-                    borderBottomColor: isOpen
-                        ? "transparent"
-                        : "var(--tertiary)",
-                }}
+                style={
+                    responsive
+                        ? {
+                              borderBottomColor: isOpen
+                                  ? "transparent"
+                                  : "var(--tertiary)",
+                              maxWidth: `${maxWidth}px`,
+                          }
+                        : {
+                              borderBottomColor: isOpen
+                                  ? "transparent"
+                                  : "var(--tertiary)",
+                          }
+                }
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
                 aria-controls={dropdownId}
@@ -229,6 +259,7 @@ export function DropdownMenu({
                     (isOpen ? "" : " " + dropdownStyle.hidden)
                 }
                 role="listbox"
+                style={responsive ? { maxWidth: `${maxWidth}px` } : { width }}
             >
                 {dropdownEntries.map((entry: DropdownEntry, idx: number) => {
                     const value: string = entry.value;
@@ -250,6 +281,11 @@ export function DropdownMenu({
                                 focusedItemIdx.current = idx;
                                 setIsOpen(false);
                             }}
+                            style={
+                                responsive
+                                    ? { maxWidth: `${maxWidth}px` }
+                                    : { width }
+                            }
                         >
                             {value}
                         </li>

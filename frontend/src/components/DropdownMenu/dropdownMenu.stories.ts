@@ -18,5 +18,8 @@ export const Primary: StoryObj<typeof meta> = {
                 callback: () => console.log("Three clicked"),
             },
         ],
+        responsive: true,
+        width: "300px",
+        fontSize: "1rem",
     },
 };
