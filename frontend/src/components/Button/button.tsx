@@ -2,9 +2,9 @@ import buttonStyle from "./button.module.css";
 
 interface ButtonArgs {
     label: string;
-    padding: number;
-    borderRadius: number;
-    fontSize: number;
+    padding?: number;
+    borderRadius?: number;
+    fontSize?: number;
     onClick?: () => void;
 }
 

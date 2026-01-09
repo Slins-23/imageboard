@@ -5,23 +5,22 @@ import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import NotificationCount from "@/components/NotificationCount/notificationCount";
 
 interface iconButtonArgs {
-    btnId: string;
-    ariaLabel: string;
-    btnIcon: IconProp;
-    isActive: boolean;
-    width: string;
-    height: string;
-    iconSize: string;
-    iconWidthScale: number;
-    iconHeightScale: number;
-    hasNotifications: boolean;
-    unreadNotifications: number;
+    ariaLabel?: string;
+    isActive?: boolean;
+    btnIcon?: IconProp;
+    width?: string;
+    height?: string;
+    iconSize?: string;
+    iconWidthScale?: number;
+    iconHeightScale?: number;
+    hasNotifications?: boolean;
+    unreadNotifications?: number;
+    onClick?: (event: Event) => void;
 }
 
 export default function iconButton({
-    btnId = "home",
-    ariaLabel = "home",
     btnIcon = faHouse,
+    ariaLabel = "Home button",
     isActive = false,
     width = "50px",
     height = "50px",
@@ -33,22 +32,20 @@ export default function iconButton({
 }: iconButtonArgs) {
     return (
         <button
-            type={"button"}
-            id={btnId}
+            type="button"
             className={
                 `${buttonStyle.iconButton}` +
-                ` ` +
-                (isActive && `${buttonStyle["iconButton--active"]}`)
+                (isActive ? ` ${buttonStyle["iconButton--active"]}` : ``)
             }
             style={{ width, height }}
-            aria-label={`${ariaLabel}`}
+            aria-label={ariaLabel}
         >
             <FontAwesomeIcon
                 icon={btnIcon}
-                color="var(--accent)"
                 style={{
                     fontSize: iconSize,
                     scale: `${iconWidthScale} ${iconHeightScale}`,
+                    color: "var(--accent)",
                 }}
             />
 

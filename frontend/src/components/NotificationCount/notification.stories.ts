@@ -8,7 +8,7 @@ const meta: Meta<typeof NotificationCount> = {
 
 export default meta;
 
-export const primary: StoryObj<typeof meta> = {
+export const Primary: StoryObj<typeof meta> = {
     args: {
         count: 0,
     },

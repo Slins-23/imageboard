@@ -19,7 +19,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 const meta: Meta<typeof iconButton> = {
-    title: "Components/iconButton",
+    title: "Components/IconButton",
     component: iconButton,
 };
 
@@ -29,21 +29,20 @@ type Story = StoryObj<typeof meta>;
 
 export const HomeButton: Story = {
     args: {
-        btnId: "homeBtn",
-        ariaLabel: "homeBtn",
+        ariaLabel: "Home button",
         btnIcon: faHouse,
-        isActive: false,
         width: "50px",
         height: "50px",
         iconSize: "25px",
         iconWidthScale: 1,
         iconHeightScale: 1,
+        hasNotifications: false,
+        unreadNotifications: 0,
     },
 };
 
 export const TagsButton: Story = {
     args: {
-        btnId: "tagsBtn",
         ariaLabel: "tagsBtn",
         btnIcon: faTags,
         iconSize: "28px",
@@ -52,7 +51,6 @@ export const TagsButton: Story = {
 
 export const SettingsButton: Story = {
     args: {
-        btnId: "settingsBtn",
         ariaLabel: "settingsBtn",
         btnIcon: faGear,
     },
@@ -60,7 +58,6 @@ export const SettingsButton: Story = {
 
 export const CreateButton: Story = {
     args: {
-        btnId: "createBtn",
         ariaLabel: "createBtn",
         btnIcon: faPlus,
         iconSize: "30px",
@@ -69,7 +66,6 @@ export const CreateButton: Story = {
 
 export const ChatsButton: Story = {
     args: {
-        btnId: "chatsBtn",
         ariaLabel: "chatsBtn",
         btnIcon: faMessage,
         hasNotifications: true,
@@ -79,7 +75,6 @@ export const ChatsButton: Story = {
 
 export const NotificationsButton: Story = {
     args: {
-        btnId: "notificationsBtn",
         ariaLabel: "notificationsBtn",
         btnIcon: faBell,
         hasNotifications: true,
@@ -90,7 +85,6 @@ export const NotificationsButton: Story = {
 
 export const UserButton: Story = {
     args: {
-        btnId: "userBtn",
         ariaLabel: "userBtn",
         btnIcon: faUser,
         iconWidthScale: 1.15,
@@ -100,7 +94,6 @@ export const UserButton: Story = {
 
 export const ThemeButton: Story = {
     args: {
-        btnId: "themeBtn",
         ariaLabel: "themeBtn",
         btnIcon: faCircleHalfStroke,
     },
@@ -108,7 +101,6 @@ export const ThemeButton: Story = {
 
 export const LeftButton: Story = {
     args: {
-        btnId: "leftBtn",
         ariaLabel: "leftBtn",
         btnIcon: faArrowLeft,
     },
@@ -116,7 +108,6 @@ export const LeftButton: Story = {
 
 export const RightButton: Story = {
     args: {
-        btnId: "rightBtn",
         ariaLabel: "rightBtn",
         btnIcon: faArrowRight,
     },
@@ -124,7 +115,6 @@ export const RightButton: Story = {
 
 export const RefreshButton: Story = {
     args: {
-        btnId: "refreshButton",
         ariaLabel: "refreshButton",
         btnIcon: faRefresh,
     },
@@ -132,7 +122,6 @@ export const RefreshButton: Story = {
 
 export const SearchButton: Story = {
     args: {
-        btnId: "searchBtn",
         ariaLabel: "searchBtn",
         btnIcon: faSearch,
     },
@@ -140,7 +129,6 @@ export const SearchButton: Story = {
 
 export const DownButton: Story = {
     args: {
-        btnId: "downBtn",
         ariaLabel: "downBtn",
         btnIcon: faAngleDown,
         iconSize: "30px",
@@ -151,7 +139,6 @@ export const DownButton: Story = {
 
 export const ViewButton: Story = {
     args: {
-        btnId: "viewBtn",
         ariaLabel: "viewBtn",
         btnIcon: faEye,
     },
@@ -159,7 +146,6 @@ export const ViewButton: Story = {
 
 export const CloseButton: Story = {
     args: {
-        btnId: "closeBtn",
         ariaLabel: "closeBtn",
         btnIcon: faX,
     },

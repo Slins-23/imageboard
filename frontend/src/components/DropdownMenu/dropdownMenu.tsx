@@ -1,7 +1,14 @@
 "use client";
 
 import dropdownStyle from "./dropdownMenu.module.css";
-import { useState, useEffect, useRef, useLayoutEffect, useId } from "react";
+import {
+    useState,
+    useEffect,
+    useRef,
+    useLayoutEffect,
+    useId,
+    useCallback,
+} from "react";
 
 type DropdownEntry = {
     value: string;
@@ -11,7 +18,14 @@ type DropdownEntry = {
 type DropdownEntries = Array<DropdownEntry>;
 
 export function DropdownMenu({
-    dropdownEntries,
+    dropdownEntries = [
+        { value: "One" },
+        { value: "Two" },
+        {
+            value: "Threeeeeeeeeeeeeeeeeeeesssssaaac",
+            callback: () => console.log("Three clicked"),
+        },
+    ],
     responsive = true,
     fontSize = "1rem",
     width = "300px",
@@ -23,26 +37,154 @@ export function DropdownMenu({
 }) {
     const dropdownId = useId();
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
     const [selectedValue, setValue] =
         dropdownEntries.length > 0
-            ? useState(dropdownEntries[0].value)
-            : useState("");
-    const rootNode = useRef<HTMLDivElement>(null);
+            ? useState<string>(dropdownEntries[0].value)
+            : useState<string>("");
+
+    const buttonRef = useRef<HTMLButtonElement | null>(null);
+
+    const rootNode = useRef<HTMLDivElement | null>(null);
+    const listRef = useRef<HTMLUListElement | null>(null);
     const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
-    const selectedItemIdx = useRef(0);
-    const focusedItemIdx = useRef(0);
 
-    const listRef = useRef<HTMLUListElement>(null);
+    const selectedItemIdx = useRef<number>(0);
+    const focusedItemIdx = useRef<number>(0);
 
-    const [menuWidth, setMenuWidth] = useState<string>("auto");
-    const [maxWidth, setMaxWidth] = useState<number | undefined>(undefined);
+    const menuWidth = useRef<number | undefined>(undefined);
+    const maxWidth = useRef<number | undefined>(undefined);
 
-    function setItemRef(element: HTMLLIElement | null, index: number) {
-        if (element && !itemRefs.current?.includes(element)) {
-            itemRefs.current[index] = element;
+    const updateMenuWidth = useCallback(
+        (localMenuWidth?: number, localMaxWidth?: number) => {
+            if (localMenuWidth === undefined && localMaxWidth === undefined)
+                return;
+
+            if (localMenuWidth) {
+                menuWidth.current = localMenuWidth;
+
+                // ROOTNODE
+                if (rootNode.current)
+                    rootNode.current.style.width = `${localMenuWidth}px`;
+            }
+
+            if (localMaxWidth) {
+                maxWidth.current = localMaxWidth;
+
+                // BUTTON
+                if (buttonRef.current)
+                    buttonRef.current.style.maxWidth = `${localMaxWidth}px`;
+
+                // LIST
+                if (listRef.current)
+                    listRef.current.style.maxWidth = `${localMaxWidth}px`;
+
+                // ITEMS
+                if (itemRefs.current) {
+                    for (const itemRef of itemRefs.current) {
+                        if (itemRef)
+                            itemRef.style.maxWidth = `${localMaxWidth}px`;
+                    }
+                }
+            }
+        },
+        []
+    );
+
+    useLayoutEffect(() => {
+        if (!responsive) return undefined;
+
+        const listElement: HTMLUListElement | null = listRef.current;
+        if (!listElement) return undefined;
+
+        let currentWindowWidth: number = 0;
+        let currentWindowHeight: number = 0;
+
+        // Controls how long, in milliseconds after the last resize, to re-calculate the width for the elements
+        // Makes up for inconsistencies due to lack of synchronization
+        // Can take too long to update UI if too big, but also becomes more accurate
+        // Can update the UI very fast, but also becomes less accurate and more computationally expensive, also increases the risk and potential number of obsolete updates
+        const lastResizeDelay: number = 200;
+
+        let resizeQueued: boolean = false;
+        let timeoutId: NodeJS.Timeout | number | undefined = undefined;
+
+        currentWindowWidth = window.innerWidth;
+        currentWindowHeight = window.innerHeight;
+
+        if (listRef.current) {
+            const width: number = listRef.current.getBoundingClientRect().width;
+            updateMenuWidth(width, width);
         }
-    }
+
+        const handleResize = (fromRecursion: boolean) => {
+            console.log("Resize function triggered (handleResize)");
+
+            if (fromRecursion && !resizeQueued) {
+                return;
+            }
+
+            if (listElement) {
+                const previousWindowWidth: number = currentWindowWidth;
+                const previousWindowHeight: number = currentWindowHeight;
+
+                currentWindowWidth = window.innerWidth;
+                currentWindowHeight = window.innerHeight;
+
+                const dWidth: number = currentWindowWidth - previousWindowWidth;
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                const dHeight: number =
+                    currentWindowHeight - previousWindowHeight;
+
+                const listBoundingWidth: number =
+                    listElement.getBoundingClientRect().width;
+
+                listElement.style.width = `${listBoundingWidth + dWidth}px`;
+
+                const computedListStyle: CSSStyleDeclaration =
+                    getComputedStyle(listElement);
+                const totalBorderWidth: number =
+                    Number.parseFloat(computedListStyle.borderLeftWidth) +
+                    Number.parseFloat(computedListStyle.borderRightWidth);
+                const listItemWidthStr: string = `${listBoundingWidth - totalBorderWidth}px`;
+
+                for (const itemRef of itemRefs.current) {
+                    if (itemRef) {
+                        itemRef.style.width = listItemWidthStr;
+                    }
+                }
+
+                updateMenuWidth(Number.parseFloat(listElement.style.width));
+
+                if (!fromRecursion && !resizeQueued) {
+                    resizeQueued = true;
+                    timeoutId = setTimeout(handleResize, lastResizeDelay, true);
+                } else if (!fromRecursion && resizeQueued) {
+                    clearTimeout(timeoutId as number);
+                    timeoutId = setTimeout(handleResize, lastResizeDelay, true);
+                } else if (fromRecursion && resizeQueued) {
+                    resizeQueued = false;
+                }
+            }
+        };
+
+        const resizeCallback = () => handleResize(false);
+
+        window.addEventListener("resize", resizeCallback);
+
+        return () => {
+            window.removeEventListener("resize", resizeCallback);
+            // observer.disconnect();
+        };
+    }, [responsive, dropdownEntries]);
+
+    useLayoutEffect(() => {
+        if (!listRef.current) return undefined;
+
+        itemRefs.current = [...listRef.current.querySelectorAll("li")];
+
+        return undefined;
+    }, [dropdownEntries]);
 
     useEffect(() => {
         if (!isOpen) return undefined;
@@ -62,7 +204,7 @@ export function DropdownMenu({
                     if (focusedItemIdx.current > 0) {
                         focusedItemIdx.current--;
 
-                        const newFocusedItem =
+                        const newFocusedItem: HTMLLIElement | null =
                             itemRefs.current[focusedItemIdx.current];
 
                         newFocusedItem?.focus();
@@ -74,7 +216,7 @@ export function DropdownMenu({
                     if (focusedItemIdx.current < itemCount - 1) {
                         focusedItemIdx.current++;
 
-                        const newFocusedItem =
+                        const newFocusedItem: HTMLLIElement | null =
                             itemRefs.current[focusedItemIdx.current];
 
                         newFocusedItem?.focus();
@@ -110,123 +252,14 @@ export function DropdownMenu({
         };
     }, [isOpen]);
 
-    if (responsive) {
-        const currentWindowWidth = useRef(0);
-        const currentWindowHeight = useRef(0);
-
-        const lastResizeDelay = useRef(200);
-        const resizeQueued = useRef(false);
-        const timeoutId = useRef<NodeJS.Timeout | number | null>(null);
-
-        useLayoutEffect(() => {
-            const listElement = listRef.current;
-            if (!listElement) return undefined;
-
-            currentWindowWidth.current = window.innerWidth;
-            currentWindowHeight.current = window.innerHeight;
-
-            if (listRef.current) {
-                const width = listRef.current.getBoundingClientRect().width;
-                setMaxWidth(width);
-                setMenuWidth(`${width}px`);
-            }
-
-            const handleResize = (fromRecursion: boolean) => {
-                console.log("Resize function triggered (handleResize)");
-
-                if (fromRecursion && !resizeQueued.current) {
-                    return undefined;
-                }
-
-                if (listElement) {
-                    const previousWindowWidth = currentWindowWidth.current;
-                    const previousWindowHeight = currentWindowHeight.current;
-
-                    currentWindowWidth.current = window.innerWidth;
-                    currentWindowHeight.current = window.innerHeight;
-
-                    const dWidth =
-                        currentWindowWidth.current - previousWindowWidth;
-                    const dHeight =
-                        currentWindowHeight.current - previousWindowHeight;
-
-                    // const currentWidth = listElement.getBoundingClientRect().width;
-                    // // Rounded down (FLOOR)
-                    // if (Math.round(currentWidth) - currentWidth < 0) {
-                    //     setMenuWidth(`${currentWidth}px`);
-                    //     // Rounded up (CEIL)
-                    // } else if (Math.round(currentWidth) - currentWidth > 0) {
-                    //     setMenuWidth(`${currentWidth}px`);
-                    // } else {
-                    //     setMenuWidth(`${currentWidth}px`);
-                    // }
-
-                    const listBoundingWidth =
-                        listElement.getBoundingClientRect().width;
-
-                    listElement.style.width = `${listBoundingWidth + dWidth}px`;
-
-                    /*
-                const currentWidth = listElement.getBoundingClientRect().width;
-                const finalWidth =
-                    window.innerWidth <= currentWidth
-                        ? window.innerWidth - 50
-                        : currentWidth;
-                */
-
-                    const computedListStyle = getComputedStyle(listElement);
-                    const totalBorderWidth =
-                        Number.parseFloat(computedListStyle.borderLeftWidth) +
-                        Number.parseFloat(computedListStyle.borderRightWidth);
-                    const listItemWidthStr = `${listBoundingWidth - totalBorderWidth}px`;
-
-                    for (const itemRef of itemRefs.current) {
-                        if (itemRef) {
-                            itemRef.style.width = listItemWidthStr;
-                        }
-                    }
-
-                    // setMenuWidth(`${finalWidth}px`);
-                    setMenuWidth(listElement.style.width);
-
-                    if (!fromRecursion && !resizeQueued.current) {
-                        resizeQueued.current = true;
-                        timeoutId.current = setTimeout(
-                            handleResize,
-                            lastResizeDelay.current,
-                            true
-                        );
-                    } else if (!fromRecursion && resizeQueued.current) {
-                        clearTimeout(timeoutId.current as number);
-                        timeoutId.current = setTimeout(
-                            handleResize,
-                            lastResizeDelay.current,
-                            true
-                        );
-                    } else if (fromRecursion && resizeQueued.current) {
-                        resizeQueued.current = false;
-                    }
-                }
-            };
-
-            const resizeCallback = () => handleResize(false);
-
-            window.addEventListener("resize", resizeCallback);
-
-            return () => {
-                window.removeEventListener("resize", resizeCallback);
-                // observer.disconnect();
-            };
-        }, [dropdownEntries]);
-    }
-
     return (
         <div
             ref={rootNode}
             className={dropdownStyle.wrapper}
-            style={{ width: responsive ? menuWidth : width, fontSize }}
+            style={{ fontSize }}
         >
             <button
+                ref={buttonRef}
                 onClick={() => {
                     setIsOpen(!isOpen);
                 }}
@@ -237,12 +270,13 @@ export function DropdownMenu({
                               borderBottomColor: isOpen
                                   ? "transparent"
                                   : "var(--tertiary)",
-                              maxWidth: `${maxWidth}px`,
                           }
                         : {
                               borderBottomColor: isOpen
                                   ? "transparent"
                                   : "var(--tertiary)",
+                              width,
+                              maxWidth: width,
                           }
                 }
                 aria-haspopup="listbox"
@@ -259,7 +293,7 @@ export function DropdownMenu({
                     (isOpen ? "" : " " + dropdownStyle.hidden)
                 }
                 role="listbox"
-                style={responsive ? { maxWidth: `${maxWidth}px` } : { width }}
+                style={responsive ? {} : { width, maxWidth: width }}
             >
                 {dropdownEntries.map((entry: DropdownEntry, idx: number) => {
                     const value: string = entry.value;
@@ -268,7 +302,7 @@ export function DropdownMenu({
                     return (
                         // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                         <li
-                            ref={(element) => setItemRef(element, idx)}
+                            // ref={(element) => setItemRef(element, idx)}
                             key={idx}
                             role="option"
                             aria-selected={selectedItemIdx.current === idx}
@@ -276,16 +310,12 @@ export function DropdownMenu({
                             tabIndex={0}
                             onClick={() => {
                                 if (callback !== undefined) callback();
-                                setValue(value);
                                 selectedItemIdx.current = idx;
                                 focusedItemIdx.current = idx;
+                                setValue(value);
                                 setIsOpen(false);
                             }}
-                            style={
-                                responsive
-                                    ? { maxWidth: `${maxWidth}px` }
-                                    : { width }
-                            }
+                            style={responsive ? {} : { width, maxWidth: width }}
                         >
                             {value}
                         </li>

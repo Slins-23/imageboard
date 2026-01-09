@@ -3,11 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 
 interface userPlaceholderArgs {
-    width: string;
-    height: string;
-    iconSize: string;
-    iconWidthScale: number;
-    iconHeightScale: number;
+    width?: string;
+    height?: string;
+    iconSize?: string;
+    iconWidthScale?: number;
+    iconHeightScale?: number;
 }
 
 export default function UserPlaceholder({
@@ -23,6 +23,7 @@ export default function UserPlaceholder({
             style={{ width, height }}
         >
             <FontAwesomeIcon
+                className={`${placeholderStyle["avatar-icon"]}`}
                 icon={faUser}
                 style={{
                     fontSize: iconSize,
