@@ -1,0 +1,23 @@
+.textBox {
+    font-family: "Fenix";
+    background-color: var(--secondary);
+    color: var(--accent);
+    border-color: var(--tertiary);
+    border-width: 1px;
+    border-style: solid;
+    padding-left: 0.5em;
+    padding-right: 0.5em;
+}
+
+.textBox:focus {
+    outline: none;
+}
+
+.textBox::placeholder {
+    color: var(--accent);
+    opacity: 0.25;
+}
+
+.textBox:disabled {
+    filter: brightness(0.6);
+}

@@ -37,10 +37,22 @@
     --accent: #acc4ee;
 }
 
+::selection {
+    background: var(--primary);
+    color: var(--tertiary);
+}
+
+::-webkit-scrollbar-button {
+    display: none;
+    height: 0;
+    width: 0;
+}
+
 html,
 body {
     max-width: 100vw;
     overflow-x: hidden;
+    scrollbar-color: var(--tertiary) var(--primary);
 }
 
 body {
@@ -71,4 +83,13 @@ a {
     html {
         color-scheme: dark;
     }
+}
+
+h1 {
+}
+
+h2 {
+}
+
+h3 {
 }

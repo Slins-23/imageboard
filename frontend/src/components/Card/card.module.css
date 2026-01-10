@@ -1,6 +1,4 @@
 .card {
-    width: 150px;
-    height: 150px;
     padding: 2em;
     background-color: var(--secondary);
     border-style: solid;
@@ -13,11 +11,9 @@
 }
 
 .interest-tag {
-    font-size: 2rem;
     color: var(--accent);
 }
 
 .interest-value {
-    font-size: 1.5rem;
     color: var(--tertiary);
 }

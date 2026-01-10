@@ -1,0 +1,23 @@
+.textArea {
+    font-family: "Fenix";
+    background-color: var(--secondary);
+    color: var(--accent);
+    border-color: var(--tertiary);
+    border-width: 1px;
+    border-style: solid;
+    padding: 0.5em;
+    white-space: normal;
+}
+
+.textArea:focus {
+    outline: none;
+}
+
+.textArea::placeholder {
+    color: var(--accent);
+    opacity: 0.25;
+}
+
+.textArea:disabled {
+    filter: brightness(0.6);
+}
