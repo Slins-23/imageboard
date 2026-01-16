@@ -1,7 +1,6 @@
 import React from "react";
-import {
-    GradientNavbar,
-    type NavigationItems,
+import GradientNavbar, {
+    NavigationItems,
 } from "@/components/GradientNavbar/gradientNavbar";
 
 const title = "Account";
