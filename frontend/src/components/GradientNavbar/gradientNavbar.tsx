@@ -12,7 +12,7 @@ interface NavigationItem {
 
 export type NavigationItems = Array<NavigationItem>;
 
-export function GradientNavbar({
+export default function GradientNavbar({
     title,
     items,
 }: {
