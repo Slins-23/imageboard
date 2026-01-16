@@ -1,7 +1,7 @@
 .wrapper {
     position: relative;
     display: inline-block;
-    font-weight: 600;
+    font-weight: 1000;
 }
 
 .select {
@@ -46,7 +46,7 @@
 
 .list {
     position: absolute;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     background-color: var(--secondary);
     border-width: 0px 1px 1px 1px;
     border-color: var(--tertiary);

@@ -1,13 +1,15 @@
 import Image from "next/image";
 import styles from "./page.module.css";
-import Button from "@/components/Button/button";
 import { DropdownMenu } from "@/components/DropdownMenu/dropdownMenu";
+import Link from "next/link";
 
 export default function Home() {
     return (
         <div className={styles.page}>
             <main className={styles.main}>
+                <Link href="/profile">Profile</Link>
                 <DropdownMenu
+                    responsive={true}
                     dropdownEntries={[
                         { value: "One" },
                         { value: "Two" },

@@ -10,10 +10,10 @@ import {
     useCallback,
 } from "react";
 
-type DropdownEntry = {
+interface DropdownEntry {
     value: string;
     callback?: () => void;
-};
+}
 
 type DropdownEntries = Array<DropdownEntry>;
 
@@ -54,6 +54,17 @@ export function DropdownMenu({
 
     const menuWidth = useRef<number | undefined>(undefined);
     const maxWidth = useRef<number | undefined>(undefined);
+
+    /*
+    const setItemRefs = useCallback(
+        (element: HTMLLIElement | null, index: number) => {
+            if (element && !itemRefs.current.includes(element)) {
+                itemRefs.current[index] = element;
+            }
+        },
+        []
+    );
+    */
 
     const updateMenuWidth = useCallback(
         (localMenuWidth?: number, localMaxWidth?: number) => {
@@ -178,7 +189,7 @@ export function DropdownMenu({
         };
     }, [responsive, dropdownEntries]);
 
-    useLayoutEffect(() => {
+    useEffect(() => {
         if (!listRef.current) return undefined;
 
         itemRefs.current = [...listRef.current.querySelectorAll("li")];
@@ -302,6 +313,7 @@ export function DropdownMenu({
                     return (
                         // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                         <li
+                            // Avoiding using React references directly and doing it manually instead as it gets reset every window resize
                             // ref={(element) => setItemRef(element, idx)}
                             key={idx}
                             role="option"

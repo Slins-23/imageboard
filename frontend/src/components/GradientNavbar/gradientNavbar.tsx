@@ -1,0 +1,119 @@
+"use client";
+
+import Link from "next/link";
+import gradientNavbarStyle from "./gradientNavbar.module.css";
+import { useState, useRef, useCallback, useEffect } from "react";
+import { usePathname } from "next/navigation";
+
+interface NavigationItem {
+    text: Readonly<string>;
+    route: Readonly<string>;
+}
+
+export type NavigationItems = Array<NavigationItem>;
+
+export function GradientNavbar({
+    title,
+    items,
+}: {
+    title: Readonly<string>;
+    items: Readonly<NavigationItems>;
+}) {
+    const slug = usePathname();
+    // const currentRouteIdx = items.findIndex((item) => item.route === slug);
+
+    const menuOptionsRefs = useRef<(HTMLLIElement | null)[]>([]);
+    const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
+
+    const [currentRouteIdx, setCurrentRouteIdx] = useState<number | undefined>(
+        () => items.findIndex((item) => item.route === slug)
+    );
+
+    useEffect(() => {
+        setCurrentRouteIdx(items.findIndex((item) => item.route === slug));
+    }, [slug]);
+
+    const setItemRef = useCallback(
+        (element: HTMLLIElement | null, index: number) => {
+            if (!menuOptionsRefs.current) return;
+
+            if (element && !menuOptionsRefs.current.includes(element)) {
+                menuOptionsRefs.current[index] = element;
+            }
+        },
+        []
+    );
+
+    const setLinkRef = useCallback(
+        (element: HTMLAnchorElement | null, index: number) => {
+            if (!linkRefs.current) return;
+
+            if (element && !linkRefs.current.includes(element)) {
+                linkRefs.current[index] = element;
+            }
+        },
+        []
+    );
+
+    return (
+        <nav className={`${gradientNavbarStyle.navbar}`}>
+            <header>
+                <h1 style={{ color: "var(--tertiary)", fontWeight: "500" }}>
+                    {title}
+                </h1>
+            </header>
+            <ul className={`${gradientNavbarStyle.list}`}>
+                {items.map((item: NavigationItem, idx: number) => (
+                    <li
+                        ref={(element) => setItemRef(element, idx)}
+                        key={idx}
+                        role={"option"}
+                        tabIndex={0}
+                        aria-selected={idx === currentRouteIdx}
+                        onClick={(event) => {
+                            event.preventDefault();
+                            linkRefs.current[idx]?.click();
+                        }}
+                        onKeyDown={(event) => {
+                            switch (event.code) {
+                                case "Enter":
+                                case "Space": {
+                                    linkRefs.current[idx]?.click();
+                                    break;
+                                }
+                                case "ArrowUp": {
+                                    const elementAbove =
+                                        idx > 0
+                                            ? menuOptionsRefs.current[idx - 1]
+                                            : menuOptionsRefs.current[idx];
+                                    elementAbove?.focus();
+                                    break;
+                                }
+                                case "ArrowDown": {
+                                    const elementBelow =
+                                        idx < items.length - 1
+                                            ? menuOptionsRefs.current[idx + 1]
+                                            : menuOptionsRefs.current[idx];
+                                    elementBelow?.focus();
+                                    break;
+                                }
+                                default: {
+                                    break;
+                                }
+                            }
+                        }}
+                    >
+                        <Link
+                            ref={(element) => setLinkRef(element, idx)}
+                            tabIndex={-1}
+                            href={item.route}
+                            onClick={() => setCurrentRouteIdx(idx)}
+                        >
+                            {item.text}
+                        </Link>
+                    </li>
+                ))}
+            </ul>
+        </nav>
+    );
+}

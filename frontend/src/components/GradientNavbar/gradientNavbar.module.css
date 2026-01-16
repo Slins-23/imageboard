@@ -1,0 +1,39 @@
+.navbar {
+    display: inline-block;
+    background-image: linear-gradient(
+        var(--secondary) 0%,
+        var(--secondary) 69%,
+        var(--primary) 100%
+    );
+    border-radius: 10px;
+    padding-left: 0.75em;
+    padding-right: 0.5em;
+    padding-top: 0.85em;
+    padding-bottom: 0.85em;
+}
+
+.navbar ul {
+    margin-top: 0.75em;
+}
+
+.navbar ul li {
+    cursor: pointer;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+    padding-left: 0.6em;
+    padding-right: 2em;
+    appearance: none;
+    text-wrap: nowrap;
+    overflow: hidden;
+    font-size: 1.5rem;
+}
+
+.navbar ul li:hover,
+.navbar ul li:focus,
+.navbar ul li[aria-selected="true"] {
+    color: var(--tertiary);
+}
+
+.navbar ul li[aria-selected="true"] {
+    font-weight: 1000;
+}

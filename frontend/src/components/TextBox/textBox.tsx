@@ -24,7 +24,7 @@ export function TextBox({
     maxLength = undefined,
     required = false,
 }: textBoxArgs) {
-    const inputText = useRef<string | null>(undefined);
+    const inputText = useRef<string | undefined>(undefined);
 
     const onInput = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {

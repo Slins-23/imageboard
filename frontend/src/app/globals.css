@@ -22,6 +22,7 @@
 }
 */
 
+/*
 @font-face {
     font-family: "Fenix";
     src: url("/fonts/Fenix/Fenix-Regular.ttf") format("truetype");
@@ -29,6 +30,7 @@
     font-style: normal;
     font-display: swap;
 }
+*/
 
 :root {
     --primary: #0d1c37;
@@ -39,7 +41,6 @@
 
 ::selection {
     background: var(--primary);
-    color: var(--tertiary);
 }
 
 ::-webkit-scrollbar-button {
