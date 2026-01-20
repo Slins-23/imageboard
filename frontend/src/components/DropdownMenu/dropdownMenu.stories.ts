@@ -19,7 +19,7 @@ export const Primary: StoryObj<typeof meta> = {
             },
         ],
         responsive: true,
-        width: "300px",
         fontSize: "1rem",
+        width: "300px",
     },
 };

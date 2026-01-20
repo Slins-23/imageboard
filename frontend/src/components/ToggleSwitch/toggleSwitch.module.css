@@ -1,0 +1,40 @@
+.switch {
+    width: var(--switch-width);
+    height: var(--switch-height);
+    position: relative;
+    background-color: var(--secondary);
+    border-width: calc(0.1 * var(--switch-height));
+    border-style: solid;
+    border-radius: calc((var(--switch-height) / 2));
+    border-color: var(--tertiary);
+    cursor: pointer;
+    transition: 0.2s;
+    box-sizing: border-box;
+}
+
+.switch[aria-checked="true"] {
+    background-color: var(--tertiary);
+}
+
+.circle {
+    position: relative;
+    width: calc(var(--switch-height) - calc(2 * 0.1 * var(--switch-height)));
+    height: calc(var(--switch-height) - calc(2 * 0.1 * var(--switch-height)));
+    background-color: var(--accent);
+    border-radius: 50%;
+    transition: 0.2s;
+    box-sizing: content-box;
+    padding: 1px;
+    margin-top: -1px;
+    margin-left: -1px;
+}
+
+.switch[aria-checked="true"] .circle {
+    translate: calc(var(--switch-width) - var(--switch-height));
+}
+
+.switch[aria-disabled="true"] {
+    pointer-events: none;
+    cursor: move;
+    filter: brightness(var(--disabled-brightness));
+}

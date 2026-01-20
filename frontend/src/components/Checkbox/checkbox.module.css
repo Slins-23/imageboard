@@ -1,0 +1,8 @@
+.checkbox {
+    appearance: none;
+    cursor: pointer;
+    border-width: 1px;
+    border-style: solid;
+    border-color: var(--tertiary);
+    padding: 0.1rem 0 0.1rem 0;
+}

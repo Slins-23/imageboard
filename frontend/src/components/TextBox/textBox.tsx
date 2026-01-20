@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useCallback } from "react";
 import textBoxStyle from "@/components/TextBox/textBox.module.css";
 
@@ -11,10 +13,21 @@ interface textBoxArgs {
     isDisabled?: boolean;
     maxLength?: number;
     required?: boolean;
+    type?:
+        | "date"
+        | "email"
+        | "number"
+        | "password"
+        | "search"
+        | "tel"
+        | "text"
+        | "time"
+        | "url"
+        | "week";
 }
 
 export function TextBox({
-    width = "190px",
+    width = "auto",
     height = "32px",
     fontSize = "1.15rem",
     placeholder = undefined,
@@ -23,6 +36,7 @@ export function TextBox({
     isDisabled = false,
     maxLength = undefined,
     required = false,
+    type = "text",
 }: textBoxArgs) {
     const inputText = useRef<string | undefined>(undefined);
 
@@ -40,7 +54,7 @@ export function TextBox({
 
     return (
         <input
-            type="text"
+            type={type}
             className={textBoxStyle.textBox}
             style={{ width, height, fontSize }}
             onInput={onInput}

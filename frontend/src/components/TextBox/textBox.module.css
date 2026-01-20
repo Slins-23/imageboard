@@ -9,6 +9,14 @@
     padding-right: 0.5em;
 }
 
+.textBox[type="date"] {
+    width: 16ch !important;
+}
+
+.textBox[type="number"] {
+    width: 6ch !important;
+}
+
 .textBox:focus {
     outline: none;
 }
@@ -19,5 +27,6 @@
 }
 
 .textBox:disabled {
-    filter: brightness(0.6);
+    filter: brightness(var(--disabled-brightness));
+    pointer-events: none;
 }

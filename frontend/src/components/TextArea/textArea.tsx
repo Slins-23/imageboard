@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef, useCallback, useLayoutEffect } from "react";
 import textAreaStyle from "./textArea.module.css";
 

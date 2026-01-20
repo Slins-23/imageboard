@@ -11,5 +11,8 @@ export default meta;
 export const Primary: StoryObj<typeof meta> = {
     args: {
         count: 0,
+        width: "16px",
+        height: "16px",
+        fontSize: "8px",
     },
 };

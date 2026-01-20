@@ -37,6 +37,7 @@
     --secondary: #122a53;
     --tertiary: #73a5f8;
     --accent: #acc4ee;
+    --disabled-brightness: 0.6;
 }
 
 ::selection {

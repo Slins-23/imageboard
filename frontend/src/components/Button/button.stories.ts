@@ -14,6 +14,9 @@ type Story = StoryObj<typeof meta>;
 export const SaveButton: Story = {
     args: {
         label: "Save changes",
+        padding: 0.5,
+        borderRadius: 0,
+        fontSize: 1.5,
         onClick: fn(),
     },
 };

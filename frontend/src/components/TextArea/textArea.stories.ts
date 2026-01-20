@@ -10,6 +10,17 @@ export default meta;
 
 export const Primary: StoryObj<typeof meta> = {
     args: {
+        width: "310px",
+        height: "130px",
+        fontSize: "1.15rem",
+        placeholder: undefined,
+        readOnly: false,
+        isDisabled: false,
+        maxLength: 255,
+        required: false,
+        resize: "none",
+        scrollable: true,
+        responsive: true,
         handleInput: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const initialValue: string = event.target.value;
             const sanitizedValue: string = initialValue
