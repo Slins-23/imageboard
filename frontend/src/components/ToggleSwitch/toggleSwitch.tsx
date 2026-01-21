@@ -1,13 +1,17 @@
 "use client";
 
 import switchStyle from "./toggleSwitch.module.css";
-import { useEffect, useState, useRef, type KeyboardEvent } from "react";
+import { useEffect, useRef, type KeyboardEvent } from "react";
+import { useControllableState } from "@/utils/utils";
 
 interface SwitchArgs {
     width?: string;
     height?: string;
     isDisabled?: boolean;
     isRequired?: boolean;
+    isChecked?: boolean;
+    defaultChecked?: boolean;
+    onToggle?: (isChecked: boolean) => void;
 }
 
 export default function ToggleSwitch({
@@ -15,8 +19,18 @@ export default function ToggleSwitch({
     height = "17px",
     isDisabled = false,
     isRequired = false,
+    isChecked = undefined,
+    defaultChecked = false,
+    onToggle = undefined,
 }: SwitchArgs) {
-    const [isChecked, setIsChecked] = useState<boolean>(false);
+    const [internalChecked, setInternalChecked] = useControllableState<boolean>(
+        {
+            value: isChecked,
+            defaultValue: defaultChecked,
+            onChange: onToggle,
+        }
+    );
+
     const buttonRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -36,11 +50,11 @@ export default function ToggleSwitch({
             <div
                 ref={buttonRef}
                 role="checkbox"
-                aria-checked={isChecked}
+                aria-checked={internalChecked}
                 aria-required={isRequired}
                 tabIndex={0}
                 className={`${switchStyle.switch}`}
-                onClick={() => setIsChecked(!isChecked)}
+                onClick={() => setInternalChecked(!internalChecked)}
                 onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
                     event.preventDefault();
                     switch (event.code) {
