@@ -1,11 +1,12 @@
 import buttonStyle from "./button.module.css";
+import type { MouseEvent } from "react";
 
 interface ButtonArgs {
     label: string;
     padding?: number;
     borderRadius?: number;
     fontSize?: number;
-    onClick?: () => void;
+    onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default function button({

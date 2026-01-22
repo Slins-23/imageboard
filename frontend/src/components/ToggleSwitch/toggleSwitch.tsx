@@ -3,35 +3,46 @@
 import switchStyle from "./toggleSwitch.module.css";
 import { useEffect, useRef, type KeyboardEvent } from "react";
 import { useControllableState } from "@/utils/utils";
+import type { MouseEvent } from "react";
 
 interface SwitchArgs {
+    isChecked?: boolean;
+    defaultChecked?: boolean;
+    onToggle?: (event: MouseEvent<HTMLDivElement>) => void;
+    onToggleChange?: (isChecked: boolean) => void;
     width?: string;
     height?: string;
     isDisabled?: boolean;
     isRequired?: boolean;
-    isChecked?: boolean;
-    defaultChecked?: boolean;
-    onToggle?: (isChecked: boolean) => void;
 }
 
 export default function ToggleSwitch({
+    isChecked = undefined,
+    defaultChecked = false,
+    onToggle = undefined,
+    onToggleChange = undefined,
     width = "32px",
     height = "17px",
     isDisabled = false,
     isRequired = false,
-    isChecked = undefined,
-    defaultChecked = false,
-    onToggle = undefined,
 }: SwitchArgs) {
     const [internalChecked, setInternalChecked] = useControllableState<boolean>(
         {
             value: isChecked,
             defaultValue: defaultChecked,
-            onChange: onToggle,
+            onChange: onToggleChange,
         }
     );
 
     const buttonRef = useRef<HTMLDivElement | null>(null);
+
+    const handleChange = (event: MouseEvent<HTMLDivElement>) => {
+        onToggle?.(event);
+
+        if (event.defaultPrevented) return;
+
+        setInternalChecked(!internalChecked);
+    };
 
     useEffect(() => {
         const buttonEl: HTMLDivElement | null = buttonRef.current;
@@ -54,7 +65,7 @@ export default function ToggleSwitch({
                 aria-required={isRequired}
                 tabIndex={0}
                 className={`${switchStyle.switch}`}
-                onClick={() => setInternalChecked(!internalChecked)}
+                onClick={handleChange}
                 onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
                     event.preventDefault();
                     switch (event.code) {

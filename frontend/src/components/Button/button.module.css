@@ -3,7 +3,7 @@
     border-style: solid;
     border-width: 1px;
     border-color: var(--tertiary);
-    transition: 0.2s;
+    transition: 0.15s;
     cursor: pointer;
 }
 

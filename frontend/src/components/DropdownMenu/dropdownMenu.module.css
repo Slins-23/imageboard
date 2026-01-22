@@ -42,12 +42,14 @@
     color: var(--tertiary);
 }
 
+/*
 .hidden {
     visibility: hidden;
     pointer-events: none;
     height: 0;
     overflow: hidden;
 }
+*/
 
 .list {
     position: absolute;
@@ -60,6 +62,13 @@
     z-index: 999;
     margin-top: -1px;
     min-width: 7ch;
+}
+
+.list[aria-hidden="true"] {
+    visibility: hidden;
+    pointer-events: none;
+    height: 0;
+    overflow: hidden;
 }
 
 .list li {

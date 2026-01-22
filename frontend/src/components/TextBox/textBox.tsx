@@ -1,14 +1,18 @@
 "use client";
 
-import React, { useRef, useCallback } from "react";
+import { type ChangeEvent } from "react";
 import textBoxStyle from "@/components/TextBox/textBox.module.css";
+import { useControllableState } from "@/utils/utils";
 
 interface textBoxArgs {
+    defaultValue?: string;
+    value?: string;
+    onInput?: (event: ChangeEvent<HTMLInputElement>) => string;
+    onChange?: (newValue: string) => void;
     width?: string;
     height?: string;
     fontSize?: string;
     placeholder?: string;
-    handleInput?: (event: React.ChangeEvent<HTMLInputElement>) => string;
     readOnly?: boolean;
     isDisabled?: boolean;
     maxLength?: number;
@@ -27,37 +31,44 @@ interface textBoxArgs {
 }
 
 export function TextBox({
+    defaultValue = "",
+    value = undefined,
+    onInput = undefined,
+    onChange = undefined,
     width = "auto",
     height = "32px",
     fontSize = "1.15rem",
     placeholder = undefined,
-    handleInput = undefined,
     readOnly = false,
     isDisabled = false,
     maxLength = undefined,
     required = false,
     type = "text",
 }: textBoxArgs) {
-    const inputText = useRef<string | undefined>(undefined);
+    const [textState, setTextState] = useControllableState({
+        value,
+        defaultValue,
+        onChange,
+    });
 
-    const onInput = useCallback(
-        (event: React.ChangeEvent<HTMLInputElement>) => {
-            if (handleInput === undefined) {
-                inputText.current = (event.target as HTMLInputElement)?.value;
-            } else {
-                inputText.current = handleInput(event);
-                event.target.value = inputText.current;
-            }
-        },
-        []
-    );
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (event.defaultPrevented) return;
+
+        if (onInput === undefined) {
+            setTextState((event.target as HTMLInputElement)?.value);
+        } else {
+            const parsedContent = onInput(event);
+            event.target.value = parsedContent;
+            setTextState(parsedContent);
+        }
+    };
 
     return (
         <input
             type={type}
             className={textBoxStyle.textBox}
             style={{ width, height, fontSize }}
-            onInput={onInput}
+            onInput={handleChange}
             disabled={isDisabled}
             readOnly={readOnly}
             placeholder={placeholder}

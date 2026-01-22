@@ -21,11 +21,11 @@
     border-color: var(--accent);
 }
 
-.iconButton--active {
+.iconButton[aria-pressed="true"] {
     background-color: var(--tertiary);
 }
 
-.iconButton--active > div {
+.iconButton[aria-pressed="true"] > div {
     background-color: var(--tertiary);
     color: var(--accent);
     border-color: var(--accent);

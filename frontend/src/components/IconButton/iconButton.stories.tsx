@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import iconButton from "./iconButton";
+import IconButton from "./iconButton";
 import {
     faHouse,
     faTags,
@@ -17,10 +17,12 @@ import {
     faEye,
     faX,
 } from "@fortawesome/free-solid-svg-icons";
+import type { MouseEvent } from "react";
+import { useArgs } from "storybook/preview-api";
 
-const meta: Meta<typeof iconButton> = {
+const meta: Meta<typeof IconButton> = {
     title: "Components/IconButton",
-    component: iconButton,
+    component: IconButton,
 };
 
 export default meta;
@@ -38,6 +40,45 @@ export const HomeButton: Story = {
         iconHeightScale: 1,
         hasNotifications: false,
         unreadNotifications: 0,
+    },
+};
+
+export const ControlledHomeButton: Story = {
+    args: {
+        ariaLabel: "Home button",
+        btnIcon: faHouse,
+        width: "50px",
+        height: "50px",
+        iconSize: "25px",
+        iconWidthScale: 1,
+        iconHeightScale: 1,
+        hasNotifications: false,
+        unreadNotifications: 0,
+        isActive: false,
+    },
+    render: (args) => {
+        const [, setArgs] = useArgs();
+        const setIsActive = (isActive: boolean) => setArgs({ isActive });
+
+        const clickHandler = (event: MouseEvent<HTMLButtonElement>) => {
+            event.preventDefault();
+
+            const buttonElement = event.currentTarget as HTMLButtonElement;
+
+            alert(
+                `Button is pressed? ${buttonElement.getAttribute("aria-pressed")}`
+            );
+
+            setArgs({ isActive: !args.isActive });
+        };
+
+        return (
+            <IconButton
+                {...args}
+                onActiveChange={setIsActive}
+                onClick={clickHandler}
+            />
+        );
     },
 };
 

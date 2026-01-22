@@ -1,5 +1,4 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { fn } from "storybook/test";
 import Button from "./button.tsx";
 
 const meta: Meta<typeof Button> = {
@@ -17,7 +16,6 @@ export const SaveButton: Story = {
         padding: 0.5,
         borderRadius: 0,
         fontSize: 1.5,
-        onClick: fn(),
     },
 };
 

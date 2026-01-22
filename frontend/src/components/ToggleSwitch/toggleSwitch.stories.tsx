@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import { useArgs } from "storybook/preview-api";
 import ToggleSwitch from "./toggleSwitch";
-import { useState } from "react";
 
 const meta: Meta<typeof ToggleSwitch> = {
     title: "Components/ToggleSwitch",
@@ -11,30 +11,32 @@ export default meta;
 
 type Story = StoryObj<typeof meta>;
 
-export const Primary: Story = {
+export const Uncontrolled: Story = {
     args: {
         width: "32px",
         height: "18px",
         isDisabled: false,
-        defaultChecked: false,
+        isRequired: false,
     },
 };
 
 export const Controlled: Story = {
-    render: () => {
-        const [isChecked, setIsChecked] = useState<boolean>(false);
+    args: {
+        width: "32px",
+        height: "18px",
+        isDisabled: false,
+        isChecked: false,
+        isRequired: false,
+    },
+    render: (args) => {
+        const [, setArgs] = useArgs();
+        const setIsChecked = (isChecked: boolean) => setArgs({ isChecked });
 
         return (
             <ToggleSwitch
-                isChecked={isChecked}
-                onToggle={setIsChecked}
+                {...args}
+                onToggleChange={setIsChecked}
             />
         );
-    },
-};
-
-export const Uncontrolled: Story = {
-    render: () => {
-        return <ToggleSwitch defaultChecked={false} />;
     },
 };

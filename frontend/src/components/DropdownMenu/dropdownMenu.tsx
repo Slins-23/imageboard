@@ -300,9 +300,11 @@ export function DropdownMenu({
                 id={dropdownId}
                 ref={listRef}
                 className={
-                    `${dropdownStyle.list}` +
-                    (isOpen ? "" : " " + dropdownStyle.hidden)
+                    `${dropdownStyle.list}` //+
+                    // (isOpen ? "" : " " + dropdownStyle.hidden)
                 }
+                // { isOpen && { "aria-hidden"="true" } }
+                aria-hidden={!isOpen}
                 role="listbox"
                 style={responsive ? {} : { width, maxWidth: width }}
             >

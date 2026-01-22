@@ -8,6 +8,11 @@
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    pointer-events: none;
+    user-select: none;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 }
 
 .interest-tag {
