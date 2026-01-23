@@ -58,7 +58,7 @@ export function TextBox({
             setTextState((event.target as HTMLInputElement)?.value);
         } else {
             const parsedContent = onInput(event);
-            event.target.value = parsedContent;
+            // event.target.value = parsedContent;
             setTextState(parsedContent);
         }
     };
@@ -68,12 +68,13 @@ export function TextBox({
             type={type}
             className={textBoxStyle.textBox}
             style={{ width, height, fontSize }}
-            onInput={handleChange}
+            onChange={handleChange}
             disabled={isDisabled}
             readOnly={readOnly}
             placeholder={placeholder}
             maxLength={maxLength}
             required={required}
+            value={textState}
         />
     );
 }

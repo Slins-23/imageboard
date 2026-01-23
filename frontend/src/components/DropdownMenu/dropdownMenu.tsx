@@ -8,14 +8,30 @@ import {
     useLayoutEffect,
     useId,
     useCallback,
+    type MouseEvent,
+    type KeyboardEvent as ReactKeyboardEvent,
 } from "react";
+import { useControllableState } from "@/utils/utils";
 
 interface DropdownEntry {
     value: string;
     callback?: () => void;
 }
 
-type DropdownEntries = Array<DropdownEntry>;
+type DropdownEntries = Array<Readonly<DropdownEntry>>;
+
+interface DropdownMenuArgs {
+    dropdownEntries: DropdownEntries;
+    selectedIdx?: number;
+    defaultSelectedIdx?: number;
+    onSelected?: (
+        event: MouseEvent<HTMLLIElement> | ReactKeyboardEvent<HTMLLIElement>
+    ) => void;
+    onSelectedChange?: (selectedIdx: number) => void;
+    responsive?: boolean;
+    fontSize?: string;
+    width?: string;
+}
 
 export function DropdownMenu({
     dropdownEntries = [
@@ -26,22 +42,17 @@ export function DropdownMenu({
             callback: () => console.log("Three clicked"),
         },
     ],
+    selectedIdx = undefined,
+    defaultSelectedIdx = 0,
+    onSelected = undefined,
+    onSelectedChange = undefined,
     responsive = true,
     fontSize = "1rem",
     width = "300px",
-}: {
-    dropdownEntries: DropdownEntries;
-    responsive: boolean;
-    fontSize?: string;
-    width?: string;
-}) {
+}: DropdownMenuArgs) {
     const dropdownId = useId();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
-    const [selectedValue, setValue] =
-        dropdownEntries.length > 0
-            ? useState<string>(dropdownEntries[0].value)
-            : useState<string>("");
 
     const buttonRef = useRef<HTMLButtonElement | null>(null);
 
@@ -49,8 +60,19 @@ export function DropdownMenu({
     const listRef = useRef<HTMLUListElement | null>(null);
     const itemRefs = useRef<(HTMLLIElement | null)[]>([]);
 
-    const selectedItemIdx = useRef<number>(0);
-    const focusedItemIdx = useRef<number>(0);
+    const [internalSelectedIdx, setInternalSelectedIdx] = useControllableState({
+        value: selectedIdx,
+        defaultValue: defaultSelectedIdx,
+        onChange: onSelectedChange,
+    });
+
+    const focusedItemIdx = useRef<number>(
+        selectedIdx === undefined ||
+            selectedIdx < 0 ||
+            selectedIdx > dropdownEntries.length - 1
+            ? defaultSelectedIdx
+            : selectedIdx
+    );
 
     const menuWidth = useRef<number | undefined>(undefined);
     const maxWidth = useRef<number | undefined>(undefined);
@@ -200,6 +222,9 @@ export function DropdownMenu({
     useEffect(() => {
         if (!isOpen) return undefined;
 
+        // itemRefs.current[internalSelectedIdx as number]?.focus();
+        focusedItemIdx.current = internalSelectedIdx as number;
+
         function closeDropdown(event: PointerEvent) {
             if (!rootNode.current?.contains(event.target as Node))
                 setIsOpen(false);
@@ -237,15 +262,7 @@ export function DropdownMenu({
                 }
                 case "Enter":
                 case "Space": {
-                    if (selectedItemIdx.current !== focusedItemIdx.current) {
-                        selectedItemIdx.current = focusedItemIdx.current;
-
-                        setValue(
-                            dropdownEntries[selectedItemIdx.current].value
-                        );
-                    }
-
-                    setIsOpen(!isOpen);
+                    itemRefs.current[focusedItemIdx.current]?.click();
                     break;
                 }
                 default: {
@@ -262,6 +279,24 @@ export function DropdownMenu({
             document.removeEventListener("keydown", traverseList);
         };
     }, [isOpen]);
+
+    const handleClick = (
+        event: MouseEvent<HTMLLIElement> | ReactKeyboardEvent<HTMLLIElement>,
+        entry: DropdownEntry,
+        idx: number
+    ) => {
+        onSelected?.(event);
+
+        if (event.defaultPrevented) return;
+
+        entry.callback?.();
+
+        setInternalSelectedIdx(idx);
+        focusedItemIdx.current = idx;
+
+        if (event.type === "keydown") setIsOpen(!isOpen);
+        else setIsOpen(false);
+    };
 
     return (
         <div
@@ -294,7 +329,7 @@ export function DropdownMenu({
                 aria-expanded={isOpen}
                 aria-controls={dropdownId}
             >
-                {selectedValue}
+                {dropdownEntries[internalSelectedIdx as number].value}
             </button>
             <ul
                 id={dropdownId}
@@ -308,33 +343,30 @@ export function DropdownMenu({
                 role="listbox"
                 style={responsive ? {} : { width, maxWidth: width }}
             >
-                {dropdownEntries.map((entry: DropdownEntry, idx: number) => {
-                    const value: string = entry.value;
-                    const callback: (() => void) | undefined = entry.callback;
-
-                    return (
-                        // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-                        <li
-                            // Avoiding using React references directly and doing it manually instead as it gets reset every window resize
-                            // ref={(element) => setItemRef(element, idx)}
-                            key={idx}
-                            role="option"
-                            aria-selected={selectedItemIdx.current === idx}
-                            value={value}
-                            tabIndex={0}
-                            onClick={() => {
-                                if (callback !== undefined) callback();
-                                selectedItemIdx.current = idx;
-                                focusedItemIdx.current = idx;
-                                setValue(value);
-                                setIsOpen(false);
-                            }}
-                            style={responsive ? {} : { width, maxWidth: width }}
-                        >
-                            {value}
-                        </li>
-                    );
-                })}
+                {dropdownEntries.map(
+                    (entry: Readonly<DropdownEntry>, idx: number) => {
+                        return (
+                            // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                            <li
+                                // Avoiding using React references directly and doing it manually instead as it gets reset every window resize
+                                // ref={(element) => setItemRef(element, idx)}
+                                key={idx}
+                                role="option"
+                                aria-selected={internalSelectedIdx === idx}
+                                value={entry.value}
+                                tabIndex={0}
+                                onClick={(event: MouseEvent<HTMLLIElement>) =>
+                                    handleClick(event, entry, idx)
+                                }
+                                style={
+                                    responsive ? {} : { width, maxWidth: width }
+                                }
+                            >
+                                {entry.value}
+                            </li>
+                        );
+                    }
+                )}
             </ul>
         </div>
     );

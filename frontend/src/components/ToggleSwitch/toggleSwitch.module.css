@@ -8,7 +8,7 @@
     border-radius: calc((var(--switch-height) / 2));
     border-color: var(--tertiary);
     cursor: pointer;
-    transition: 0.2s;
+    transition: background-color 0.2s;
     box-sizing: border-box;
 }
 
@@ -22,7 +22,7 @@
     height: calc(var(--switch-height) - calc(2 * 0.1 * var(--switch-height)));
     background-color: var(--accent);
     border-radius: 50%;
-    transition: 0.2s;
+    transition: translate 0.2s;
     box-sizing: content-box;
     padding: 1px;
     margin-top: -1px;

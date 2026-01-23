@@ -6,18 +6,18 @@ import { useState, useRef, useCallback, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
 interface NavigationItem {
-    text: Readonly<string>;
-    route: Readonly<string>;
+    text: string;
+    route: string;
 }
 
-export type NavigationItems = Array<NavigationItem>;
+export type NavigationItems = Array<Readonly<NavigationItem>>;
 
 export default function GradientNavbar({
     title,
     items,
 }: {
-    title: Readonly<string>;
-    items: Readonly<NavigationItems>;
+    title: string;
+    items: NavigationItems;
 }) {
     const slug = usePathname();
     // const currentRouteIdx = items.findIndex((item) => item.route === slug);
@@ -68,6 +68,7 @@ export default function GradientNavbar({
                         ref={(element) => setItemRef(element, idx)}
                         key={idx}
                         role={"option"}
+                        data-text={item.text}
                         tabIndex={0}
                         aria-selected={idx === currentRouteIdx}
                         onClick={(event) => {

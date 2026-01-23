@@ -1,27 +1,28 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { TextBox } from "@/components/TextBox/textBox";
-import React from "react";
+import TextArea from "@/components/TextArea/textArea";
 import { useArgs } from "storybook/preview-api";
 
-const meta: Meta<typeof TextBox> = {
-    title: "Components/TextBox",
-    component: TextBox,
+const meta: Meta<typeof TextArea> = {
+    title: "Components/TextArea",
+    component: TextArea,
 };
 
 export default meta;
 
 export const Uncontrolled: StoryObj<typeof meta> = {
     args: {
-        width: "auto",
-        height: "32px",
+        width: "310px",
+        height: "130px",
         fontSize: "1.15rem",
         placeholder: undefined,
         readOnly: false,
         isDisabled: false,
-        maxLength: undefined,
+        maxLength: 255,
         required: false,
-        type: "text",
-        onInput: (event: React.ChangeEvent<HTMLInputElement>) => {
+        resize: "none",
+        scrollable: true,
+        responsive: true,
+        onInput: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const initialValue: string = event.target.value;
             const sanitizedValue: string = initialValue
                 .replaceAll("a", "1")
@@ -37,17 +38,19 @@ export const Uncontrolled: StoryObj<typeof meta> = {
 
 export const Controlled: StoryObj<typeof meta> = {
     args: {
-        value: "This is controlled",
-        width: "auto",
-        height: "32px",
+        value: "Hello... Starting value",
+        width: "310px",
+        height: "130px",
         fontSize: "1.15rem",
         placeholder: undefined,
         readOnly: false,
         isDisabled: false,
-        maxLength: undefined,
+        maxLength: 255,
         required: false,
-        type: "text",
-        onInput: (event: React.ChangeEvent<HTMLInputElement>) => {
+        resize: "none",
+        scrollable: true,
+        responsive: false,
+        onInput: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
             const initialValue: string = event.target.value;
             const sanitizedValue: string = initialValue
                 .replaceAll("a", "1")
@@ -61,10 +64,10 @@ export const Controlled: StoryObj<typeof meta> = {
     },
     render: (args) => {
         const [, setArgs] = useArgs();
-        const setTextState = (textState: string) =>
-            setArgs({ value: textState });
+        const setTextState = (text: string) => setArgs({ value: text });
+
         return (
-            <TextBox
+            <TextArea
                 {...args}
                 onChange={setTextState}
             />

@@ -7,10 +7,12 @@ import { useControllableState } from "@/utils/utils";
 import type { MouseEvent } from "react";
 
 interface IconButtonArgs {
-    ariaLabel?: string;
-    btnIcon?: IconProp;
     isActive?: boolean;
     defaultActive?: boolean;
+    onActiveChange?: (isActive: boolean) => void;
+    onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
+    ariaLabel?: string;
+    btnIcon?: IconProp;
     width?: string;
     height?: string;
     iconSize?: string;
@@ -18,15 +20,13 @@ interface IconButtonArgs {
     iconHeightScale?: number;
     hasNotifications?: boolean;
     unreadNotifications?: number;
-    onActiveChange?: (isActive: boolean) => void;
-    onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default function IconButton({
-    btnIcon = faHouse,
-    ariaLabel = "Home button",
     isActive = undefined,
     defaultActive = false,
+    btnIcon = faHouse,
+    ariaLabel = "Home button",
     width = "50px",
     height = "50px",
     iconSize = "25px",
