@@ -15,8 +15,6 @@ export const Uncontrolled: Story = {
     args: {
         width: "32px",
         height: "18px",
-        isDisabled: false,
-        isRequired: false,
     },
 };
 
@@ -24,9 +22,8 @@ export const Controlled: Story = {
     args: {
         width: "32px",
         height: "18px",
-        isDisabled: false,
         isChecked: false,
-        isRequired: false,
+        "aria-disabled": true,
     },
     render: (args) => {
         const [, setArgs] = useArgs();
@@ -35,7 +32,11 @@ export const Controlled: Story = {
         return (
             <ToggleSwitch
                 {...args}
-                onToggleChange={setIsChecked}
+                onCheckedChange={setIsChecked}
+                onClick={() => alert(`Is checked (click)? ${args.isChecked}`)}
+                onKeyDown={() =>
+                    alert(`Is checked (keydown)? ${args.isChecked}`)
+                }
             />
         );
     },

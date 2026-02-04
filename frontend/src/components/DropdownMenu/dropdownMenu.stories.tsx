@@ -22,6 +22,9 @@ export const Uncontrolled: StoryObj<typeof meta> = {
         responsive: true,
         fontSize: "1rem",
         width: "300px",
+        buttonProps: {
+            disabled: true,
+        },
     },
 };
 

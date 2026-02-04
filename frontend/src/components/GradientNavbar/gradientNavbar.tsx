@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import gradientNavbarStyle from "./gradientNavbar.module.css";
-import { useState, useRef, useCallback, useEffect } from "react";
+import {
+    useState,
+    useRef,
+    useCallback,
+    useEffect,
+    type HTMLAttributes,
+    type LiHTMLAttributes,
+} from "react";
 import { usePathname } from "next/navigation";
 
 interface NavigationItem {
@@ -15,9 +22,15 @@ export type NavigationItems = Array<Readonly<NavigationItem>>;
 export default function GradientNavbar({
     title,
     items,
+    navProps,
+    listProps,
+    itemProps,
 }: {
     title: string;
     items: NavigationItems;
+    navProps?: HTMLAttributes<HTMLElement>;
+    listProps?: HTMLAttributes<HTMLUListElement>;
+    itemProps?: LiHTMLAttributes<HTMLLIElement>;
 }) {
     const slug = usePathname();
     // const currentRouteIdx = items.findIndex((item) => item.route === slug);
@@ -56,15 +69,22 @@ export default function GradientNavbar({
     );
 
     return (
-        <nav className={`${gradientNavbarStyle.navbar}`}>
+        <nav
+            {...navProps}
+            className={`${gradientNavbarStyle.navbar}`}
+        >
             <header>
                 <h1 style={{ color: "var(--tertiary)", fontWeight: "500" }}>
                     {title}
                 </h1>
             </header>
-            <ul className={`${gradientNavbarStyle.list}`}>
+            <ul
+                {...listProps}
+                className={`${gradientNavbarStyle.list}`}
+            >
                 {items.map((item: NavigationItem, idx: number) => (
                     <li
+                        {...itemProps}
                         ref={(element) => setItemRef(element, idx)}
                         key={idx}
                         role={"option"}

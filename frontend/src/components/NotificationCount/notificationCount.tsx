@@ -1,6 +1,7 @@
 import notificationStyle from "./notification.module.css";
+import { type HTMLAttributes } from "react";
 
-interface notificationArgs {
+export interface NotificationArgs extends HTMLAttributes<HTMLDivElement> {
     count?: number;
     width?: string;
     height?: string;
@@ -12,9 +13,11 @@ export default function NotificationCount({
     width = "16px",
     height = "16px",
     fontSize = "8px",
-}: notificationArgs) {
+    ...args
+}: NotificationArgs) {
     return (
         <div
+            {...args}
             className={`${notificationStyle.notificationCount}`}
             style={{
                 width,

@@ -10,8 +10,11 @@ import {
     useCallback,
     type MouseEvent,
     type KeyboardEvent as ReactKeyboardEvent,
+    type HTMLAttributes,
+    type ButtonHTMLAttributes,
+    type LiHTMLAttributes,
 } from "react";
-import { useControllableState } from "@/utils/utils";
+import { isMouseEvent, useControllableState } from "@/utils/utils";
 
 interface DropdownEntry {
     value: string;
@@ -31,6 +34,10 @@ interface DropdownMenuArgs {
     responsive?: boolean;
     fontSize?: string;
     width?: string;
+    rootProps?: HTMLAttributes<HTMLDivElement>;
+    buttonProps?: ButtonHTMLAttributes<HTMLButtonElement>;
+    listProps?: HTMLAttributes<HTMLUListElement>;
+    itemProps?: LiHTMLAttributes<HTMLLIElement>;
 }
 
 export function DropdownMenu({
@@ -49,6 +56,10 @@ export function DropdownMenu({
     responsive = true,
     fontSize = "1rem",
     width = "300px",
+    rootProps = undefined,
+    buttonProps = undefined,
+    listProps = undefined,
+    itemProps = undefined,
 }: DropdownMenuArgs) {
     const dropdownId = useId();
 
@@ -128,7 +139,7 @@ export function DropdownMenu({
         if (!responsive) return undefined;
 
         const listElement: HTMLUListElement | null = listRef.current;
-        if (!listElement) return undefined;
+        if (!listElement || !listRef.current) return undefined;
 
         let currentWindowWidth: number = 0;
         let currentWindowHeight: number = 0;
@@ -145,13 +156,22 @@ export function DropdownMenu({
         currentWindowWidth = window.innerWidth;
         currentWindowHeight = window.innerHeight;
 
-        if (listRef.current) {
-            const width: number = listRef.current.getBoundingClientRect().width;
-            updateMenuWidth(width, width);
+        if (document.fonts?.ready) {
+            document.fonts.ready.then(() => {
+                const width: number | undefined =
+                    listRef.current?.getBoundingClientRect().width;
+                updateMenuWidth(width, width);
+            });
+        } else {
+            requestAnimationFrame(() => {
+                const width: number | undefined =
+                    listRef.current?.getBoundingClientRect().width;
+                updateMenuWidth(width, width);
+            });
         }
 
         const handleResize = (fromRecursion: boolean) => {
-            console.log("Resize function triggered (handleResize)");
+            // console.log("Resize function triggered (handleResize)");
 
             if (fromRecursion && !resizeQueued) {
                 return;
@@ -231,12 +251,11 @@ export function DropdownMenu({
         }
 
         function traverseList(event: KeyboardEvent) {
-            event.preventDefault();
-
             const itemCount: number = dropdownEntries.length;
 
             switch (event.code) {
                 case "ArrowUp": {
+                    event.preventDefault();
                     if (focusedItemIdx.current > 0) {
                         focusedItemIdx.current--;
 
@@ -249,6 +268,7 @@ export function DropdownMenu({
                     break;
                 }
                 case "ArrowDown": {
+                    event.preventDefault();
                     if (focusedItemIdx.current < itemCount - 1) {
                         focusedItemIdx.current++;
 
@@ -262,6 +282,7 @@ export function DropdownMenu({
                 }
                 case "Enter":
                 case "Space": {
+                    event.preventDefault();
                     itemRefs.current[focusedItemIdx.current]?.click();
                     break;
                 }
@@ -280,38 +301,69 @@ export function DropdownMenu({
         };
     }, [isOpen]);
 
-    const handleClick = (
+    const handleItemClick = (
         event: MouseEvent<HTMLLIElement> | ReactKeyboardEvent<HTMLLIElement>,
         entry: DropdownEntry,
         idx: number
     ) => {
-        onSelected?.(event);
-
         if (event.defaultPrevented) return;
-
-        entry.callback?.();
 
         setInternalSelectedIdx(idx);
         focusedItemIdx.current = idx;
 
-        if (event.type === "keydown") setIsOpen(!isOpen);
+        if (event.type === "keydown") setIsOpen((prev) => !prev);
         else setIsOpen(false);
+
+        onSelected?.(event);
+
+        entry.callback?.();
+
+        if (isMouseEvent(event)) {
+            itemProps?.onClick?.(event);
+        } else {
+            itemProps?.onKeyDown?.(event);
+        }
+    };
+
+    const handleButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
+        if (
+            (buttonProps !== undefined && buttonProps.disabled) ||
+            event.defaultPrevented
+        )
+            return;
+
+        setIsOpen((prev) => !prev);
+
+        buttonProps?.onClick?.(event);
+    };
+    const handleButtonKeyDown = (
+        event: ReactKeyboardEvent<HTMLButtonElement>
+    ) => {
+        if (
+            (buttonProps !== undefined && buttonProps.disabled) ||
+            event.defaultPrevented
+        )
+            return;
+
+        buttonProps?.onKeyDown?.(event);
     };
 
     return (
         <div
+            {...rootProps}
             ref={rootNode}
             className={dropdownStyle.wrapper}
             style={{ fontSize }}
         >
             <button
+                {...buttonProps}
                 ref={buttonRef}
-                onClick={() => {
-                    setIsOpen(!isOpen);
-                }}
+                onClick={handleButtonClick}
+                onKeyDown={handleButtonKeyDown}
+                data-isopen={isOpen}
                 className={dropdownStyle.select}
-                style={
-                    responsive
+                style={{
+                    ...(responsive
                         ? {
                               borderBottomColor: isOpen
                                   ? "transparent"
@@ -323,8 +375,8 @@ export function DropdownMenu({
                                   : "var(--tertiary)",
                               width,
                               maxWidth: width,
-                          }
-                }
+                          }),
+                }}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
                 aria-controls={dropdownId}
@@ -332,6 +384,7 @@ export function DropdownMenu({
                 {dropdownEntries[internalSelectedIdx as number].value}
             </button>
             <ul
+                {...listProps}
                 id={dropdownId}
                 ref={listRef}
                 className={
@@ -348,6 +401,7 @@ export function DropdownMenu({
                         return (
                             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                             <li
+                                {...itemProps}
                                 // Avoiding using React references directly and doing it manually instead as it gets reset every window resize
                                 // ref={(element) => setItemRef(element, idx)}
                                 key={idx}
@@ -356,7 +410,7 @@ export function DropdownMenu({
                                 value={entry.value}
                                 tabIndex={0}
                                 onClick={(event: MouseEvent<HTMLLIElement>) =>
-                                    handleClick(event, entry, idx)
+                                    handleItemClick(event, entry, idx)
                                 }
                                 style={
                                     responsive ? {} : { width, maxWidth: width }

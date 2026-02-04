@@ -16,22 +16,19 @@ export const Uncontrolled: StoryObj<typeof meta> = {
         fontSize: "1.15rem",
         placeholder: undefined,
         readOnly: false,
-        isDisabled: false,
+        disabled: false,
         maxLength: 255,
         required: false,
         resize: "none",
         scrollable: true,
         responsive: true,
-        onInput: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-            const initialValue: string = event.target.value;
-            const sanitizedValue: string = initialValue
+        transformText: (text: string) => {
+            return text
                 .replaceAll("a", "1")
                 .replaceAll("e", "2")
                 .replaceAll("i", "3")
                 .replaceAll("o", "4")
                 .replaceAll("u", "5");
-
-            return sanitizedValue;
         },
     },
 };
@@ -44,22 +41,19 @@ export const Controlled: StoryObj<typeof meta> = {
         fontSize: "1.15rem",
         placeholder: undefined,
         readOnly: false,
-        isDisabled: false,
+        disabled: false,
         maxLength: 255,
         required: false,
         resize: "none",
         scrollable: true,
         responsive: false,
-        onInput: (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-            const initialValue: string = event.target.value;
-            const sanitizedValue: string = initialValue
+        transformText: (text: string) => {
+            return text
                 .replaceAll("a", "1")
                 .replaceAll("e", "2")
                 .replaceAll("i", "3")
                 .replaceAll("o", "4")
                 .replaceAll("u", "5");
-
-            return sanitizedValue;
         },
     },
     render: (args) => {
@@ -69,7 +63,7 @@ export const Controlled: StoryObj<typeof meta> = {
         return (
             <TextArea
                 {...args}
-                onChange={setTextState}
+                onTextChange={setTextState}
             />
         );
     },

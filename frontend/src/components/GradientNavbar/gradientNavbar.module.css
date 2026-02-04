@@ -36,7 +36,6 @@
 .navbar ul li::after {
     display: block;
     content: attr(data-text);
-    font-weight: 1000;
     height: 0;
     pointer-events: none;
     appearance: none;
@@ -49,8 +48,4 @@
 .navbar ul li:focus,
 .navbar ul li[aria-selected="true"] {
     color: var(--tertiary);
-}
-
-.navbar ul li[aria-selected="true"] {
-    font-weight: 1000;
 }

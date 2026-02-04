@@ -1,22 +1,17 @@
 "use client";
 
-import { type ChangeEvent } from "react";
+import { type ChangeEvent, type InputHTMLAttributes } from "react";
 import textBoxStyle from "@/components/TextBox/textBox.module.css";
 import { useControllableState } from "@/utils/utils";
 
-interface textBoxArgs {
+interface textBoxArgs extends InputHTMLAttributes<HTMLInputElement> {
     defaultValue?: string;
     value?: string;
-    onInput?: (event: ChangeEvent<HTMLInputElement>) => string;
-    onChange?: (newValue: string) => void;
+    transformText?: (value: string) => string;
+    onTextChange?: (value: string) => void;
     width?: string;
     height?: string;
     fontSize?: string;
-    placeholder?: string;
-    readOnly?: boolean;
-    isDisabled?: boolean;
-    maxLength?: number;
-    required?: boolean;
     type?:
         | "date"
         | "email"
@@ -33,48 +28,39 @@ interface textBoxArgs {
 export function TextBox({
     defaultValue = "",
     value = undefined,
-    onInput = undefined,
-    onChange = undefined,
+    transformText = undefined,
+    onTextChange = undefined,
     width = "auto",
     height = "32px",
     fontSize = "1.15rem",
-    placeholder = undefined,
-    readOnly = false,
-    isDisabled = false,
-    maxLength = undefined,
-    required = false,
     type = "text",
+    ...args
 }: textBoxArgs) {
-    const [textState, setTextState] = useControllableState({
+    const [textState, setTextState] = useControllableState<string>({
         value,
         defaultValue,
-        onChange,
+        onChange: onTextChange,
     });
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (event.defaultPrevented) return;
+        if (args.disabled || event.defaultPrevented) return;
 
-        if (onInput === undefined) {
-            setTextState((event.target as HTMLInputElement)?.value);
-        } else {
-            const parsedContent = onInput(event);
-            // event.target.value = parsedContent;
-            setTextState(parsedContent);
+        let currentText = event.target?.value;
+        if (transformText !== undefined) {
+            currentText = transformText?.(currentText);
         }
+
+        setTextState(currentText);
     };
 
     return (
         <input
+            {...args}
             type={type}
             className={textBoxStyle.textBox}
             style={{ width, height, fontSize }}
+            value={textState ?? ""}
             onChange={handleChange}
-            disabled={isDisabled}
-            readOnly={readOnly}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            required={required}
-            value={textState}
         />
     );
 }

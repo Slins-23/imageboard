@@ -1,22 +1,23 @@
 "use client";
 
-import { useRef, useCallback, useLayoutEffect, type ChangeEvent } from "react";
+import {
+    useRef,
+    useCallback,
+    useLayoutEffect,
+    type ChangeEvent,
+    type TextareaHTMLAttributes,
+} from "react";
 import textAreaStyle from "./textArea.module.css";
 import { useControllableState } from "@/utils/utils";
 
-interface textAreaArgs {
+interface textAreaArgs extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     defaultValue?: string;
     value?: string;
-    onInput?: (event: ChangeEvent<HTMLTextAreaElement>) => string;
-    onChange?: (newValue: string) => void;
+    transformText?: (value: string) => string;
+    onTextChange?: (value: string) => void;
     width?: string;
     height?: string;
     fontSize?: string;
-    placeholder?: string;
-    readOnly?: boolean;
-    isDisabled?: boolean;
-    maxLength?: number;
-    required?: boolean;
     resize?: "none" | "both" | "vertical" | "horizontal";
     scrollable?: boolean;
     responsive?: boolean;
@@ -25,19 +26,15 @@ interface textAreaArgs {
 export default function TextArea({
     defaultValue = "",
     value = undefined,
-    onInput = undefined,
-    onChange = undefined,
+    transformText = undefined,
+    onTextChange = undefined,
     width = "310px",
     height = "130px",
     fontSize = "1.15rem",
-    placeholder = undefined,
-    readOnly = false,
-    isDisabled = false,
-    maxLength = undefined,
-    required = false,
     resize = "none",
     scrollable = true,
     responsive = false,
+    ...args
 }: textAreaArgs) {
     const textAreaElementRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -47,19 +44,19 @@ export default function TextArea({
     const [textState, setTextState] = useControllableState({
         value,
         defaultValue,
-        onChange,
+        onChange: onTextChange,
     });
 
     const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
-        if (event.defaultPrevented) return;
+        if (args.disabled || event.defaultPrevented) return;
 
-        if (onInput === undefined) {
-            setTextState((event.target as HTMLTextAreaElement)?.value);
-        } else {
-            const parsedContent = onInput(event);
-            // event.target.value = parsedContent;
-            setTextState(parsedContent);
+        let currentText = event.target?.value;
+
+        if (transformText !== undefined) {
+            currentText = transformText?.(currentText);
         }
+
+        setTextState(currentText);
     };
 
     const updateDimensions = useCallback((width?: number, height?: number) => {
@@ -191,6 +188,7 @@ export default function TextArea({
 
     return (
         <textarea
+            {...args}
             ref={textAreaElementRef}
             className={textAreaStyle.textArea}
             style={{
@@ -201,11 +199,6 @@ export default function TextArea({
                 overflow: scrollable ? "auto" : "hidden",
             }}
             onChange={handleChange}
-            disabled={isDisabled}
-            readOnly={readOnly}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            required={required}
             value={textState}
         />
     );

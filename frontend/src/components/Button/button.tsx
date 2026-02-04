@@ -1,23 +1,26 @@
 import buttonStyle from "./button.module.css";
-import type { MouseEvent } from "react";
+import { useRef } from "react";
+import { type ButtonHTMLAttributes } from "react";
 
-interface ButtonArgs {
-    label: string;
+interface ButtonArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
     padding?: number;
     borderRadius?: number;
     fontSize?: number;
-    onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
 }
 
 export default function button({
-    label = "Save changes",
+    "aria-label": ariaLabel = "Save changes",
     padding = 0.5,
     borderRadius = 0,
     fontSize = 1.5,
-    ...properties
+    ...args
 }: ButtonArgs) {
+    const buttonRef = useRef<HTMLButtonElement>(null);
+
     return (
         <button
+            {...args}
+            ref={buttonRef}
             type={"button"}
             className={`${buttonStyle.button}`}
             style={{
@@ -25,9 +28,9 @@ export default function button({
                 borderRadius: `${borderRadius}px`,
                 fontSize: `${fontSize}rem`,
             }}
-            {...properties}
+            aria-label={ariaLabel}
         >
-            {label}
+            {ariaLabel}
         </button>
     );
 }

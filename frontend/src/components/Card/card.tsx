@@ -1,6 +1,7 @@
 import cardStyle from "./card.module.css";
+import { type HTMLAttributes } from "react";
 
-interface CardParams {
+interface CardParams extends HTMLAttributes<HTMLDivElement> {
     interestTag?: string;
     interestValue?: number;
     width?: string;

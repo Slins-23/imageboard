@@ -1,7 +1,6 @@
 .wrapper {
     position: relative;
     display: inline-block;
-    font-weight: 1000;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -20,7 +19,6 @@
     color: var(--tertiary);
     text-align: left;
     cursor: pointer;
-    font-weight: inherit;
     box-sizing: border-box;
     border-width: 1px;
     border-style: solid;
@@ -28,6 +26,14 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
+}
+
+.select:focus-visible {
+    outline-width: 1px;
+}
+
+.select:focus-visible[data-isopen="true"] {
+    outline: 0;
 }
 
 .select::after {
@@ -64,6 +70,12 @@
     min-width: 7ch;
 }
 
+/*
+.list:has(li:focus-visible) {
+    outline: 1px solid var(--accent);
+}
+*/
+
 .list[aria-hidden="true"] {
     visibility: hidden;
     pointer-events: none;
@@ -82,6 +94,7 @@
 .list li:hover,
 .list li:focus-visible,
 .list li:focus {
+    outline: none;
     background-color: var(--accent);
     color: var(--tertiary);
 }

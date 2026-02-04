@@ -32,9 +32,3 @@
 .switch[aria-checked="true"] .circle {
     translate: calc(var(--switch-width) - var(--switch-height));
 }
-
-.switch[aria-disabled="true"] {
-    pointer-events: none;
-    cursor: move;
-    filter: brightness(var(--disabled-brightness));
-}

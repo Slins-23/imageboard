@@ -3,13 +3,20 @@
 import checkboxStyle from "./checkbox.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useControllableState } from "@/utils/utils";
-import { useRef, type MouseEvent, type KeyboardEvent } from "react";
+import { useControllableState, isMouseEvent } from "@/utils/utils";
+import {
+    useRef,
+    type MouseEvent,
+    type KeyboardEvent,
+    type HTMLAttributes,
+} from "react";
 
-interface CheckboxArgs {
+interface CheckboxArgs extends HTMLAttributes<HTMLDivElement> {
     defaultChecked?: boolean;
     isChecked?: boolean;
-    onChecked?: (event?: MouseEvent<HTMLButtonElement>) => void;
+    onChecked?: (
+        event?: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>
+    ) => void;
     onCheckedChange?: (isChecked: boolean) => void;
     width: string;
     height: string;
@@ -28,6 +35,7 @@ export default function Checkbox({
     iconSize = "18px",
     iconWidthScale = 0.8,
     iconHeightScale = 1,
+    ...args
 }: CheckboxArgs) {
     const checkboxRef = useRef<HTMLDivElement>(null);
 
@@ -37,50 +45,58 @@ export default function Checkbox({
         onChange: onCheckedChange,
     });
 
-    const handleChange = (event: MouseEvent<HTMLDivElement>) => {
-        onChecked?.();
+    const handleChange = (
+        event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>
+    ) => {
+        if (args["aria-disabled"] || event.defaultPrevented) return;
 
-        if (event.defaultPrevented) return;
+        if (isMouseEvent(event)) {
+            setInternalIsChecked((prev) => !prev);
+            args.onClick?.(event);
+        } else {
+            switch (event.code) {
+                case "Space":
+                case "Enter": {
+                    setInternalIsChecked((prev) => !prev);
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
 
-        setInternalIsChecked(!internalIsChecked);
+            args.onKeyDown?.(event);
+        }
+
+        onChecked?.(event);
     };
 
     return (
-        <div>
-            <div
-                ref={checkboxRef}
-                role="checkbox"
-                tabIndex={0}
-                aria-checked={internalIsChecked}
-                className={`${checkboxStyle.checkbox}`}
+        <div
+            {...args}
+            ref={checkboxRef}
+            role="checkbox"
+            tabIndex={0}
+            aria-checked={internalIsChecked}
+            className={`${checkboxStyle.checkbox}`}
+            style={{
+                width,
+                height,
+            }}
+            onClick={handleChange}
+            onKeyDown={handleChange}
+        >
+            <FontAwesomeIcon
+                icon={faCheck}
+                className={checkboxStyle.iconStyle}
                 style={{
-                    width,
-                    height,
+                    fontSize: iconSize,
+                    scale: `${iconWidthScale} ${iconHeightScale}`,
+                    color: "var(--accent)",
+                    // visibility: internalIsChecked ? "visible" : "hidden",
+                    opacity: internalIsChecked ? "1" : "0",
                 }}
-                onClick={handleChange}
-                onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
-                    switch (event.code) {
-                        case "Space":
-                        case "Enter": {
-                            break;
-                        }
-                        default: {
-                            break;
-                        }
-                    }
-                }}
-            >
-                <FontAwesomeIcon
-                    icon={faCheck}
-                    className={checkboxStyle.iconStyle}
-                    style={{
-                        fontSize: iconSize,
-                        scale: `${iconWidthScale} ${iconHeightScale}`,
-                        color: "var(--accent)",
-                        visibility: internalIsChecked ? "visible" : "hidden",
-                    }}
-                />
-            </div>
+            />
         </div>
     );
 }

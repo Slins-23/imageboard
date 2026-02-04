@@ -6,6 +6,7 @@
     border-style: solid;
     border-color: var(--tertiary);
     padding: 0.1rem 0 0.1rem 0;
+    transition: 0.1s;
 }
 
 .checkbox[aria-checked="true"] {
@@ -13,8 +14,9 @@
 }
 
 .iconStyle {
-    visibility: hidden;
+    opacity: 0;
     color: var(--accent);
+    transition: 0.1s;
 }
 
 .checkbox[aria-checked="true"] .iconStyle {

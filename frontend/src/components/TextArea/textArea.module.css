@@ -17,7 +17,3 @@
     color: var(--accent);
     opacity: 0.25;
 }
-
-.textArea:disabled {
-    filter: brightness(var(--disabled-brightness));
-}
