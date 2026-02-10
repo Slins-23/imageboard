@@ -31,7 +31,7 @@ export function TextBox({
     transformText = undefined,
     onTextChange = undefined,
     width = "auto",
-    height = "32px",
+    height = "2rem",
     fontSize = "1.15rem",
     type = "text",
     ...args

@@ -49,3 +49,7 @@
 .navbar ul li[aria-selected="true"] {
     color: var(--tertiary);
 }
+
+.navbar ul li:focus-visible {
+    outline: 0;
+}

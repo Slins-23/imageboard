@@ -1,0 +1,19 @@
+.button {
+    appearance: none;
+    display: block;
+    border-radius: 50%;
+    background-color: var(--secondary);
+    outline-color: var(--tertiary);
+    outline-width: 1px;
+    outline-style: solid;
+}
+
+.button:checked {
+    background-color: var(--tertiary);
+}
+
+.button:focus-visible {
+    outline-color: var(--accent);
+    outline-width: 2px;
+    outline-style: solid;
+}

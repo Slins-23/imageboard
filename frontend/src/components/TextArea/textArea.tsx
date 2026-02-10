@@ -199,7 +199,7 @@ export default function TextArea({
                 overflow: scrollable ? "auto" : "hidden",
             }}
             onChange={handleChange}
-            value={textState}
+            value={textState ?? ""}
         />
     );
 }

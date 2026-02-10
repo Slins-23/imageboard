@@ -3,19 +3,19 @@
 import checkboxStyle from "./checkbox.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useControllableState, isMouseEvent } from "@/utils/utils";
+import { useControllableState } from "@/utils/utils";
 import {
     useRef,
     type MouseEvent,
     type KeyboardEvent,
-    type HTMLAttributes,
+    ButtonHTMLAttributes,
 } from "react";
 
-interface CheckboxArgs extends HTMLAttributes<HTMLDivElement> {
+interface CheckboxArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
     defaultChecked?: boolean;
     isChecked?: boolean;
     onChecked?: (
-        event?: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>
+        event?: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
     ) => void;
     onCheckedChange?: (isChecked: boolean) => void;
     width: string;
@@ -32,12 +32,12 @@ export default function Checkbox({
     onCheckedChange = undefined,
     width = "auto",
     height = "auto",
-    iconSize = "18px",
+    iconSize = "1.125rem",
     iconWidthScale = 0.8,
     iconHeightScale = 1,
     ...args
 }: CheckboxArgs) {
-    const checkboxRef = useRef<HTMLDivElement>(null);
+    const checkboxRef = useRef<HTMLButtonElement>(null);
 
     const [internalIsChecked, setInternalIsChecked] = useControllableState({
         defaultValue: defaultChecked,
@@ -45,46 +45,49 @@ export default function Checkbox({
         onChange: onCheckedChange,
     });
 
-    const handleChange = (
-        event: MouseEvent<HTMLDivElement> | KeyboardEvent<HTMLDivElement>
-    ) => {
-        if (args["aria-disabled"] || event.defaultPrevented) return;
+    const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+        if (args.disabled || event.defaultPrevented) return;
 
-        if (isMouseEvent(event)) {
-            setInternalIsChecked((prev) => !prev);
-            args.onClick?.(event);
-        } else {
-            switch (event.code) {
-                case "Space":
-                case "Enter": {
-                    setInternalIsChecked((prev) => !prev);
-                    break;
-                }
-                default: {
-                    break;
-                }
+        setInternalIsChecked((prev) => !prev);
+
+        onChecked?.(event);
+
+        args.onClick?.(event);
+    };
+
+    const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+        if (args.disabled || event.defaultPrevented) return;
+
+        switch (event.code) {
+            case "Space":
+            case "Enter": {
+                event.preventDefault();
+                setInternalIsChecked((prev) => !prev);
+                break;
             }
-
-            args.onKeyDown?.(event);
+            default: {
+                break;
+            }
         }
 
         onChecked?.(event);
+
+        args.onKeyDown?.(event);
     };
 
     return (
-        <div
+        <button
             {...args}
             ref={checkboxRef}
             role="checkbox"
-            tabIndex={0}
             aria-checked={internalIsChecked}
             className={`${checkboxStyle.checkbox}`}
             style={{
                 width,
                 height,
             }}
-            onClick={handleChange}
-            onKeyDown={handleChange}
+            onClick={handleClick}
+            onKeyDown={handleKeyDown}
         >
             <FontAwesomeIcon
                 icon={faCheck}
@@ -97,6 +100,6 @@ export default function Checkbox({
                     opacity: internalIsChecked ? "1" : "0",
                 }}
             />
-        </div>
+        </button>
     );
 }

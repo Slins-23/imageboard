@@ -17,11 +17,20 @@ export const SaveButton: Story = {
         borderRadius: 0,
         fontSize: 1.5,
         onClick: () => alert("Changes saved!"),
+        disabled: false,
     },
 };
 
 export const UploadButton: Story = {
     args: {
         "aria-label": "Upload",
+        disabled: false,
+    },
+};
+
+export const Reset: Story = {
+    args: {
+        "aria-label": "Reset",
+        disabled: false,
     },
 };

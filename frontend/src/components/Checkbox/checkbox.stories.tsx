@@ -11,22 +11,26 @@ export default meta;
 
 export const Uncontrolled: StoryObj<typeof meta> = {
     args: {
+        "aria-label": "Uncontrolled",
         width: "auto",
         height: "auto",
         iconSize: "18px",
         iconWidthScale: 0.8,
         iconHeightScale: 1,
+        disabled: false,
     },
 };
 
 export const Controlled: StoryObj<typeof meta> = {
     args: {
+        "aria-label": "Controlled",
         isChecked: false,
         width: "auto",
         height: "auto",
         iconSize: "18px",
         iconWidthScale: 0.8,
         iconHeightScale: 1,
+        disabled: false,
     },
     render: (args) => {
         const [, setArgs] = useArgs();

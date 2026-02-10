@@ -10,9 +10,9 @@ export interface NotificationArgs extends HTMLAttributes<HTMLDivElement> {
 
 export default function NotificationCount({
     count = 0,
-    width = "16px",
-    height = "16px",
-    fontSize = "8px",
+    width = "1rem",
+    height = "1rem",
+    fontSize = "0.5rem",
     ...args
 }: NotificationArgs) {
     return (

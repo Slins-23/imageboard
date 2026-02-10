@@ -13,17 +13,20 @@ type Story = StoryObj<typeof meta>;
 
 export const Uncontrolled: Story = {
     args: {
+        "aria-label": "Uncontrolled",
         width: "32px",
         height: "18px",
+        disabled: false,
     },
 };
 
 export const Controlled: Story = {
     args: {
+        "aria-label": "Controlled",
         width: "32px",
         height: "18px",
         isChecked: false,
-        "aria-disabled": true,
+        disabled: true,
     },
     render: (args) => {
         const [, setArgs] = useArgs();

@@ -1,0 +1,50 @@
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 1.875rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1.875rem;
+    padding: 0.8125rem 0.625rem;
+    background-color: var(--secondary);
+    border-color: var(--tertiary);
+    border-radius: 10px;
+    border-width: 1px;
+    border-style: solid;
+    font-size: 2rem;
+    position: relative;
+    width: 100%;
+    margin-right: 4.5%;
+    min-width: 0;
+}
+
+.text {
+    color: var(--accent);
+    white-space: nowrap;
+    overflow-x: auto;
+}
+
+.button {
+    background-color: var(--primary);
+    color: var(--tertiary);
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: var(--tertiary);
+    border-style: solid;
+    font-size: 1.5rem;
+    padding: 0.425rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: 0.2s background-color;
+    flex-shrink: 0;
+}
+
+.button:hover,
+.button:focus-visible {
+    background-color: var(--accent);
+}

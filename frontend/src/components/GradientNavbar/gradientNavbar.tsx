@@ -80,14 +80,14 @@ export default function GradientNavbar({
             </header>
             <ul
                 {...listProps}
-                className={`${gradientNavbarStyle.list}`}
+                role="listbox"
             >
                 {items.map((item: NavigationItem, idx: number) => (
                     <li
                         {...itemProps}
+                        role="option"
                         ref={(element) => setItemRef(element, idx)}
                         key={idx}
-                        role={"option"}
                         data-text={item.text}
                         tabIndex={0}
                         aria-selected={idx === currentRouteIdx}
@@ -99,6 +99,7 @@ export default function GradientNavbar({
                             switch (event.code) {
                                 case "Enter":
                                 case "Space": {
+                                    event.preventDefault();
                                     linkRefs.current[idx]?.click();
                                     break;
                                 }

@@ -255,7 +255,6 @@ export function DropdownMenu({
 
             switch (event.code) {
                 case "ArrowUp": {
-                    event.preventDefault();
                     if (focusedItemIdx.current > 0) {
                         focusedItemIdx.current--;
 
@@ -268,7 +267,6 @@ export function DropdownMenu({
                     break;
                 }
                 case "ArrowDown": {
-                    event.preventDefault();
                     if (focusedItemIdx.current < itemCount - 1) {
                         focusedItemIdx.current++;
 
@@ -306,7 +304,7 @@ export function DropdownMenu({
         entry: DropdownEntry,
         idx: number
     ) => {
-        if (event.defaultPrevented) return;
+        if (buttonProps?.disabled || event.defaultPrevented) return;
 
         setInternalSelectedIdx(idx);
         focusedItemIdx.current = idx;
@@ -326,11 +324,7 @@ export function DropdownMenu({
     };
 
     const handleButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
-        if (
-            (buttonProps !== undefined && buttonProps.disabled) ||
-            event.defaultPrevented
-        )
-            return;
+        if (buttonProps?.disabled || event.defaultPrevented) return;
 
         setIsOpen((prev) => !prev);
 
@@ -339,11 +333,7 @@ export function DropdownMenu({
     const handleButtonKeyDown = (
         event: ReactKeyboardEvent<HTMLButtonElement>
     ) => {
-        if (
-            (buttonProps !== undefined && buttonProps.disabled) ||
-            event.defaultPrevented
-        )
-            return;
+        if (buttonProps?.disabled || event.defaultPrevented) return;
 
         buttonProps?.onKeyDown?.(event);
     };

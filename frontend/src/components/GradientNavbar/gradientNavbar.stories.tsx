@@ -20,5 +20,6 @@ export const Primary: StoryObj<typeof meta> = {
             { route: "/user/notifications", text: "Notifications" },
             { route: "/user/delete", text: "Delete" },
         ],
+        listProps: { "aria-label": "list" },
     },
 };

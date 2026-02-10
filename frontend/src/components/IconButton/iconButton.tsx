@@ -31,9 +31,9 @@ export default function IconButton({
     isActive = undefined,
     defaultActive = false,
     btnIcon = faHouse,
-    width = "50px",
-    height = "50px",
-    iconSize = "25px",
+    width = "3.125rem",
+    height = "3.125rem",
+    iconSize = "1.5625rem",
     iconWidthScale = 1,
     iconHeightScale = 1,
     hasNotifications = false,
@@ -48,7 +48,7 @@ export default function IconButton({
         });
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-        if (event.defaultPrevented) return;
+        if (props.buttonProps?.disabled || event.defaultPrevented) return;
 
         if (!internalIsActive) setInternalIsActive(true);
 

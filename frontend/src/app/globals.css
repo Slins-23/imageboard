@@ -52,8 +52,7 @@
 }
 
 ::selection {
-    /* background: var(--primary); */
-    background: red;
+    background: var(--primary);
 }
 
 ::-webkit-scrollbar-button {
