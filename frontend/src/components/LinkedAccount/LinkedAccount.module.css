@@ -1,6 +1,7 @@
 .wrapper {
     display: flex;
     flex-direction: row;
+    align-items: center;
     gap: 1.875rem;
 }
 
@@ -8,9 +9,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
     gap: 1.875rem;
-    padding: 0.8125rem 0.625rem;
+    padding: 0.8125rem 0.925rem;
     background-color: var(--secondary);
     border-color: var(--tertiary);
     border-radius: 10px;
@@ -38,10 +38,12 @@
     border-style: solid;
     font-size: 1.5rem;
     padding: 0.425rem 1rem;
-    text-align: center;
+    /* text-align: center; */
     cursor: pointer;
     transition: 0.2s background-color;
     flex-shrink: 0;
+    margin-left: auto;
+    width: 11ch;
 }
 
 .button:hover,

@@ -255,6 +255,7 @@ export function DropdownMenu({
 
             switch (event.code) {
                 case "ArrowUp": {
+                    event.preventDefault();
                     if (focusedItemIdx.current > 0) {
                         focusedItemIdx.current--;
 
@@ -267,6 +268,7 @@ export function DropdownMenu({
                     break;
                 }
                 case "ArrowDown": {
+                    event.preventDefault();
                     if (focusedItemIdx.current < itemCount - 1) {
                         focusedItemIdx.current++;
 
@@ -304,23 +306,26 @@ export function DropdownMenu({
         entry: DropdownEntry,
         idx: number
     ) => {
-        if (buttonProps?.disabled || event.defaultPrevented) return;
-
-        setInternalSelectedIdx(idx);
-        focusedItemIdx.current = idx;
-
-        if (event.type === "keydown") setIsOpen((prev) => !prev);
-        else setIsOpen(false);
-
-        onSelected?.(event);
-
-        entry.callback?.();
+        if (buttonProps?.disabled) return;
 
         if (isMouseEvent(event)) {
             itemProps?.onClick?.(event);
         } else {
             itemProps?.onKeyDown?.(event);
         }
+
+        if (event.defaultPrevented) return;
+
+        setInternalSelectedIdx(idx);
+
+        focusedItemIdx.current = idx;
+
+        if (event.type === "keydown") setIsOpen((prev) => !prev);
+        else setIsOpen(false);
+
+        entry.callback?.();
+
+        onSelected?.(event);
     };
 
     const handleButtonClick = (event: MouseEvent<HTMLButtonElement>) => {
@@ -333,24 +338,22 @@ export function DropdownMenu({
     const handleButtonKeyDown = (
         event: ReactKeyboardEvent<HTMLButtonElement>
     ) => {
-        if (buttonProps?.disabled || event.defaultPrevented) return;
+        if (buttonProps?.disabled) return;
 
         buttonProps?.onKeyDown?.(event);
+
+        // eslint-disable-next-line no-useless-return
+        if (event.defaultPrevented) return;
     };
 
     return (
         <div
-            {...rootProps}
-            ref={rootNode}
             className={dropdownStyle.wrapper}
             style={{ fontSize }}
+            {...rootProps}
+            ref={rootNode}
         >
             <button
-                {...buttonProps}
-                ref={buttonRef}
-                onClick={handleButtonClick}
-                onKeyDown={handleButtonKeyDown}
-                data-isopen={isOpen}
                 className={dropdownStyle.select}
                 style={{
                     ...(responsive
@@ -367,43 +370,47 @@ export function DropdownMenu({
                               maxWidth: width,
                           }),
                 }}
+                data-isopen={isOpen}
                 aria-haspopup="listbox"
                 aria-expanded={isOpen}
                 aria-controls={dropdownId}
+                {...buttonProps}
+                ref={buttonRef}
+                onClick={handleButtonClick}
+                onKeyDown={handleButtonKeyDown}
             >
                 {dropdownEntries[internalSelectedIdx as number].value}
             </button>
             <ul
-                {...listProps}
-                id={dropdownId}
-                ref={listRef}
                 className={
                     `${dropdownStyle.list}` //+
                     // (isOpen ? "" : " " + dropdownStyle.hidden)
                 }
                 // { isOpen && { "aria-hidden"="true" } }
-                aria-hidden={!isOpen}
+
                 role="listbox"
                 style={responsive ? {} : { width, maxWidth: width }}
+                aria-hidden={!isOpen}
+                {...listProps}
+                id={dropdownId}
+                ref={listRef}
             >
                 {dropdownEntries.map(
                     (entry: Readonly<DropdownEntry>, idx: number) => {
                         return (
                             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                             <li
-                                {...itemProps}
-                                // Avoiding using React references directly and doing it manually instead as it gets reset every window resize
-                                // ref={(element) => setItemRef(element, idx)}
-                                key={idx}
-                                role="option"
-                                aria-selected={internalSelectedIdx === idx}
-                                value={entry.value}
-                                tabIndex={0}
-                                onClick={(event: MouseEvent<HTMLLIElement>) =>
-                                    handleItemClick(event, entry, idx)
-                                }
                                 style={
                                     responsive ? {} : { width, maxWidth: width }
+                                }
+                                role="option"
+                                tabIndex={0}
+                                aria-selected={internalSelectedIdx === idx}
+                                value={entry.value}
+                                {...itemProps}
+                                key={idx}
+                                onClick={(event: MouseEvent<HTMLLIElement>) =>
+                                    handleItemClick(event, entry, idx)
                                 }
                             >
                                 {entry.value}

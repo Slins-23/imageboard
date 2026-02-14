@@ -188,8 +188,6 @@ export default function TextArea({
 
     return (
         <textarea
-            {...args}
-            ref={textAreaElementRef}
             className={textAreaStyle.textArea}
             style={{
                 width,
@@ -198,8 +196,10 @@ export default function TextArea({
                 resize,
                 overflow: scrollable ? "auto" : "hidden",
             }}
-            onChange={handleChange}
             value={textState ?? ""}
+            ref={textAreaElementRef}
+            {...args}
+            onChange={handleChange}
         />
     );
 }

@@ -38,6 +38,12 @@
     --tertiary: #73a5f8;
     --accent: #acc4ee;
     --disabled-brightness: 0.6;
+    --background-blur-opacity: 0.7;
+    --background-blur-radius: 8px;
+    --foreground-blur-opacity: 0.4;
+    --foreground-blur-radius: 5px;
+    --foreground-hovered-blur-opacity: 0.7;
+    --foreground-hovered-blur-radius: 5px;
 }
 
 :disabled,

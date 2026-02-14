@@ -55,11 +55,11 @@ export function TextBox({
 
     return (
         <input
-            {...args}
             type={type}
             className={textBoxStyle.textBox}
             style={{ width, height, fontSize }}
             value={textState ?? ""}
+            {...args}
             onChange={handleChange}
         />
     );

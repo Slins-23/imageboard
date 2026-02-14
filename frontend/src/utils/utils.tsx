@@ -5,7 +5,7 @@ import {
     type KeyboardEvent,
 } from "react";
 
-type SetActionState<T> = T | ((prev: T) => T);
+export type SetStateAction<T> = T | ((prev: T) => T);
 
 export interface ControllableProps<T> {
     value?: T;
@@ -19,7 +19,7 @@ export function useControllableState<T>({
     onChange,
 }: ControllableProps<T>): [
     T | undefined,
-    (setAction: SetActionState<T>) => void,
+    (setAction: SetStateAction<T>) => void,
 ] {
     const isControllable = value !== undefined;
 
@@ -30,7 +30,7 @@ export function useControllableState<T>({
     const state = isControllable ? value : internalValue;
 
     const setState = useCallback(
-        (setAction: SetActionState<T>) => {
+        (setAction: SetStateAction<T>) => {
             if (isControllable) {
                 const newState =
                     typeof setAction === "function"

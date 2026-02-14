@@ -19,10 +19,10 @@ export default function RadioButton({
 }: RadioButtonArgs) {
     return (
         <input
-            {...args}
             className={`${radioBtnStyle.button}`}
             style={{ width, height }}
             type="radio"
+            {...args}
         />
     );
 }

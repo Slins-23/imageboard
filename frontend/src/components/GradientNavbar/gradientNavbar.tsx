@@ -70,8 +70,8 @@ export default function GradientNavbar({
 
     return (
         <nav
-            {...navProps}
             className={`${gradientNavbarStyle.navbar}`}
+            {...navProps}
         >
             <header>
                 <h1 style={{ color: "var(--tertiary)", fontWeight: "500" }}>
@@ -79,18 +79,18 @@ export default function GradientNavbar({
                 </h1>
             </header>
             <ul
-                {...listProps}
                 role="listbox"
+                {...listProps}
             >
                 {items.map((item: NavigationItem, idx: number) => (
                     <li
-                        {...itemProps}
                         role="option"
-                        ref={(element) => setItemRef(element, idx)}
-                        key={idx}
                         data-text={item.text}
                         tabIndex={0}
                         aria-selected={idx === currentRouteIdx}
+                        {...itemProps}
+                        ref={(element) => setItemRef(element, idx)}
+                        key={idx}
                         onClick={(event) => {
                             event.preventDefault();
                             linkRefs.current[idx]?.click();
@@ -104,6 +104,7 @@ export default function GradientNavbar({
                                     break;
                                 }
                                 case "ArrowUp": {
+                                    event.preventDefault();
                                     const elementAbove =
                                         idx > 0
                                             ? menuOptionsRefs.current[idx - 1]
@@ -112,6 +113,7 @@ export default function GradientNavbar({
                                     break;
                                 }
                                 case "ArrowDown": {
+                                    event.preventDefault();
                                     const elementBelow =
                                         idx < items.length - 1
                                             ? menuOptionsRefs.current[idx + 1]

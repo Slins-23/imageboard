@@ -17,13 +17,13 @@ export default function NotificationCount({
 }: NotificationArgs) {
     return (
         <div
-            {...args}
             className={`${notificationStyle.notificationCount}`}
             style={{
                 width,
                 height,
                 fontSize,
             }}
+            {...args}
         >
             {count}
         </div>

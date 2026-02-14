@@ -37,31 +37,33 @@ export default function ToggleSwitch({
     const buttonRef = useRef<HTMLButtonElement | null>(null);
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-        if (args.disabled || event.defaultPrevented) return;
-
-        setInternalChecked((prev) => !prev);
+        if (args.disabled) return;
 
         args.onClick?.(event);
+
+        if (event.defaultPrevented) return;
+
+        setInternalChecked((prev) => !prev);
     };
 
     const handleKeydown = (event: KeyboardEvent<HTMLButtonElement>) => {
-        if (args.disabled || event.defaultPrevented) return;
+        if (args.disabled) return;
+
+        args.onKeyDown?.(event);
+
+        if (event.defaultPrevented) return;
 
         switch (event.code) {
             case "Enter":
             case "Space": {
-                // buttonRef.current?.click();
                 event.preventDefault();
                 setInternalChecked((prev) => !prev);
-                // event.preventDefault();
                 break;
             }
             default: {
                 break;
             }
         }
-
-        args.onKeyDown?.(event);
     };
 
     useEffect(() => {
@@ -78,11 +80,11 @@ export default function ToggleSwitch({
 
     return (
         <button
-            {...args}
-            ref={buttonRef}
             role="switch"
             aria-checked={internalChecked}
             className={`${switchStyle.switch}`}
+            {...args}
+            ref={buttonRef}
             onClick={handleClick}
             onKeyDown={handleKeydown}
         >

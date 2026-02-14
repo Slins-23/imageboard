@@ -48,24 +48,25 @@ export default function IconButton({
         });
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-        if (props.buttonProps?.disabled || event.defaultPrevented) return;
-
-        if (!internalIsActive) setInternalIsActive(true);
+        if (props.buttonProps?.disabled) return;
 
         props.buttonProps?.onClick?.(event);
+
+        if (event.defaultPrevented) return;
+
+        if (!internalIsActive) setInternalIsActive(true);
     };
 
     return (
         <button
-            {...props.buttonProps}
             type="button"
             className={`${buttonStyle.iconButton}`}
             style={{ width, height }}
             aria-pressed={internalIsActive}
+            {...props.buttonProps}
             onClick={handleClick}
         >
             <FontAwesomeIcon
-                {...props.iconProps}
                 icon={btnIcon}
                 style={{
                     ...(iconSize === undefined ? {} : { fontSize: iconSize }),
@@ -75,6 +76,7 @@ export default function IconButton({
                         : { scale: `${iconWidthScale} ${iconHeightScale}` }),
                     color: "var(--accent)",
                 }}
+                {...props.iconProps}
             />
 
             {hasNotifications && (

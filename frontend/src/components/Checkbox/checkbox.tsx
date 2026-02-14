@@ -46,17 +46,23 @@ export default function Checkbox({
     });
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-        if (args.disabled || event.defaultPrevented) return;
+        if (args.disabled) return;
+
+        args.onClick?.(event);
+
+        if (event.defaultPrevented) return;
 
         setInternalIsChecked((prev) => !prev);
 
         onChecked?.(event);
-
-        args.onClick?.(event);
     };
 
     const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-        if (args.disabled || event.defaultPrevented) return;
+        if (args.disabled) return;
+
+        args.onKeyDown?.(event);
+
+        if (event.defaultPrevented) return;
 
         switch (event.code) {
             case "Space":
@@ -71,21 +77,19 @@ export default function Checkbox({
         }
 
         onChecked?.(event);
-
-        args.onKeyDown?.(event);
     };
 
     return (
         <button
-            {...args}
-            ref={checkboxRef}
-            role="checkbox"
-            aria-checked={internalIsChecked}
             className={`${checkboxStyle.checkbox}`}
             style={{
                 width,
                 height,
             }}
+            role="checkbox"
+            aria-checked={internalIsChecked}
+            {...args}
+            ref={checkboxRef}
             onClick={handleClick}
             onKeyDown={handleKeyDown}
         >

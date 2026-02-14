@@ -11,9 +11,9 @@ export default meta;
 
 export const Google: StoryObj<typeof meta> = {
     args: {
-        iconSrc: "google.svg",
-        width: "85px",
-        height: "85px",
+        iconSrc: "social-media/google.svg",
+        width: "75px",
+        height: "75px",
     },
 };
 
@@ -39,8 +39,8 @@ export const GoogleControlled: StoryObj<typeof meta> = {
 
 export const Facebook: StoryObj<typeof meta> = {
     args: {
-        iconSrc: "facebook.svg",
-        width: "85px",
-        height: "85px",
+        iconSrc: "social-media/facebook.svg",
+        width: "75px",
+        height: "75px",
     },
 };

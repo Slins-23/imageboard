@@ -1,0 +1,29 @@
+.blurred {
+    position: relative;
+    border: 0;
+    padding: 10px;
+    cursor: pointer;
+    color: rgb(from var(--accent) r g b / 0.6);
+    paint-order: stroke fill;
+    -webkit-text-stroke: 2px
+        rgb(from var(--secondary) r g b / var(--foreground-blur-opacity));
+    background-color: rgb(
+        from var(--secondary) r g b / var(--foreground-blur-opacity)
+    );
+    backdrop-filter: blur(var(--foreground-blur-radius));
+    transition-duration: 0.15s;
+    transition-property: color, background-color;
+}
+
+.blurred:hover,
+.blurred:focus-visible {
+    color: var(--accent);
+    background-color: rgb(
+        from var(--primary) r g b / var(--foreground-hovered-blur-opacity)
+    );
+    -webkit-text-stroke: 2px var(--secondary);
+}
+
+.blurred:focus-visible {
+    outline-width: 2px;
+}

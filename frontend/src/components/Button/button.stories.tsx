@@ -13,10 +13,12 @@ type Story = StoryObj<typeof meta>;
 export const SaveButton: Story = {
     args: {
         "aria-label": "Save changes",
-        padding: 0.5,
+        paddingH: 0.5,
+        paddingV: 0.25,
         borderRadius: 0,
         fontSize: 1.5,
         onClick: () => alert("Changes saved!"),
+        onKeyDown: () => alert("Changes saved! (KeyDown)"),
         disabled: false,
     },
 };

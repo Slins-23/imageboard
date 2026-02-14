@@ -1,3 +1,5 @@
+"use client";
+
 import linkedAccountStyle from "./LinkedAccount.module.css";
 import { useControllableState } from "@/utils/utils";
 import {
@@ -17,13 +19,13 @@ interface LinkedAccountArgs {
     onDisconnected?: (isConnected?: boolean) => void;
     onConnected?: (isConnected?: boolean) => void;
     onConnectedChange?: (isConnected?: boolean) => void;
-    wrapperWidth: string;
+    wrapperWidth?: string;
 }
 
 export default function LinkedAccount({
-    iconSrc = "google.svg",
-    width = "80px",
-    height = "80px",
+    iconSrc = "social-media/google.svg",
+    width = "75px",
+    height = "75px",
     isConnected = undefined,
     defaultIsConnected = false,
     onDisconnected = undefined,
@@ -43,6 +45,7 @@ export default function LinkedAccount({
     const iconWrapperRef = useRef<HTMLDivElement | null>(null);
 
     const linkAccount = (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
     ) => {
         setInternalIsConnected(true);
@@ -50,6 +53,7 @@ export default function LinkedAccount({
     };
 
     const unlinkAccount = (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
     ) => {
         setInternalIsConnected(false);
@@ -87,20 +91,6 @@ export default function LinkedAccount({
             }}
         >
             <div ref={iconWrapperRef}></div>
-
-            {/* <object
-                data="facebook.svg"
-                type="image/svg+xml"
-                width="70"
-                height="70"
-                aria-label="hi"
-                style={{ backgroundColor: "none", fill: "red" }}
-            >
-                <img
-                    src="facebook.svg"
-                    alt="facebook"
-                ></img>
-            </object> */}
             <div className={`${linkedAccountStyle.container}`}>
                 {internalIsConnected && (
                     <span className={`${linkedAccountStyle.text}`}>
