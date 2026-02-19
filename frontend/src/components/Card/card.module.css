@@ -1,25 +1,7 @@
 .card {
-    /* padding: 2.7em 1.9em; */
-    padding: 2em;
-    background-color: var(--secondary);
+    background-color: var(--primary);
     border-style: solid;
     border-color: var(--tertiary);
     border-width: 1px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    pointer-events: none;
-    user-select: none;
-    -ms-user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-}
-
-.interest-tag {
-    color: var(--accent);
-}
-
-.interest-value {
-    color: var(--tertiary);
+    font-size: 2rem;
 }

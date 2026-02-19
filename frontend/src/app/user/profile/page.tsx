@@ -2,7 +2,7 @@ import Button from "@/components/Button/button";
 import LinkedAccount from "@/components/LinkedAccount/LinkedAccount";
 import RadioButton from "@/components/RadioButton/radioButton";
 import * as Modal from "@/components/Modal/modal";
-import Card from "@/components/Card/card";
+import Card from "@/components/InterestCard/interestCard";
 import { DropdownMenu } from "@/components/DropdownMenu/dropdownMenu";
 
 export default function Profile() {

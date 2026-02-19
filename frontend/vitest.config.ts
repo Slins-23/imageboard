@@ -4,8 +4,10 @@ import { defineConfig } from "vitest/config";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "@vitest/browser-playwright";
 const dirname =
+    // eslint-disable-next-line unicorn/no-negated-condition, unicorn/prefer-module
     typeof __dirname !== "undefined"
-        ? __dirname
+        ? // eslint-disable-next-line unicorn/prefer-module
+          __dirname
         : path.dirname(fileURLToPath(import.meta.url));
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon

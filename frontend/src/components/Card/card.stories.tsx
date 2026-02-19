@@ -10,10 +10,6 @@ export default meta;
 
 export const Primary: StoryObj<typeof meta> = {
     args: {
-        interestTag: "Anime",
-        interestValue: 0.95,
-        width: "150px",
-        height: "150px",
-        fontSize: "2rem",
+        style: { width: "150px", height: "150px" },
     },
 };

@@ -5,8 +5,8 @@
     border-color: var(--tertiary);
     border-width: 1px;
     border-style: solid;
-    padding-left: 0.5em;
-    padding-right: 0.5em;
+    padding-left: 0.3em;
+    padding-right: 0.2em;
 }
 
 .textBox[type="date"] {

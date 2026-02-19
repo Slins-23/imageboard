@@ -14,7 +14,7 @@ import {
     type ReactNode,
     ButtonHTMLAttributes,
 } from "react";
-import { useControllableState, type SetStateAction } from "@/utils/utils";
+import { useControllableState } from "@/utils/utils";
 import modalStyle from "./modal.module.css";
 import Button from "@/components/Button/button";
 import { createPortal } from "react-dom";
@@ -22,11 +22,9 @@ import { createPortal } from "react-dom";
 const ModalContext = createContext<
     | {
           internalIsOpen: boolean | undefined;
-          setInternalIsOpen: (setAction: SetStateAction<boolean>) => void;
+          setInternalIsOpen: (isOpen: boolean) => void;
           internalIsDismissible: boolean | undefined;
-          setInternalIsDismissible: (
-              setAction: SetStateAction<boolean>
-          ) => void;
+          setInternalIsDismissible: (isDismissible: boolean) => void;
       }
     | undefined
 >(undefined);
@@ -45,12 +43,12 @@ export function useModalContext() {
 interface RootArgs {
     isOpen?: boolean;
     defaultIsOpen?: boolean;
-    onOpenChange?: (isOpen: SetStateAction<boolean>) => void;
+    onOpenChange?: (isOpen: boolean) => void;
     onOpen?: () => void;
     onClose?: () => void;
     isDismissible?: boolean;
     defaultIsDismissible?: boolean;
-    onDismissibleChange?: (isDismissible: SetStateAction<boolean>) => void;
+    onDismissibleChange?: (isDismissible: boolean) => void;
     children?: ReactNode;
 }
 
@@ -78,7 +76,9 @@ export function Root({
             onChange: onDismissibleChange,
         });
 
-    const previousIsOpen = useRef<boolean | undefined>(undefined);
+    const modalId = useId();
+
+    const previousIsOpen = useRef<boolean | undefined>(null);
 
     useEffect(() => {
         if (previousIsOpen.current === undefined) {
@@ -101,6 +101,7 @@ export function Root({
         <div
             aria-modal="true"
             role="dialog"
+            aria-label={modalId}
         >
             <ModalContext.Provider
                 value={{

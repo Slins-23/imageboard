@@ -11,10 +11,6 @@ export default meta;
 export const Uncontrolled: StoryObj<typeof meta> = {
     args: {
         "aria-label": "Click",
-        paddingH: 0.3,
-        paddingV: 0.1,
-        fontSize: 1.5,
-        borderRadius: 10,
         onClick: () => alert("Clicked"),
         onKeyDown: () => alert("Key pressed"),
     },
@@ -31,7 +27,7 @@ export const Uncontrolled: StoryObj<typeof meta> = {
                     justifyContent: "center",
                 }}
             >
-                <BlurredButton {...args} />
+                <BlurredButton {...args}>Click</BlurredButton>
             </div>
         );
     },

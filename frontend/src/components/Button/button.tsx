@@ -6,21 +6,16 @@ import {
     type ButtonHTMLAttributes,
     type MouseEvent,
     type KeyboardEvent,
+    type ReactNode,
 } from "react";
 
-export interface ButtonArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
-    paddingH?: number;
-    paddingV?: number;
-    borderRadius?: number;
-    fontSize?: number;
+interface ButtonArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
+    children?: ReactNode;
 }
 
-export default function button({
+export default function Button({
     "aria-label": ariaLabel = "Save changes",
-    paddingH = 0.5,
-    paddingV = 0.25,
-    borderRadius = 0,
-    fontSize = 1.5,
+    children = "Save changes",
     ...args
 }: ButtonArgs) {
     const buttonRef = useRef<HTMLButtonElement>(null);
@@ -47,18 +42,13 @@ export default function button({
         <button
             aria-label={ariaLabel}
             className={`${buttonStyle.button}`}
-            style={{
-                padding: `${paddingV}em ${paddingH}em`,
-                borderRadius: `${borderRadius}px`,
-                fontSize: `${fontSize}rem`,
-            }}
             type={"button"}
             {...args}
             ref={buttonRef}
             onClick={handleClick}
             onKeyDown={handleKeyDown}
         >
-            <span style={{ position: "relative", zIndex: 1 }}>{ariaLabel}</span>
+            <span style={{ position: "relative", zIndex: 1 }}>{children}</span>
         </button>
     );
 }

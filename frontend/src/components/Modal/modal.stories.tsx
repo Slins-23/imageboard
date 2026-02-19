@@ -1,9 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import { useArgs } from "storybook/preview-api";
 import Button from "@/components/Button/button";
-import Card from "@/components/Card/card";
+import Card from "@/components/InterestCard/interestCard";
 import * as Modal from "./modal";
-import { SetStateAction } from "@/utils/utils";
 import { ComponentProps } from "react";
 
 type ModalArgs = ComponentProps<typeof Modal.Root> &
@@ -104,9 +103,8 @@ export const Controlled: StoryObj<typeof meta> = {
     },
     render: (args) => {
         const [, setArgs] = useArgs();
-        const setIsOpen = (isOpen: SetStateAction<boolean>) =>
-            setArgs({ isOpen });
-        const setIsDismissible = (isDismissible: SetStateAction<boolean>) =>
+        const setIsOpen = (isOpen: boolean) => setArgs({ isOpen });
+        const setIsDismissible = (isDismissible: boolean) =>
             setArgs({ isDismissible });
 
         const {

@@ -85,8 +85,8 @@ export function DropdownMenu({
             : selectedIdx
     );
 
-    const menuWidth = useRef<number | undefined>(undefined);
-    const maxWidth = useRef<number | undefined>(undefined);
+    const menuWidth = useRef<number | null>(null);
+    const maxWidth = useRef<number | null>(null);
 
     /*
     const setItemRefs = useCallback(

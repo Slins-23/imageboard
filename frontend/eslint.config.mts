@@ -86,6 +86,7 @@ export default defineConfig([
         rules: {
             "unicorn/prevent-abbreviations": "off",
             "unicorn/filename-case": "off",
+            "unicorn/no-null": "off",
             "n/no-unpublished-import": "off",
             "n/no-missing-import": "off",
             "prefer-const": "error",

@@ -25,7 +25,7 @@ interface textBoxArgs extends InputHTMLAttributes<HTMLInputElement> {
         | "week";
 }
 
-export function TextBox({
+export default function TextBox({
     defaultValue = "",
     value = undefined,
     transformText = undefined,

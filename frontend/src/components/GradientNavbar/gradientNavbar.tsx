@@ -38,8 +38,8 @@ export default function GradientNavbar({
     const menuOptionsRefs = useRef<(HTMLLIElement | null)[]>([]);
     const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
 
-    const [currentRouteIdx, setCurrentRouteIdx] = useState<number | undefined>(
-        () => items.findIndex((item) => item.route === slug)
+    const [currentRouteIdx, setCurrentRouteIdx] = useState<number>(() =>
+        items.findIndex((item) => item.route === slug)
     );
 
     useEffect(() => {

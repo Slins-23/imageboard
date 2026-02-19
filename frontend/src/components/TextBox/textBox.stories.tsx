@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import { TextBox } from "@/components/TextBox/textBox";
+import TextBox from "@/components/TextBox/textBox";
 import { useArgs } from "storybook/preview-api";
 
 const meta: Meta<typeof TextBox> = {
