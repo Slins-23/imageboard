@@ -23,7 +23,7 @@ interface DropdownEntry {
 
 type DropdownEntries = Array<Readonly<DropdownEntry>>;
 
-interface DropdownMenuArgs {
+interface DropdownMenuArgs extends HTMLAttributes<HTMLDivElement> {
     dropdownEntries: DropdownEntries;
     selectedIdx?: number;
     defaultSelectedIdx?: number;
@@ -34,7 +34,6 @@ interface DropdownMenuArgs {
     responsive?: boolean;
     fontSize?: string;
     width?: string;
-    rootProps?: HTMLAttributes<HTMLDivElement>;
     buttonProps?: ButtonHTMLAttributes<HTMLButtonElement>;
     listProps?: HTMLAttributes<HTMLUListElement>;
     itemProps?: LiHTMLAttributes<HTMLLIElement>;
@@ -54,12 +53,12 @@ export function DropdownMenu({
     onSelected = undefined,
     onSelectedChange = undefined,
     responsive = true,
-    fontSize = "1rem",
+    fontSize = "var(--font-size-md)",
     width = "300px",
-    rootProps = undefined,
     buttonProps = undefined,
     listProps = undefined,
     itemProps = undefined,
+    ...args
 }: DropdownMenuArgs) {
     const dropdownId = useId();
 
@@ -350,7 +349,7 @@ export function DropdownMenu({
         <div
             className={dropdownStyle.wrapper}
             style={{ fontSize }}
-            {...rootProps}
+            {...args}
             ref={rootNode}
         >
             <button
@@ -369,6 +368,7 @@ export function DropdownMenu({
                               width,
                               maxWidth: width,
                           }),
+                    ...buttonProps?.style,
                 }}
                 data-isopen={isOpen}
                 aria-haspopup="listbox"
@@ -389,9 +389,9 @@ export function DropdownMenu({
                 // { isOpen && { "aria-hidden"="true" } }
 
                 role="listbox"
-                style={responsive ? {} : { width, maxWidth: width }}
                 aria-hidden={!isOpen}
                 {...listProps}
+                style={responsive ? {} : { width, maxWidth: width }}
                 id={dropdownId}
                 ref={listRef}
             >
@@ -400,14 +400,20 @@ export function DropdownMenu({
                         return (
                             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
                             <li
-                                style={
-                                    responsive ? {} : { width, maxWidth: width }
-                                }
                                 role="option"
                                 tabIndex={0}
                                 aria-selected={internalSelectedIdx === idx}
                                 value={entry.value}
                                 {...itemProps}
+                                style={
+                                    responsive
+                                        ? { ...itemProps?.style }
+                                        : {
+                                              width,
+                                              maxWidth: width,
+                                              ...itemProps?.style,
+                                          }
+                                }
                                 key={idx}
                                 onClick={(event: MouseEvent<HTMLLIElement>) =>
                                     handleItemClick(event, entry, idx)

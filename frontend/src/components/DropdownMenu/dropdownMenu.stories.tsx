@@ -20,7 +20,7 @@ export const Uncontrolled: StoryObj<typeof meta> = {
             },
         ],
         responsive: true,
-        fontSize: "1rem",
+        fontSize: "var(--font-size-md)",
         width: "300px",
         buttonProps: {
             disabled: true,
@@ -40,7 +40,7 @@ export const Controlled: StoryObj<typeof meta> = {
         ],
         selectedIdx: 0,
         responsive: true,
-        fontSize: "1rem",
+        fontSize: "var(--font-size-md)",
         width: "300px",
     },
     render: (args) => {

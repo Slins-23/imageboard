@@ -7,6 +7,7 @@
     border-color: var(--tertiary);
     padding: 0.1rem 0 0.1rem 0;
     transition: 0.1s;
+    transition-property: background-color;
 }
 
 .checkbox[aria-checked="true"] {
@@ -17,8 +18,9 @@
     opacity: 0;
     color: var(--accent);
     transition: 0.1s;
+    transition-property: opacity;
 }
 
 .checkbox[aria-checked="true"] .iconStyle {
-    visibility: visible;
+    opacity: 1;
 }

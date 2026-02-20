@@ -1,7 +1,10 @@
 "use client";
 
 import checkboxStyle from "./checkbox.module.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    FontAwesomeIcon,
+    FontAwesomeIconProps,
+} from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
 import { useControllableState } from "@/utils/utils";
 import {
@@ -12,17 +15,16 @@ import {
 } from "react";
 
 interface CheckboxArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
+    iconSize: string;
+    iconWidthScale: number;
+    iconHeightScale: number;
     defaultChecked?: boolean;
     isChecked?: boolean;
     onChecked?: (
         event?: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
     ) => void;
     onCheckedChange?: (isChecked: boolean) => void;
-    width: string;
-    height: string;
-    iconSize: string;
-    iconWidthScale: number;
-    iconHeightScale: number;
+    iconProps?: FontAwesomeIconProps;
 }
 
 export default function Checkbox({
@@ -30,9 +32,7 @@ export default function Checkbox({
     isChecked = undefined,
     onChecked = undefined,
     onCheckedChange = undefined,
-    width = "auto",
-    height = "auto",
-    iconSize = "1.125rem",
+    iconSize = "var(--font-size-md)",
     iconWidthScale = 0.8,
     iconHeightScale = 1,
     ...args
@@ -82,10 +82,6 @@ export default function Checkbox({
     return (
         <button
             className={`${checkboxStyle.checkbox}`}
-            style={{
-                width,
-                height,
-            }}
             role="checkbox"
             aria-checked={internalIsChecked}
             {...args}
@@ -96,12 +92,11 @@ export default function Checkbox({
             <FontAwesomeIcon
                 icon={faCheck}
                 className={checkboxStyle.iconStyle}
+                {...args?.iconProps}
                 style={{
                     fontSize: iconSize,
                     scale: `${iconWidthScale} ${iconHeightScale}`,
-                    color: "var(--accent)",
-                    // visibility: internalIsChecked ? "visible" : "hidden",
-                    opacity: internalIsChecked ? "1" : "0",
+                    ...args?.iconProps?.style,
                 }}
             />
         </button>

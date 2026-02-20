@@ -31,7 +31,8 @@ type Story = StoryObj<typeof meta>;
 
 export const HomeButton: Story = {
     args: {
-        buttonProps: { "aria-label": "Home button", disabled: false },
+        "aria-label": "Home button",
+        disabled: false,
         notificationProps: { count: 0 },
         btnIcon: faHouse,
         width: "50px",
@@ -45,7 +46,8 @@ export const HomeButton: Story = {
 
 export const ControlledHomeButton: Story = {
     args: {
-        buttonProps: { "aria-label": "Home button", disabled: false },
+        "aria-label": "Home button",
+        disabled: false,
         notificationProps: { count: 0 },
         btnIcon: faHouse,
         width: "50px",
@@ -76,7 +78,7 @@ export const ControlledHomeButton: Story = {
             <IconButton
                 {...args}
                 onActiveChange={setIsActive}
-                buttonProps={{ onClick: clickHandler }}
+                onClick={clickHandler}
             />
         );
     },
@@ -84,7 +86,8 @@ export const ControlledHomeButton: Story = {
 
 export const TagsButton: Story = {
     args: {
-        buttonProps: { "aria-label": "tagsBtn", disabled: false },
+        "aria-label": "tagsBtn",
+        disabled: false,
         btnIcon: faTags,
         iconSize: "28px",
     },
@@ -92,14 +95,16 @@ export const TagsButton: Story = {
 
 export const SettingsButton: Story = {
     args: {
-        buttonProps: { "aria-label": "settingsBtn", disabled: false },
+        "aria-label": "settingsBtn",
+        disabled: false,
         btnIcon: faGear,
     },
 };
 
 export const CreateButton: Story = {
     args: {
-        buttonProps: { "aria-label": "createBtn", disabled: false },
+        "aria-label": "createBtn",
+        disabled: false,
         btnIcon: faPlus,
         iconSize: "30px",
     },
@@ -107,7 +112,8 @@ export const CreateButton: Story = {
 
 export const ChatsButton: Story = {
     args: {
-        buttonProps: { "aria-label": "chatsBtn", disabled: false },
+        "aria-label": "chatsBtn",
+        disabled: false,
         btnIcon: faMessage,
         hasNotifications: true,
         notificationProps: { count: 32 },
@@ -116,7 +122,8 @@ export const ChatsButton: Story = {
 
 export const NotificationsButton: Story = {
     args: {
-        buttonProps: { "aria-label": "notificationsBtn", disabled: false },
+        "aria-label": "notificationsBtn",
+        disabled: false,
         btnIcon: faBell,
         hasNotifications: true,
         notificationProps: { count: 55 },
@@ -126,7 +133,8 @@ export const NotificationsButton: Story = {
 
 export const UserButton: Story = {
     args: {
-        buttonProps: { "aria-label": "userBtn", disabled: false },
+        "aria-label": "userBtn",
+        disabled: false,
         btnIcon: faUser,
         iconWidthScale: 1.15,
         iconHeightScale: 1.15,
@@ -135,42 +143,48 @@ export const UserButton: Story = {
 
 export const ThemeButton: Story = {
     args: {
-        buttonProps: { "aria-label": "themeBtn", disabled: false },
+        "aria-label": "themeBtn",
+        disabled: false,
         btnIcon: faCircleHalfStroke,
     },
 };
 
 export const LeftButton: Story = {
     args: {
-        buttonProps: { "aria-label": "leftBtn", disabled: false },
+        "aria-label": "leftBtn",
+        disabled: false,
         btnIcon: faArrowLeft,
     },
 };
 
 export const RightButton: Story = {
     args: {
-        buttonProps: { "aria-label": "rightBtn", disabled: false },
+        "aria-label": "rightBtn",
+        disabled: false,
         btnIcon: faArrowRight,
     },
 };
 
 export const RefreshButton: Story = {
     args: {
-        buttonProps: { "aria-label": "refreshBtn", disabled: false },
+        "aria-label": "refreshBtn",
+        disabled: false,
         btnIcon: faRefresh,
     },
 };
 
 export const SearchButton: Story = {
     args: {
-        buttonProps: { "aria-label": "searchBtn", disabled: false },
+        "aria-label": "searchBtn",
+        disabled: false,
         btnIcon: faSearch,
     },
 };
 
 export const DownButton: Story = {
     args: {
-        buttonProps: { "aria-label": "downBtn", disabled: false },
+        "aria-label": "downBtn",
+        disabled: false,
         btnIcon: faAngleDown,
         iconSize: "30px",
         iconWidthScale: 1,
@@ -180,14 +194,16 @@ export const DownButton: Story = {
 
 export const ViewButton: Story = {
     args: {
-        buttonProps: { "aria-label": "viewBtn", disabled: false },
+        "aria-label": "viewBtn",
+        disabled: false,
         btnIcon: faEye,
     },
 };
 
 export const CloseButton: Story = {
     args: {
-        buttonProps: { "aria-label": "closeBtn", disabled: false },
+        "aria-label": "closeBtn",
+        disabled: false,
         btnIcon: faX,
     },
 };

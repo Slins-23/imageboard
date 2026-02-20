@@ -15,9 +15,6 @@ interface textAreaArgs extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     value?: string;
     transformText?: (value: string) => string;
     onTextChange?: (value: string) => void;
-    width?: string;
-    height?: string;
-    fontSize?: string;
     resize?: "none" | "both" | "vertical" | "horizontal";
     scrollable?: boolean;
     responsive?: boolean;
@@ -28,9 +25,6 @@ export default function TextArea({
     value = undefined,
     transformText = undefined,
     onTextChange = undefined,
-    width = "310px",
-    height = "130px",
-    fontSize = "1.15rem",
     resize = "none",
     scrollable = true,
     responsive = false,
@@ -189,16 +183,14 @@ export default function TextArea({
     return (
         <textarea
             className={textAreaStyle.textArea}
-            style={{
-                width,
-                height,
-                fontSize,
-                resize,
-                overflow: scrollable ? "auto" : "hidden",
-            }}
             value={textState ?? ""}
             ref={textAreaElementRef}
             {...args}
+            style={{
+                resize,
+                overflow: scrollable ? "auto" : "hidden",
+                ...args.style,
+            }}
             onChange={handleChange}
         />
     );

@@ -11,9 +11,6 @@ export default meta;
 
 export const Uncontrolled: StoryObj<typeof meta> = {
     args: {
-        width: "auto",
-        height: "32px",
-        fontSize: "1.15rem",
         "aria-placeholder": undefined,
         "aria-readonly": false,
         "aria-label": "Uncontrolled",
@@ -35,9 +32,6 @@ export const Uncontrolled: StoryObj<typeof meta> = {
 export const Controlled: StoryObj<typeof meta> = {
     args: {
         value: "This is controlled",
-        width: "auto",
-        height: "32px",
-        fontSize: "1.15rem",
         "aria-placeholder": undefined,
         "aria-readonly": false,
         "aria-label": "Controlled",

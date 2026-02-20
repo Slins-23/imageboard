@@ -1,31 +1,32 @@
+import { useControllableState } from "@/utils/utils";
 import notificationStyle from "./notification.module.css";
 import { type HTMLAttributes } from "react";
 
 export interface NotificationArgs extends HTMLAttributes<HTMLDivElement> {
     count?: number;
-    width?: string;
-    height?: string;
-    fontSize?: string;
+    defaultCount?: number;
+    onCountChange?: (count: number) => void;
+    onCount?: (count?: number) => void;
 }
 
 export default function NotificationCount({
-    count = 0,
-    width = "1rem",
-    height = "1rem",
-    fontSize = "0.5rem",
+    count = undefined,
+    defaultCount = 0,
+    onCountChange = undefined,
     ...args
 }: NotificationArgs) {
+    const [internalCount] = useControllableState<number>({
+        defaultValue: defaultCount,
+        value: count,
+        onChange: onCountChange,
+    });
+
     return (
         <div
             className={`${notificationStyle.notificationCount}`}
-            style={{
-                width,
-                height,
-                fontSize,
-            }}
             {...args}
         >
-            {count}
+            {internalCount}
         </div>
     );
 }

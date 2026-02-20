@@ -7,7 +7,15 @@ import { DropdownMenu } from "@/components/DropdownMenu/dropdownMenu";
 
 export default function Profile() {
     return (
-        <div style={{ backgroundColor: "var(--primary)", padding: "2rem" }}>
+        <div
+            style={{
+                backgroundColor: "var(--primary)",
+                padding: "2rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: "2rem",
+            }}
+        >
             Profile page
             <br></br>
             <br></br>
@@ -47,7 +55,7 @@ export default function Profile() {
                     justifyContent: "center",
                 }}
             >
-                <Button aria-label="Get country" />
+                <Button aria-label="Get country">Get country</Button>
             </div>
             <br></br>
             <div
@@ -81,10 +89,10 @@ export default function Profile() {
                 />
             </div>
             <Modal.Root>
-                <Modal.Trigger value={true} />
+                <Modal.Trigger triggerValue={true} />
                 <Modal.Content>
                     <Card />
-                    <Modal.Trigger value={false} />
+                    <Modal.Trigger triggerValue={false} />
                 </Modal.Content>
             </Modal.Root>
             <br />

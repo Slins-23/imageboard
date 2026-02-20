@@ -25,7 +25,12 @@ export default function RootLayout({
                 title={title}
                 items={items}
             />
-            <div style={{ padding: "20px", backgroundColor: "green" }}>
+            <div
+                style={{
+                    padding: "var(--font-size-lg)",
+                    backgroundColor: "green",
+                }}
+            >
                 {children}
             </div>
         </div>

@@ -15,4 +15,7 @@
     -ms-user-select: none;
     -o-user-select: none;
     user-select: none;
+    font-size: var(--font-size-xsm);
+    width: var(--font-size-md);
+    height: var(--font-size-md);
 }

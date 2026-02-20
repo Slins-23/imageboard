@@ -15,7 +15,19 @@ export const SaveButton: Story = {
         "aria-label": "Save changes",
         children: "Save changes",
         onClick: () => alert("Changes saved!"),
-        onKeyDown: () => alert("Changes saved! (KeyDown)"),
+        onKeyDown: (event) => {
+            switch (event.code) {
+                case "Space":
+                case "Enter": {
+                    event.preventDefault();
+                    alert("Changes saved! (KeyDown)");
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        },
         disabled: false,
     },
 };

@@ -8,11 +8,14 @@ const meta: Meta<typeof NotificationCount> = {
 
 export default meta;
 
-export const Primary: StoryObj<typeof meta> = {
+export const Uncontrolled: StoryObj<typeof meta> = {
     args: {
-        count: 0,
-        width: "16px",
-        height: "16px",
-        fontSize: "8px",
+        defaultCount: 5,
+    },
+};
+
+export const Controlled: StoryObj<typeof meta> = {
+    args: {
+        count: 32,
     },
 };

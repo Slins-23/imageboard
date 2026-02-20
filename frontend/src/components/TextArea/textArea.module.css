@@ -7,6 +7,9 @@
     border-style: solid;
     padding: 0.5em;
     white-space: normal;
+    width: 310px;
+    height: 130px;
+    font-size: var(--font-size-lg);
 }
 
 .textArea:focus {

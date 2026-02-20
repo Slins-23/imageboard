@@ -5,7 +5,20 @@
     top: 0;
     left: 0;
     z-index: 50;
+    opacity: 0;
+    pointer-events: none;
+    transition-duration: 0.5s;
+    transition-property: opacity;
+    overflow: visible;
     /* transition: 1s; */
+}
+
+.modal[data-state="open"] {
+    opacity: 1;
+    pointer-events: initial;
+    transition-duration: 1s;
+    transition-property: opacity;
+    overflow: hidden;
 }
 
 .wrapper {
@@ -16,4 +29,9 @@
     align-items: center;
     justify-content: center;
     z-index: 51;
+    pointer-events: none;
+}
+
+.modal[data-state="open"] .wrapper {
+    pointer-events: initial;
 }

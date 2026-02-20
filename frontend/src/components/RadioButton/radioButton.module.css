@@ -4,8 +4,12 @@
     border-radius: 50%;
     background-color: var(--secondary);
     outline-color: var(--tertiary);
-    outline-width: 1px;
+    outline-width: 2px;
     outline-style: solid;
+    transition: 0.2s;
+    transition-property: background-color;
+    width: var(--font-size-xl);
+    height: var(--font-size-xl);
 }
 
 .button:checked {

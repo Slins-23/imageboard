@@ -12,7 +12,19 @@ export const Uncontrolled: StoryObj<typeof meta> = {
     args: {
         "aria-label": "Click",
         onClick: () => alert("Clicked"),
-        onKeyDown: () => alert("Key pressed"),
+        onKeyDown: (event) => {
+            switch (event.code) {
+                case "Space":
+                case "Enter": {
+                    event.preventDefault();
+                    alert("Changes saved! (KeyDown)");
+                    break;
+                }
+                default: {
+                    break;
+                }
+            }
+        },
     },
     render: (args) => {
         return (

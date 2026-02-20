@@ -16,8 +16,8 @@ export default function InterestCard({
 }: InterestCardParams) {
     return (
         <Card
-            style={{ width: "150px", height: "150px " }}
             {...args}
+            style={{ width: "150px", height: "150px ", ...args.style }}
         >
             <div className={`${interestCardStyle.wrapper}`}>
                 {interestTag && (

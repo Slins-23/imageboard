@@ -22,8 +22,8 @@ export default function ToggleSwitch({
     isChecked = undefined,
     defaultChecked = false,
     onCheckedChange = undefined,
-    width = "2rem",
-    height = "1.0625rem",
+    width = "var(--font-size-2xl)",
+    height = "var(--font-size-md)",
     ...args
 }: SwitchArgs) {
     const [internalChecked, setInternalChecked] = useControllableState<boolean>(

@@ -1,28 +1,46 @@
 "use client";
 
 import radioBtnStyle from "./radioButton.module.css";
-import { type ChangeEvent, type InputHTMLAttributes } from "react";
+import { useState, type ChangeEvent, type InputHTMLAttributes } from "react";
 
 interface RadioButtonArgs extends InputHTMLAttributes<HTMLInputElement> {
-    isSelected?: boolean;
-    defaultIsSelected?: boolean;
+    selectedValue?: string;
     onSelected?: (event: ChangeEvent<HTMLInputElement>) => void;
-    onSelectedChange?: (value: boolean) => void;
-    width?: string;
-    height?: string;
+    onSelectedChange?: (value: string) => void;
 }
 
 export default function RadioButton({
-    width = "1.5626rem",
-    height = "1.5626rem",
+    selectedValue = undefined,
+    onSelected = undefined,
+    onSelectedChange = undefined,
     ...args
 }: RadioButtonArgs) {
+    const [internalIsSelected, setInternalIsSelected] = useState(
+        selectedValue === args.value
+    );
+
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+        if (args.disabled) return;
+
+        args.onChange?.(event);
+
+        if (event.defaultPrevented) return;
+
+        setInternalIsSelected(true);
+
+        if (typeof args.value === "string") onSelectedChange?.(args.value);
+
+        onSelected?.(event);
+    };
+
     return (
         <input
             className={`${radioBtnStyle.button}`}
-            style={{ width, height }}
             type="radio"
+            aria-checked={internalIsSelected}
+            checked={internalIsSelected}
             {...args}
+            onChange={handleChange}
         />
     );
 }

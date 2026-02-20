@@ -12,7 +12,8 @@ import {
     type MouseEvent as ReactMouseEvent,
     type KeyboardEvent as ReactKeyboardEvent,
     type ReactNode,
-    ButtonHTMLAttributes,
+    type HTMLAttributes,
+    ComponentProps,
 } from "react";
 import { useControllableState } from "@/utils/utils";
 import modalStyle from "./modal.module.css";
@@ -40,7 +41,7 @@ export function useModalContext() {
     return context;
 }
 
-interface RootArgs {
+interface RootArgs extends HTMLAttributes<HTMLDivElement> {
     isOpen?: boolean;
     defaultIsOpen?: boolean;
     onOpenChange?: (isOpen: boolean) => void;
@@ -62,6 +63,7 @@ export function Root({
     defaultIsDismissible = true,
     onDismissibleChange = undefined,
     children,
+    ...args
 }: RootArgs) {
     const [internalIsOpen, setInternalIsOpen] = useControllableState<boolean>({
         value: isOpen,
@@ -102,6 +104,7 @@ export function Root({
             aria-modal="true"
             role="dialog"
             aria-label={modalId}
+            {...args}
         >
             <ModalContext.Provider
                 value={{
@@ -117,40 +120,36 @@ export function Root({
     );
 }
 
-export function Trigger({
-    value,
-    asChild,
-    children,
-    buttonProps,
-}: {
-    value: boolean;
+interface TriggerArgs extends ComponentProps<typeof Button> {
+    triggerValue: boolean;
     asChild?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    children?: ReactElement<any>;
-    buttonProps?: ButtonHTMLAttributes<HTMLButtonElement>;
-}) {
+    children?: ReactElement<typeof Button>;
+}
+
+export function Trigger({
+    triggerValue,
+    asChild,
+    children,
+    ...args
+}: TriggerArgs) {
     const { setInternalIsOpen } = useModalContext();
 
-    const isDisabled =
-        buttonProps !== undefined &&
-        ("disabled" in buttonProps || "aria-label" in buttonProps)
-            ? buttonProps.disabled || buttonProps["aria-disabled"]
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (children?.props as any)?.disabled ||
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (children?.props as any)?.["aria-disabled"];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const childrenProps: any | undefined = children?.props;
 
-    const onClick =
-        buttonProps !== undefined && buttonProps.onClick !== undefined
-            ? buttonProps.onClick
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (children?.props as any)?.onClick;
+    const isDisabled = Boolean(
+        args.disabled ||
+            args["aria-disabled"] ||
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            childrenProps?.disabled ||
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            childrenProps?.["aria-disabled"]
+    );
 
-    const onKeyDown =
-        buttonProps !== undefined && buttonProps.onKeyDown !== undefined
-            ? buttonProps.onKeyDown
-            : // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              (children?.props as any)?.onKeyDown;
+    const onClick = args.onClick || childrenProps?.onClick;
+
+    const onKeyDown = args.onKeyDown || childrenProps?.onKeyDown;
 
     const handleClick = (event: ReactMouseEvent<HTMLButtonElement>) => {
         if (isDisabled) return;
@@ -159,7 +158,7 @@ export function Trigger({
 
         if (event.defaultPrevented) return;
 
-        setInternalIsOpen(value);
+        setInternalIsOpen(triggerValue);
     };
 
     const handleKeyDown = (event: ReactKeyboardEvent<HTMLButtonElement>) => {
@@ -184,17 +183,18 @@ export function Trigger({
 
     return (
         <Button
-            aria-label={value ? "Open" : "Close"}
-            {...buttonProps}
+            aria-label={triggerValue ? "Open" : "Close"}
+            {...args}
             onClick={handleClick}
             onKeyDown={handleKeyDown}
         >
+            {triggerValue ? "Open" : "Close"}
             {children}
         </Button>
     );
 }
 
-interface ModalOverlayArgs {
+interface ModalOverlayArgs extends HTMLAttributes<HTMLDivElement> {
     children?: ReactNode;
     backgroundColor?: string;
     backgroundBlurRadius?: string;
@@ -219,24 +219,17 @@ function ModalOverlay({
     return (
         <div
             className={modalStyle.modal}
+            data-state={internalIsOpen ? "open" : "closed"}
+            {...args}
             style={{
                 backgroundColor: `rgb(
         from ${backgroundColor} r g b / ${backgroundBlurOpacity}
     )`,
                 backdropFilter: `blur(${backgroundBlurRadius})`,
-                opacity: internalIsOpen ? "1" : "0",
-                pointerEvents: internalIsOpen ? "initial" : "none",
-                transitionDuration: internalIsOpen ? "1s" : "0.5s",
-                overflow: internalIsOpen ? "hidden" : "visible",
+                ...args.style,
             }}
-            {...args}
         >
-            <div
-                className={`${modalStyle.wrapper}`}
-                style={{ pointerEvents: internalIsOpen ? "initial" : "none" }}
-            >
-                {children}
-            </div>
+            <div className={`${modalStyle.wrapper}`}>{children}</div>
         </div>
     );
 }

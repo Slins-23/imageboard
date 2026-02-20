@@ -9,6 +9,7 @@ export default function DialogCard({ ...args }: CardProps) {
         <Card
             {...args}
             style={{
+                backgroundColor: "var(--primary)",
                 borderRadius: "10px",
                 ...args.style,
             }}

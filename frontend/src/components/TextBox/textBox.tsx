@@ -9,9 +9,6 @@ interface textBoxArgs extends InputHTMLAttributes<HTMLInputElement> {
     value?: string;
     transformText?: (value: string) => string;
     onTextChange?: (value: string) => void;
-    width?: string;
-    height?: string;
-    fontSize?: string;
     type?:
         | "date"
         | "email"
@@ -30,9 +27,6 @@ export default function TextBox({
     value = undefined,
     transformText = undefined,
     onTextChange = undefined,
-    width = "auto",
-    height = "2rem",
-    fontSize = "1.15rem",
     type = "text",
     ...args
 }: textBoxArgs) {
@@ -57,7 +51,6 @@ export default function TextBox({
         <input
             type={type}
             className={textBoxStyle.textBox}
-            style={{ width, height, fontSize }}
             value={textState ?? ""}
             {...args}
             onChange={handleChange}

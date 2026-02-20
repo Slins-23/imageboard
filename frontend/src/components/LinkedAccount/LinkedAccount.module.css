@@ -16,7 +16,7 @@
     border-radius: 10px;
     border-width: 1px;
     border-style: solid;
-    font-size: 2rem;
+    font-size: var(--font-size-2xl);
     position: relative;
     width: 100%;
     margin-right: 4.5%;
@@ -36,7 +36,7 @@
     border-width: 2px;
     border-color: var(--tertiary);
     border-style: solid;
-    font-size: 1.5rem;
+    font-size: var(--font-size-xl);
     padding: 0.425rem 1rem;
     /* text-align: center; */
     cursor: pointer;

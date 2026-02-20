@@ -55,7 +55,7 @@ export const CreateAlbumSuccess: Story = {
     args: {
         children: (
             <>
-                <span style={{ fontSize: "2.25rem" }}>
+                <span style={{ fontSize: "var(--font-size-3xl)" }}>
                     Successfully created album{" "}
                     <span style={{ color: "var(--tertiary)" }}>???????</span>
                 </span>
@@ -70,10 +70,10 @@ export const CreateAlbumError: Story = {
     args: {
         children: (
             <>
-                <span style={{ fontSize: "2.25rem" }}>
+                <span style={{ fontSize: "var(--font-size-3xl)" }}>
                     Could not create album
                 </span>
-                <span style={{ fontSize: "1.25rem" }}>
+                <span style={{ fontSize: "var(--font-size-lg)" }}>
                     Reason: Too many characters (Max{" "}
                     <span style={{ color: "var(--tertiary)" }}>??</span>)
                 </span>
@@ -123,7 +123,7 @@ export const SignupConfirmation: Story = {
     args: {
         children: (
             <>
-                <span style={{ fontSize: "2rem" }}>
+                <span style={{ fontSize: "var(--font-size-2xl)" }}>
                     A confirmation link was sent to your e-mail. Open it in a
                     browser to complete your signature.
                 </span>

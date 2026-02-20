@@ -7,9 +7,10 @@ import {
     type MouseEvent,
     type KeyboardEvent,
     useLayoutEffect,
+    type HTMLAttributes,
 } from "react";
 
-interface LinkedAccountArgs {
+interface LinkedAccountArgs extends HTMLAttributes<HTMLDivElement> {
     iconSrc?: string;
     iconAlt?: string;
     width?: string;
@@ -32,6 +33,7 @@ export default function LinkedAccount({
     onConnected = undefined,
     onConnectedChange = undefined,
     wrapperWidth = "900px",
+    ...args
 }: LinkedAccountArgs) {
     const [internalIsConnected, setInternalIsConnected] =
         useControllableState<boolean>({
@@ -86,8 +88,10 @@ export default function LinkedAccount({
     return (
         <div
             className={`${linkedAccountStyle.wrapper}`}
+            {...args}
             style={{
                 width: wrapperWidth,
+                ...args.style,
             }}
         >
             <div ref={iconWrapperRef}></div>

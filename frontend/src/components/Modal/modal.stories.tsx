@@ -65,22 +65,18 @@ export const Uncontrolled: StoryObj<typeof meta> = {
                 onClose={onClose}
             >
                 <Modal.Trigger
-                    value={true}
-                    buttonProps={{
-                        onClick: () => {
-                            alert("Open clicked");
-                        },
+                    triggerValue={true}
+                    onClick={() => {
+                        alert("Open clicked");
                     }}
                 />
 
                 <Modal.Content {...contentProps}>
                     <Card>Hello</Card>
                     <Modal.Trigger
-                        value={false}
-                        buttonProps={{
-                            onClick: () => {
-                                alert("Close clicked");
-                            },
+                        triggerValue={false}
+                        onClick={() => {
+                            alert("Close clicked");
                         }}
                     />
                 </Modal.Content>
@@ -146,7 +142,7 @@ export const Controlled: StoryObj<typeof meta> = {
                 onDismissibleChange={setIsDismissible}
             >
                 <Modal.Trigger
-                    value={true}
+                    triggerValue={true}
                     asChild
                 >
                     <Button
@@ -154,13 +150,15 @@ export const Controlled: StoryObj<typeof meta> = {
                         onClick={() => {
                             alert("Open clicked");
                         }}
-                    />
+                    >
+                        Open modal
+                    </Button>
                 </Modal.Trigger>
 
                 <Modal.Content {...contentProps}>
                     <Card>Hello</Card>
                     <Modal.Trigger
-                        value={false}
+                        triggerValue={false}
                         asChild
                     >
                         <Button
@@ -168,7 +166,9 @@ export const Controlled: StoryObj<typeof meta> = {
                             onClick={() => {
                                 alert("Close clicked");
                             }}
-                        />
+                        >
+                            Close modal
+                        </Button>
                     </Modal.Trigger>
                 </Modal.Content>
             </Modal.Root>

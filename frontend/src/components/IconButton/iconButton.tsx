@@ -11,7 +11,7 @@ import NotificationCount, {
 import { useControllableState } from "@/utils/utils";
 import type { MouseEvent, ButtonHTMLAttributes } from "react";
 
-interface IconButtonArgs {
+interface IconButtonArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
     isActive?: boolean;
     defaultActive?: boolean;
     onActiveChange?: (isActive: boolean) => void;
@@ -22,7 +22,6 @@ interface IconButtonArgs {
     iconWidthScale?: number;
     iconHeightScale?: number;
     hasNotifications?: boolean;
-    buttonProps?: ButtonHTMLAttributes<HTMLButtonElement>;
     iconProps?: FontAwesomeIconProps;
     notificationProps?: NotificationArgs;
 }
@@ -31,14 +30,14 @@ export default function IconButton({
     isActive = undefined,
     defaultActive = false,
     btnIcon = faHouse,
-    width = "3.125rem",
-    height = "3.125rem",
-    iconSize = "1.5625rem",
+    width = "50px",
+    height = "50px",
+    iconSize = "25px",
     iconWidthScale = 1,
     iconHeightScale = 1,
     hasNotifications = false,
     onActiveChange = undefined,
-    ...props
+    ...args
 }: IconButtonArgs) {
     const [internalIsActive, setInternalIsActive] =
         useControllableState<boolean>({
@@ -48,9 +47,9 @@ export default function IconButton({
         });
 
     const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-        if (props.buttonProps?.disabled) return;
+        if (args.disabled) return;
 
-        props.buttonProps?.onClick?.(event);
+        args?.onClick?.(event);
 
         if (event.defaultPrevented) return;
 
@@ -61,13 +60,14 @@ export default function IconButton({
         <button
             type="button"
             className={`${buttonStyle.iconButton}`}
-            style={{ width, height }}
             aria-pressed={internalIsActive}
-            {...props.buttonProps}
+            {...args}
+            style={{ width, height, ...args.style }}
             onClick={handleClick}
         >
             <FontAwesomeIcon
                 icon={btnIcon}
+                {...args.iconProps}
                 style={{
                     ...(iconSize === undefined ? {} : { fontSize: iconSize }),
                     ...(iconWidthScale === undefined ||
@@ -75,12 +75,12 @@ export default function IconButton({
                         ? {}
                         : { scale: `${iconWidthScale} ${iconHeightScale}` }),
                     color: "var(--accent)",
+                    ...args.iconProps?.style,
                 }}
-                {...props.iconProps}
             />
 
             {hasNotifications && (
-                <NotificationCount {...props.notificationProps} />
+                <NotificationCount {...args.notificationProps} />
             )}
         </button>
     );

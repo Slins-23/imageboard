@@ -22,13 +22,12 @@ export type NavigationItems = Array<Readonly<NavigationItem>>;
 export default function GradientNavbar({
     title,
     items,
-    navProps,
     listProps,
     itemProps,
+    ...args
 }: {
     title: string;
     items: NavigationItems;
-    navProps?: HTMLAttributes<HTMLElement>;
     listProps?: HTMLAttributes<HTMLUListElement>;
     itemProps?: LiHTMLAttributes<HTMLLIElement>;
 }) {
@@ -71,7 +70,7 @@ export default function GradientNavbar({
     return (
         <nav
             className={`${gradientNavbarStyle.navbar}`}
-            {...navProps}
+            {...args}
         >
             <header>
                 <h1 style={{ color: "var(--tertiary)", fontWeight: "500" }}>

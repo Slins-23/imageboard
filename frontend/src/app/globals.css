@@ -44,6 +44,14 @@
     --foreground-blur-radius: 5px;
     --foreground-hovered-blur-opacity: 0.7;
     --foreground-hovered-blur-radius: 5px;
+    --font-size-4xl: 3rem;
+    --font-size-3xl: 2.25rem;
+    --font-size-2xl: 2rem;
+    --font-size-xl: 1.5rem;
+    --font-size-lg: 1.25rem;
+    --font-size-md: 1rem;
+    --font-size-sm: 0.75rem;
+    --font-size-xsm: 0.5rem;
 }
 
 :disabled,
