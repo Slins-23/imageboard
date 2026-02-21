@@ -1,9 +1,11 @@
-import Button from "@/components/Button/button";
+"use client";
 import LinkedAccount from "@/components/LinkedAccount/LinkedAccount";
-import RadioButton from "@/components/RadioButton/radioButton";
 import * as Modal from "@/components/Modal/modal";
 import Card from "@/components/InterestCard/interestCard";
 import { DropdownMenu } from "@/components/DropdownMenu/dropdownMenu";
+import RadioButton from "@/components/RadioGroup/radioButton";
+import RadioGroup from "@/components/RadioGroup/radioGroup";
+import Button from "@/components/Button/button";
 
 export default function Profile() {
     return (
@@ -19,34 +21,41 @@ export default function Profile() {
             Profile page
             <br></br>
             <br></br>
-            <div
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    flexDirection: "row",
-                    gap: "5px",
-                }}
+            <RadioGroup
+                defaultSelectedValue="MLS"
+                groupName="leagues"
             >
                 <RadioButton
-                    id="brazil"
-                    name="this-group"
-                    value="Brazil"
+                    value={"Brasileirão"}
+                    label={"Brazil"}
                 />
-                <label htmlFor="brazil">Brazil</label>
                 <RadioButton
-                    id="united-states"
-                    name="this-group"
-                    value="United States"
+                    value={"MLS"}
+                    label={"United States"}
                 />
-                <label htmlFor="united-states">United States</label>
                 <RadioButton
-                    id="germany"
-                    name="this-group"
-                    value="Germany"
+                    value={"Bundesliga"}
+                    label={"Germany"}
                 />
-                <label htmlFor="germany">Germany</label>
-            </div>
+            </RadioGroup>
+            <center>
+                <Button
+                    aria-label="Get country"
+                    onClick={() => {
+                        const selectedElement = document.querySelector(
+                            "input[name='leagues']:checked"
+                        ) as HTMLInputElement | null;
+
+                        alert(
+                            `You chose the country ${selectedElement?.value}`
+                        );
+                    }}
+                    style={{ width: "50%" }}
+                >
+                    Get league
+                </Button>
+            </center>
+            <br></br>
             <div
                 id="wrapper"
                 style={{
@@ -54,9 +63,7 @@ export default function Profile() {
                     alignItems: "center",
                     justifyContent: "center",
                 }}
-            >
-                <Button aria-label="Get country">Get country</Button>
-            </div>
+            ></div>
             <br></br>
             <div
                 id="list"
