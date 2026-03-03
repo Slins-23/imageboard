@@ -90,7 +90,6 @@ export const GroupUncontrolled: StoryObj<typeof meta> = {
                 }}
             >
                 <RadioGroup
-                    key={args.defaultSelectedValue as string}
                     {...args}
                 >
                     <RadioButton

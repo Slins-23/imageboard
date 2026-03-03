@@ -1,8 +1,14 @@
 .button {
-    background-color: var(--secondary);
+    --bg-color: var(--secondary);
+    --bg-color-hover: var(--tertiary);
+    --text-color: var(--accent);
+    --text-color-hover: var(--accent);
+    --border-color: var(--tertiary);
+    background-color: var(--bg-color);
+    color: var(--text-color);
     border-style: solid;
     border-width: 1px;
-    border-color: var(--tertiary);
+    border-color: var(--border-color);
     transition: 0.15s;
     cursor: pointer;
     font-size: var(--font-size-xl);
@@ -11,7 +17,8 @@
 
 .button:focus-visible,
 .button:hover {
-    background-color: var(--tertiary);
+    background-color: var(--bg-color-hover);
+    color: var(--text-color-hover);
 }
 
 .button:focus-visible {

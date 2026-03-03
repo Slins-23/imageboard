@@ -73,7 +73,7 @@ export const CreateAlbumError: Story = {
                 <span style={{ fontSize: "var(--font-size-3xl)" }}>
                     Could not create album
                 </span>
-                <span style={{ fontSize: "var(--font-size-lg)" }}>
+                <span style={{ fontSize: "var(--font-size-xl)" }}>
                     Reason: Too many characters (Max{" "}
                     <span style={{ color: "var(--tertiary)" }}>??</span>)
                 </span>
