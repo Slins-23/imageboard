@@ -2,9 +2,10 @@
     font-family: "Fenix";
     background-color: var(--secondary);
     color: var(--accent);
-    border-color: var(--tertiary);
-    border-width: 1px;
-    border-style: solid;
+    border: none;
+    outline-color: var(--tertiary);
+    outline-width: 1px;
+    outline-style: solid;
     padding-left: 0.3em;
     padding-right: 0.2em;
     width: auto;
@@ -21,7 +22,8 @@
 }
 
 .textBox:focus {
-    outline: none;
+    outline-width: 2px;
+    outline-color: var(--accent);
 }
 
 .textBox::placeholder {

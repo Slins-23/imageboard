@@ -2,9 +2,10 @@
     font-family: "Fenix";
     background-color: var(--secondary);
     color: var(--accent);
-    border-color: var(--tertiary);
-    border-width: 1px;
-    border-style: solid;
+    border: none;
+    outline-color: var(--tertiary);
+    outline-width: 1px;
+    outline-style: solid;
     padding: 0.5em;
     white-space: normal;
     width: 310px;
@@ -13,7 +14,8 @@
 }
 
 .textArea:focus {
-    outline: none;
+    outline-width: 2px;
+    outline-color: var(--accent);
 }
 
 .textArea::placeholder {

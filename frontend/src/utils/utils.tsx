@@ -75,3 +75,34 @@ export function makeKebabCase(text: string) {
 
     return joinedWords;
 }
+
+export async function filledElementFromSVG(
+    src: string,
+    width?: string | number,
+    height?: string | number
+): Promise<SVGElement | undefined> {
+    const svgPromise = await fetch(src)
+        .then((res) => res.text())
+        .then((svg) => {
+            const tmpContainer = document.createElement("div");
+            tmpContainer.innerHTML = svg;
+
+            const svgElement = tmpContainer.children[0] as SVGElement;
+
+            const strokes = svgElement.querySelectorAll("path");
+
+            for (const stroke of strokes) {
+                stroke.style.fill = "var(--tertiary)";
+            }
+
+            if (width !== undefined) svgElement.style.width = width.toString();
+            if (height !== undefined)
+                svgElement.style.height = height.toString();
+
+            svgElement.style.display = "block";
+
+            return svgElement;
+        });
+
+    return svgPromise;
+}

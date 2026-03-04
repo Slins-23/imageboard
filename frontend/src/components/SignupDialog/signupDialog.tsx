@@ -1,9 +1,14 @@
 import Card from "@/components/Card/card";
-import type { ReactNode } from "react";
+import type { ReactNode, ComponentProps } from "react";
 
-export default function SignupDialog({ children }: { children?: ReactNode }) {
+interface SignupDialogArgs extends ComponentProps<typeof Card> {
+    children?: ReactNode;
+}
+
+export default function SignupDialog({ children, ...args }: SignupDialogArgs) {
     return (
         <Card
+            {...args}
             style={{
                 width: "472px",
                 height: "455px",
@@ -12,6 +17,7 @@ export default function SignupDialog({ children }: { children?: ReactNode }) {
                 boxShadow: "0 0 26.4px 8px var(--secondary)",
                 backgroundImage:
                     "linear-gradient(var(--primary) 0%, var(--primary) 22%, var(--secondary) 100%)",
+                ...args.style,
             }}
         >
             {children}

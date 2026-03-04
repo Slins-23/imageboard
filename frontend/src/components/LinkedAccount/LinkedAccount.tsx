@@ -1,7 +1,7 @@
 "use client";
 
 import linkedAccountStyle from "./LinkedAccount.module.css";
-import { useControllableState } from "@/utils/utils";
+import { useControllableState, filledElementFromSVG } from "@/utils/utils";
 import {
     useRef,
     type MouseEvent,
@@ -63,26 +63,21 @@ export default function LinkedAccount({
     };
 
     useLayoutEffect(() => {
-        if (iconWrapperRef.current !== null) {
-            fetch(iconSrc)
-                .then((res) => res.text())
-                .then((svg) => {
-                    if (iconWrapperRef.current === null) return;
-                    iconWrapperRef.current.innerHTML = svg;
+        const resolveSVG = async () => {
+            if (iconWrapperRef.current === null) return;
 
-                    const svgElement = iconWrapperRef.current
-                        .children[0] as SVGElement;
+            const svgElement = await filledElementFromSVG(
+                iconSrc,
+                width,
+                height
+            );
 
-                    const strokes = svgElement.querySelectorAll("path");
+            if (svgElement !== undefined) {
+                iconWrapperRef.current.append(svgElement);
+            }
+        };
 
-                    for (const stroke of strokes) {
-                        stroke.style.fill = "var(--tertiary)";
-                    }
-
-                    svgElement.style.width = width;
-                    svgElement.style.height = height;
-                });
-        }
+        resolveSVG();
     }, []);
 
     return (

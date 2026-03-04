@@ -1,8 +1,7 @@
 import stageStyle from "./stages.module.css";
 import Button from "@/components/Button/button";
-import type { CSSProperties } from "react";
+import { type CSSProperties, useState, useId } from "react";
 import TextBox from "@/components/TextBox/textBox";
-import { useState, useId } from "react";
 
 export default function AccountDetails() {
     const [email, setEmail] = useState<string>("");
@@ -47,7 +46,6 @@ export default function AccountDetails() {
                 >
                     Create your account
                 </span>
-                {/* <div style={{ display: "flex", flexDirection: "column" }}> */}
                 <div
                     style={{
                         display: "grid",
