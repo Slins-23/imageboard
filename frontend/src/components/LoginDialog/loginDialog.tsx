@@ -4,6 +4,7 @@ import Button from "@/components/Button/button";
 import TextBox from "@/components/TextBox/textBox";
 import { type CSSProperties, useState, useId } from "react";
 import LinkAccount from "./linkAccount";
+import loginDialogStyle from "./loginDialog.module.css";
 
 export default function LoginDialog() {
     const [userId, setUserId] = useState<string>("");
@@ -17,57 +18,25 @@ export default function LoginDialog() {
     return (
         <SignupDialog style={{ height: "680px" }}>
             <div
-                className={`${stageStyle.wrapper}`}
-                style={{ padding: "1.5rem", height: "auto" }}
+                className={stageStyle.wrapper}
+                style={{ padding: "1.5rem" }}
             >
                 <div
-                    className={`${stageStyle.contentWrapper}`}
+                    className={stageStyle.contentWrapper}
                     style={{
-                        justifyContent: "start",
                         gap: "1.75rem",
-                        position: "relative",
-                        width: "100%",
-                        height: "100%",
                     }}
                 >
-                    <span
-                        style={{
-                            textAlign: "center",
-                            fontSize: "var(--font-size-2xl)",
-                            color: "var(--tertiary)",
-                            pointerEvents: "none",
-                            userSelect: "none",
-                            MozUserSelect: "none",
-                            msUserSelect: "none",
-                            WebkitUserSelect: "none",
-                        }}
-                    >
+                    <span className={stageStyle.title}>
                         Log into your account
                     </span>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            justifyContent: "center",
-                            gap: "0.5rem",
-                        }}
-                    >
+                    <div className={loginDialogStyle.linkAccountWrapper}>
                         <LinkAccount
                             src="social-media/google.svg"
                             name="Google"
                             iconWidth="var(--font-size-2xl)"
                             iconHeight="var(--font-size-2xl)"
                             onClick={() => alert("Google login clicked!")}
-                            style={
-                                {
-                                    "--bg-color-hover": "var(--primary)",
-                                    "--text-color-hover": "var(--tertiary)",
-                                    width: "300px",
-                                    borderRadius: "10px",
-                                    fontSize: "var(--font-size-xl)",
-                                    padding: "0.3em 0.9em",
-                                } as CSSProperties
-                            }
                         />
                         <LinkAccount
                             src="social-media/facebook.svg"
@@ -75,16 +44,6 @@ export default function LoginDialog() {
                             iconWidth="var(--font-size-2xl)"
                             iconHeight="var(--font-size-2xl)"
                             onClick={() => alert("Facebook login clicked!")}
-                            style={
-                                {
-                                    "--bg-color-hover": "var(--primary)",
-                                    "--text-color-hover": "var(--tertiary)",
-                                    width: "300px",
-                                    borderRadius: "10px",
-                                    fontSize: "var(--font-size-xl)",
-                                    padding: "0.3em 0.9em",
-                                } as CSSProperties
-                            }
                         />
                         <LinkAccount
                             src="social-media/instagram.svg"
@@ -92,16 +51,6 @@ export default function LoginDialog() {
                             iconWidth="var(--font-size-2xl)"
                             iconHeight="var(--font-size-2xl)"
                             onClick={() => alert("Instagram login clicked!")}
-                            style={
-                                {
-                                    "--bg-color-hover": "var(--primary)",
-                                    "--text-color-hover": "var(--tertiary)",
-                                    width: "300px",
-                                    borderRadius: "10px",
-                                    fontSize: "var(--font-size-xl)",
-                                    padding: "0.3em 0.9em",
-                                } as CSSProperties
-                            }
                         />
                         <LinkAccount
                             src="social-media/x.svg"
@@ -109,16 +58,6 @@ export default function LoginDialog() {
                             iconWidth="var(--font-size-2xl)"
                             iconHeight="var(--font-size-2xl)"
                             onClick={() => alert("X login clicked!")}
-                            style={
-                                {
-                                    "--bg-color-hover": "var(--primary)",
-                                    "--text-color-hover": "var(--tertiary)",
-                                    width: "300px",
-                                    borderRadius: "10px",
-                                    fontSize: "var(--font-size-xl)",
-                                    padding: "0.3em 0.9em",
-                                } as CSSProperties
-                            }
                         />
 
                         <LinkAccount
@@ -127,25 +66,9 @@ export default function LoginDialog() {
                             iconWidth="var(--font-size-2xl)"
                             iconHeight="var(--font-size-2xl)"
                             onClick={() => alert("Reddit login clicked!")}
-                            style={
-                                {
-                                    "--bg-color-hover": "var(--primary)",
-                                    "--text-color-hover": "var(--tertiary)",
-                                    width: "300px",
-                                    borderRadius: "10px",
-                                    fontSize: "var(--font-size-xl)",
-                                    padding: "0.3em 0.9em",
-                                } as CSSProperties
-                            }
                         />
                     </div>
-                    <div
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            gap: "1.5rem",
-                        }}
-                    >
+                    <div className={loginDialogStyle.fieldsWrapper}>
                         <TextBox
                             id={userFieldId}
                             placeholder="E-mail or username"
@@ -175,52 +98,19 @@ export default function LoginDialog() {
                         />
                     </div>
                 </div>
-                <div
-                    style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "1.25rem",
-                        marginTop: "1.25rem",
-                    }}
-                >
+                <div className={stageStyle.footerWrapper}>
                     <Button
+                        className={loginDialogStyle.resetPassword}
                         onClick={() => alert("Reset your password")}
-                        style={{
-                            background: "none",
-                            border: "none",
-                            display: "inline",
-                            padding: "0",
-                            color: "var(--tertiary)",
-                            fontSize: "var(--font-size-lg)",
-                            cursor: "pointer",
-                            userSelect: "none",
-                            MozUserSelect: "none",
-                            msUserSelect: "none",
-                            WebkitUserSelect: "none",
-                        }}
                     >
                         Forgot your login info?
                     </Button>
                     <div
-                        className={`${stageStyle.buttonWrapper}`}
-                        style={{
-                            display: "flex",
-                            flexDirection: "column",
-                            alignItems: "center",
-                            gap: "1rem",
-                        }}
+                        className={`${stageStyle.buttonWrapper} ${loginDialogStyle.extraButtonWrapper}`}
                     >
                         <span
-                            style={{
-                                visibility:
-                                    errorMessage === null
-                                        ? "hidden"
-                                        : "visible",
-                                color: "var(--accent)",
-                                fontSize: "var(--font-size-lg)",
-                            }}
+                            className={stageStyle.errorMessage}
+                            data-has-error={errorMessage !== null}
                         >
                             {errorMessage ?? "None"}
                         </span>

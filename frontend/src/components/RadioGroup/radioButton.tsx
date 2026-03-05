@@ -42,7 +42,7 @@ export default function RadioButton({
 
     return (
         <div
-            className={`${radioButtonStyle.wrapper}`}
+            className={radioButtonStyle.wrapper}
             style={{
                 gap: context.buttonTextGap,
             }}
@@ -50,7 +50,7 @@ export default function RadioButton({
             <input
                 id={radioBtnId}
                 name={context.groupName}
-                className={`${radioButtonStyle.button}`}
+                className={radioButtonStyle.button}
                 type="radio"
                 aria-checked={internalIsSelected}
                 checked={internalIsSelected}

@@ -81,7 +81,7 @@ export default function Checkbox({
 
     return (
         <button
-            className={`${checkboxStyle.checkbox}`}
+            className={checkboxStyle.checkbox}
             role="checkbox"
             aria-checked={internalIsChecked}
             {...args}

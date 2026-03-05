@@ -12,13 +12,16 @@ export const Primary: StoryObj<typeof meta> = {
     args: {
         title: "Account",
         items: [
-            { route: "/user/profile", text: "Profile" },
-            { route: "/user/credentials", text: "Credentials" },
-            { route: "/user/interests", text: "Interests" },
-            { route: "/user/history", text: "History" },
-            { route: "/user/linked-accounts", text: "Linked accounts" },
-            { route: "/user/notifications", text: "Notifications" },
-            { route: "/user/delete", text: "Delete" },
+            { route: "/user/settings/profile", text: "Profile" },
+            { route: "/user/settings/credentials", text: "Credentials" },
+            { route: "/user/settings/interests", text: "Interests" },
+            { route: "/user/settings/history", text: "History" },
+            {
+                route: "/user/settings/linked-accounts",
+                text: "Linked accounts",
+            },
+            { route: "/user/settings/notifications", text: "Notifications" },
+            { route: "/user/settings/delete", text: "Delete" },
         ],
         listProps: { "aria-label": "list" },
     },

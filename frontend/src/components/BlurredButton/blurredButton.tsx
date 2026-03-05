@@ -7,7 +7,7 @@ type ButtonProps = ComponentProps<typeof Button>;
 export default function BlurredButton({ ...args }: ButtonProps) {
     return (
         <Button
-            className={`${blurredButtonStyle.blurred}`}
+            className={blurredButtonStyle.blurred}
             {...args}
         >
             {args.children}

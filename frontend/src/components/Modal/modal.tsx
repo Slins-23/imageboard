@@ -140,11 +140,11 @@ export function Trigger({
 
     const isDisabled = Boolean(
         args.disabled ||
-            args["aria-disabled"] ||
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            childrenProps?.disabled ||
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            childrenProps?.["aria-disabled"]
+        args["aria-disabled"] ||
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        childrenProps?.disabled ||
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        childrenProps?.["aria-disabled"]
     );
 
     const onClick = args.onClick || childrenProps?.onClick;
@@ -229,7 +229,7 @@ function ModalOverlay({
                 ...args.style,
             }}
         >
-            <div className={`${modalStyle.wrapper}`}>{children}</div>
+            <div className={modalStyle.wrapper}>{children}</div>
         </div>
     );
 }

@@ -23,7 +23,7 @@ export default function NotificationCount({
 
     return (
         <div
-            className={`${notificationStyle.notificationCount}`}
+            className={notificationStyle.notificationCount}
             {...args}
         >
             {internalCount}

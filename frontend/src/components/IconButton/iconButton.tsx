@@ -59,7 +59,7 @@ export default function IconButton({
     return (
         <button
             type="button"
-            className={`${buttonStyle.iconButton}`}
+            className={buttonStyle.iconButton}
             aria-pressed={internalIsActive}
             {...args}
             style={{ width, height, ...args.style }}

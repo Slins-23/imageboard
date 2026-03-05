@@ -5,24 +5,16 @@ import type { CSSProperties } from "react";
 export default function SignupConfirmation() {
     return (
         <div
-            className={`${stageStyle.wrapper}`}
+            className={stageStyle.wrapper}
             style={{ padding: "2rem" }}
         >
             <div
-                className={`${stageStyle.contentWrapper}`}
-                style={{
-                    textAlign: "center",
-                    pointerEvents: "none",
-                    userSelect: "none",
-                    MozUserSelect: "none",
-                    msUserSelect: "none",
-                    WebkitUserSelect: "none",
-                }}
+                className={`${stageStyle.contentWrapper} ${stageStyle.mainText}`}
             >
                 A confirmation link was sent to your e-mail. Open it in a
                 browser to complete your registration.
             </div>
-            <div className={`${stageStyle.buttonWrapper}`}>
+            <div className={stageStyle.buttonWrapper}>
                 <Button
                     style={
                         {

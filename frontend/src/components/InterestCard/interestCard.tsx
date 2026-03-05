@@ -19,15 +19,15 @@ export default function InterestCard({
             {...args}
             style={{ width: "150px", height: "150px ", ...args.style }}
         >
-            <div className={`${interestCardStyle.wrapper}`}>
+            <div className={interestCardStyle.wrapper}>
                 {interestTag && (
-                    <span className={`${interestCardStyle["interest-tag"]}`}>
+                    <span className={interestCardStyle["interest-tag"]}>
                         {interestTag}
                     </span>
                 )}
                 {interestValue && (
                     <span
-                        className={`${interestCardStyle["interest-value"]}`}
+                        className={interestCardStyle["interest-value"]}
                         style={{
                             fontSize: `0.75em`,
                         }}

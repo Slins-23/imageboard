@@ -8,7 +8,7 @@ interface CardParams extends HTMLAttributes<HTMLDivElement> {
 export default function Card({ children = undefined, ...args }: CardParams) {
     return (
         <div
-            className={`${cardStyle.card}`}
+            className={cardStyle.card}
             {...args}
         >
             {children}

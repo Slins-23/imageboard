@@ -1,6 +1,12 @@
 import Button from "@/components/Button/button";
-import { type ComponentProps, useLayoutEffect, useRef } from "react";
+import {
+    type ComponentProps,
+    CSSProperties,
+    useLayoutEffect,
+    useRef,
+} from "react";
 import { filledElementFromSVG } from "@/utils/utils";
+import linkAccountStyle from "./linkAccount.module.css";
 
 interface LinkAccountArgs extends ComponentProps<typeof Button> {
     src?: string;
@@ -37,15 +43,20 @@ export default function LinkAccount({
     }, []);
 
     return (
-        <Button {...args}>
-            <div
-                style={{
-                    display: "flex",
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: "1.6rem",
-                }}
-            >
+        <Button
+            {...args}
+            style={
+                {
+                    "--bg-color-hover": "var(--primary)",
+                    "--text-color-hover": "var(--tertiary)",
+                    width: "300px",
+                    borderRadius: "10px",
+                    fontSize: "var(--font-size-xl)",
+                    padding: "0.3em 0.9em",
+                } as CSSProperties
+            }
+        >
+            <div className={linkAccountStyle.contentWrapper}>
                 <div ref={iconWrapperRef}></div>
                 <span>with {name}</span>
             </div>

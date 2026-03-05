@@ -19,8 +19,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            {/* <body className={`${fenix.className}`}>{children}</body> */}
-            <body className={`${fontFenix.className}`}> {children} </body>
+            <body className={fontFenix.className}> {children} </body>
         </html>
     );
 }

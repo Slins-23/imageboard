@@ -382,12 +382,7 @@ export function DropdownMenu({
                 {dropdownEntries[internalSelectedIdx as number].value}
             </button>
             <ul
-                className={
-                    `${dropdownStyle.list}` //+
-                    // (isOpen ? "" : " " + dropdownStyle.hidden)
-                }
-                // { isOpen && { "aria-hidden"="true" } }
-
+                className={dropdownStyle.list}
                 role="listbox"
                 aria-hidden={!isOpen}
                 {...listProps}

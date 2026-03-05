@@ -82,7 +82,7 @@ export default function LinkedAccount({
 
     return (
         <div
-            className={`${linkedAccountStyle.wrapper}`}
+            className={linkedAccountStyle.wrapper}
             {...args}
             style={{
                 width: wrapperWidth,
@@ -90,9 +90,9 @@ export default function LinkedAccount({
             }}
         >
             <div ref={iconWrapperRef}></div>
-            <div className={`${linkedAccountStyle.container}`}>
+            <div className={linkedAccountStyle.container}>
                 {internalIsConnected && (
-                    <span className={`${linkedAccountStyle.text}`}>
+                    <span className={linkedAccountStyle.text}>
                         Connected as{" "}
                         <span style={{ color: "var(--tertiary)" }}>
                             {connectedEmail}
@@ -102,14 +102,14 @@ export default function LinkedAccount({
 
                 {internalIsConnected ? (
                     <button
-                        className={`${linkedAccountStyle.button}`}
+                        className={linkedAccountStyle.button}
                         onClick={unlinkAccount}
                     >
                         Disconnect
                     </button>
                 ) : (
                     <button
-                        className={`${linkedAccountStyle.button}`}
+                        className={linkedAccountStyle.button}
                         onClick={linkAccount}
                     >
                         Connect

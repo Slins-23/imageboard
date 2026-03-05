@@ -1,40 +1,32 @@
-"use client";
-
+import userMenuStyle from "./userMenu.module.css";
 import Link from "next/link";
-import gradientNavbarStyle from "./gradientNavbar.module.css";
+import type {
+    NavigationItem,
+    NavigationItems,
+} from "@/components/GradientNavbar/gradientNavbar";
+import { usePathname } from "next/navigation";
 import {
-    useState,
-    useRef,
+    HTMLAttributes,
+    LiHTMLAttributes,
     useCallback,
     useEffect,
-    type HTMLAttributes,
-    type LiHTMLAttributes,
+    useRef,
+    useState,
 } from "react";
-import { usePathname } from "next/navigation";
 
-export interface NavigationItem {
-    text: string;
-    route: string;
-}
-
-export type NavigationItems = Array<Readonly<NavigationItem>>;
-
-interface GradientNavbarArgs {
-    title: string;
+interface UserMenuArgs {
     items: NavigationItems;
     listProps?: HTMLAttributes<HTMLUListElement>;
     itemProps?: LiHTMLAttributes<HTMLLIElement>;
 }
 
-export default function GradientNavbar({
-    title,
+export default function UserMenu({
     items,
     listProps,
     itemProps,
     ...args
-}: GradientNavbarArgs) {
+}: UserMenuArgs) {
     const slug = usePathname();
-    // const currentRouteIdx = items.findIndex((item) => item.route === slug);
 
     const menuOptionsRefs = useRef<(HTMLLIElement | null)[]>([]);
     const linkRefs = useRef<(HTMLAnchorElement | null)[]>([]);
@@ -70,17 +62,10 @@ export default function GradientNavbar({
     );
 
     return (
-        <nav
-            className={gradientNavbarStyle.navbar}
-            {...args}
-        >
-            <header>
-                <h1 style={{ color: "var(--tertiary)", fontWeight: "500" }}>
-                    {title}
-                </h1>
-            </header>
+        <nav {...args}>
             <ul
                 role="listbox"
+                className={userMenuStyle.menu}
                 {...listProps}
             >
                 {items.map((item: NavigationItem, idx: number) => (

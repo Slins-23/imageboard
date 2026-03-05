@@ -26,12 +26,12 @@ export default function UserPlaceholder({
 }: userPlaceholderArgs) {
     return (
         <div
-            className={`${placeholderStyle["avatar-card"]}`}
+            className={placeholderStyle["avatar-card"]}
             style={{ width, height }}
             {...props.cardProps}
         >
             <FontAwesomeIcon
-                className={`${placeholderStyle["avatar-icon"]}`}
+                className={placeholderStyle["avatar-icon"]}
                 icon={faUser}
                 style={{
                     fontSize: iconSize,

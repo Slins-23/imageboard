@@ -82,13 +82,13 @@ export default function ToggleSwitch({
         <button
             role="switch"
             aria-checked={internalChecked}
-            className={`${switchStyle.switch}`}
+            className={switchStyle.switch}
             {...args}
             ref={buttonRef}
             onClick={handleClick}
             onKeyDown={handleKeydown}
         >
-            <div className={`${switchStyle.circle}`} />
+            <div className={switchStyle.circle} />
         </button>
     );
 }

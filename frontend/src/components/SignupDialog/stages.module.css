@@ -19,3 +19,60 @@
 .buttonWrapper {
     /* flex-grow: 1; */
 }
+
+.footerWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.25rem;
+    margin-top: 1.25rem;
+}
+
+.title {
+    text-align: center;
+    font-size: var(--font-size-2xl);
+    color: var(--tertiary);
+    pointer-events: none;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.errorMessage {
+    visibility: hidden;
+    color: var(--accent);
+    font-size: var(--font-size-lg);
+}
+
+.errorMessage[data-has-error="true"] {
+    visibility: visible;
+}
+
+.label {
+    font-size: var(--font-size-xl);
+    pointer-events: none;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}
+
+.fieldGrid {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    column-gap: 2rem;
+    row-gap: 1.5rem;
+    align-self: start;
+    margin-right: 1rem;
+}
+
+.mainText {
+    text-align: center;
+    pointer-events: none;
+    user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+}

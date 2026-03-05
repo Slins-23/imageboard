@@ -41,7 +41,7 @@ export default function Button({
     return (
         <button
             aria-label={ariaLabel}
-            className={`${buttonStyle.button}`}
+            className={buttonStyle.button}
             type={"button"}
             {...args}
             ref={buttonRef}
