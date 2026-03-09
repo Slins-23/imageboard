@@ -1,0 +1,28 @@
+.wrapper {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.secondaryWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.icon {
+    width: 210px;
+    height: 172.5px;
+    color: var(--tertiary);
+}
+
+.failText {
+    font-size: var(--font-size-2xl);
+}
+
+.reasonText {
+    font-size: var(--font-size-2xl);
+}

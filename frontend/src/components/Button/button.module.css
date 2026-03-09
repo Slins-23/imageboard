@@ -13,6 +13,8 @@
     cursor: pointer;
     font-size: var(--font-size-xl);
     padding: 0.25em 0.5em;
+    transition: 0.15s;
+    transition-property: background-color, color, outline-width, outline-color;
 }
 
 .button:focus-visible,

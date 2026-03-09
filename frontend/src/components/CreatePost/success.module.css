@@ -1,0 +1,32 @@
+.wrapper {
+    display: flex;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.secondaryWrapper {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.icon {
+    width: 210px;
+    height: 172.5px;
+    color: var(--tertiary);
+}
+
+.successText {
+    font-size: var(--font-size-3xl);
+}
+
+.buttonsWrapper {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    font-size: var(--font-size-2xl);
+}

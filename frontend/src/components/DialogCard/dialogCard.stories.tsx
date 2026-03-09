@@ -29,7 +29,7 @@ export const DeleteAlbum: Story = {
                 </div>
             </>
         ),
-        style: { width: "450px" },
+        cardProps: { style: { width: "450px" } },
     },
 };
 
@@ -47,7 +47,7 @@ export const CreateAlbum: Story = {
                 <Button aria-label={"Create"}>Create</Button>
             </>
         ),
-        style: { width: "450px" },
+        cardProps: { style: { width: "450px" } },
     },
 };
 
@@ -62,7 +62,7 @@ export const CreateAlbumSuccess: Story = {
                 <Button aria-label={"OK"}>OK</Button>
             </>
         ),
-        style: { width: "450px" },
+        cardProps: { style: { width: "450px" } },
     },
 };
 
@@ -80,7 +80,7 @@ export const CreateAlbumError: Story = {
                 <Button aria-label={"OK"}>OK</Button>
             </>
         ),
-        style: { width: "450px" },
+        cardProps: { style: { width: "450px" } },
     },
 };
 
@@ -100,7 +100,7 @@ export const DeletePost: Story = {
                 </div>
             </>
         ),
-        style: { width: "450px" },
+        cardProps: { style: { width: "450px" } },
     },
 };
 
@@ -115,7 +115,7 @@ export const DeleteAccount: Story = {
                 </div>
             </>
         ),
-        style: { width: "450px" },
+        cardProps: { style: { width: "450px" } },
     },
 };
 
@@ -130,6 +130,6 @@ export const SignupConfirmation: Story = {
                 <Button aria-label={"OK"}>OK</Button>
             </>
         ),
-        style: { width: "450px" },
+        cardProps: { style: { width: "450px" } },
     },
 };

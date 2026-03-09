@@ -6,6 +6,7 @@ import { DropdownMenu } from "@/components/DropdownMenu/dropdownMenu";
 import RadioButton from "@/components/RadioGroup/radioButton";
 import RadioGroup from "@/components/RadioGroup/radioGroup";
 import Button from "@/components/Button/button";
+import CreatePost from "@/components/CreatePost/createPost";
 
 export default function Profile() {
     return (
@@ -111,6 +112,7 @@ export default function Profile() {
                     { value: "Opt3 A IO K OW PQ OW" },
                 ]}
             />
+            <CreatePost />
         </div>
     );
 }

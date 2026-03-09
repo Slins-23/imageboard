@@ -121,6 +121,7 @@ export default function LoginDialog() {
                                     "--text-color": "var(--tertiary)",
                                     "--text-color-hover": "var(--tertiary)",
                                     "--bg-color-hover": "var(--primary)",
+                                    transitionDuration: "0.1s",
                                 } as CSSProperties
                             }
                             onClick={() =>

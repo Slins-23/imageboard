@@ -1,0 +1,7 @@
+.card {
+    width: 845px;
+    height: 515px;
+    outline-width: 2px;
+    outline-color: var(--tertiary);
+    outline-style: dashed;
+}

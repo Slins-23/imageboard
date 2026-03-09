@@ -11,6 +11,8 @@
     width: auto;
     height: var(--font-size-2xl);
     font-size: var(--font-size-lg);
+    transition: 0.1s;
+    transition-property: outline-width, outline-color;
 }
 
 .textBox[type="date"] {

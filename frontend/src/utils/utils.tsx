@@ -106,3 +106,7 @@ export async function filledElementFromSVG(
 
     return svgPromise;
 }
+
+export async function delay(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+}

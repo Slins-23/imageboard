@@ -53,6 +53,7 @@ export default function LinkAccount({
                     borderRadius: "10px",
                     fontSize: "var(--font-size-xl)",
                     padding: "0.3em 0.9em",
+                    transitionDuration: "0.1s",
                 } as CSSProperties
             }
         >

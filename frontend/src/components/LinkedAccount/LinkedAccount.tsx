@@ -62,7 +62,11 @@ export default function LinkedAccount({
         onDisconnected?.(false);
     };
 
+    const svgResolved = useRef(false);
+
     useLayoutEffect(() => {
+        if (svgResolved.current) return;
+
         const resolveSVG = async () => {
             if (iconWrapperRef.current === null) return;
 
@@ -73,7 +77,8 @@ export default function LinkedAccount({
             );
 
             if (svgElement !== undefined) {
-                iconWrapperRef.current.append(svgElement);
+                iconWrapperRef.current.replaceChildren(svgElement);
+                svgResolved.current = true;
             }
         };
 

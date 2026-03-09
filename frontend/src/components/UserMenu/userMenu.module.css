@@ -36,6 +36,8 @@
     transition-duration: 0.15s;
     transition-property: color;
     z-index: 99999;
+    transition: 0.1s;
+    transition-property: outline-width, outline-color;
 }
 
 .menu li:hover,

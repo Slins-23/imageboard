@@ -1,20 +1,36 @@
 import Card from "@/components/Card/card";
 import dialogStyle from "./dialogCard.module.css";
-import { ComponentProps } from "react";
+import { ComponentProps, HTMLAttributes, ReactNode } from "react";
 
 type CardProps = ComponentProps<typeof Card>;
 
-export default function DialogCard({ ...args }: CardProps) {
+interface DialogCardArgs extends CardProps {
+    children?: ReactNode;
+    cardProps?: CardProps;
+    wrapperArgs?: HTMLAttributes<HTMLDivElement>;
+}
+
+export default function DialogCard({
+    children,
+    cardProps,
+    wrapperArgs,
+}: DialogCardArgs) {
     return (
         <Card
-            {...args}
+            {...cardProps}
             style={{
                 backgroundColor: "var(--primary)",
                 borderRadius: "10px",
-                ...args.style,
+                boxShadow: "0px 0px 66.5px 26px var(--secondary)",
+                ...cardProps?.style,
             }}
         >
-            <div className={dialogStyle.wrapper}>{args.children}</div>
+            <div
+                className={dialogStyle.wrapper}
+                {...wrapperArgs}
+            >
+                {children}
+            </div>
         </Card>
     );
 }

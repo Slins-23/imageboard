@@ -11,6 +11,8 @@
     width: 310px;
     height: 130px;
     font-size: var(--font-size-lg);
+    transition: 0.1s;
+    transition-property: outline-width, outline-color;
 }
 
 .textArea:focus {
