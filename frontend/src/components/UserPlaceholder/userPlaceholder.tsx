@@ -7,9 +7,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import type { HTMLAttributes } from "react";
 
 interface userPlaceholderArgs extends HTMLAttributes<HTMLDivElement> {
-    width?: string;
-    height?: string;
-    iconSize?: string;
+    size?: string;
     iconWidthScale?: number;
     iconHeightScale?: number;
     cardProps?: HTMLAttributes<HTMLDivElement>;
@@ -17,9 +15,7 @@ interface userPlaceholderArgs extends HTMLAttributes<HTMLDivElement> {
 }
 
 export default function UserPlaceholder({
-    width = "200px",
-    height = "200px",
-    iconSize = "125px",
+    size = "200px",
     iconWidthScale = 1,
     iconHeightScale = 1,
     ...props
@@ -27,17 +23,19 @@ export default function UserPlaceholder({
     return (
         <div
             className={placeholderStyle["avatar-card"]}
-            style={{ width, height }}
             {...props.cardProps}
+            style={{ width: size, height: size, ...props.cardProps?.style }}
         >
             <FontAwesomeIcon
                 className={placeholderStyle["avatar-icon"]}
                 icon={faUser}
-                style={{
-                    fontSize: iconSize,
-                    scale: `${iconWidthScale} ${iconHeightScale}`,
-                }}
                 {...props.iconProps}
+                style={{
+                    fontSize: `${Number.parseInt(size) * 0.625}px`,
+                    scale: `${iconWidthScale} ${iconHeightScale}`,
+                    marginTop: "-0.2rem",
+                    ...props.iconProps?.style,
+                }}
             />
         </div>
     );

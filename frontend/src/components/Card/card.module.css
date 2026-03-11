@@ -1,7 +1,7 @@
 .card {
     background-color: var(--secondary);
-    border-style: solid;
-    border-color: var(--tertiary);
-    border-width: 1px;
+    outline-style: solid;
+    outline-color: var(--tertiary);
+    outline-width: 1px;
     font-size: var(--font-size-2xl);
 }

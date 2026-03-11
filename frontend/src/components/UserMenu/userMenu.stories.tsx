@@ -8,13 +8,23 @@ const meta: Meta<typeof UserMenu> = {
 
 export default meta;
 
-export const Primary: StoryObj<typeof meta> = {
+export const LoggedIn: StoryObj<typeof meta> = {
     args: {
         items: [
             { text: "My profile", route: "/user/profile" },
             { text: "My likes", route: "/user/likes" },
             { text: "My albums", route: "/user/albums" },
-            { text: "Logout", route: "/user/logout" },
+            { text: "Log out", route: "/user/logout" },
+        ],
+        listProps: { "aria-label": "list" },
+    },
+};
+
+export const LoggedOut: StoryObj<typeof meta> = {
+    args: {
+        items: [
+            { text: "Log in", route: "/user/login" },
+            { text: "Sign up", route: "/user/signup" },
         ],
         listProps: { "aria-label": "list" },
     },

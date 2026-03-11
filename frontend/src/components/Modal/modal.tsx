@@ -276,7 +276,10 @@ export function Content({ children, ...args }: ModalOverlayArgs) {
 
     useEffect(() => {
         if (!internalIsOpen) {
-            setTimeout(() => setResetKey(resetKey + 1), fadeDuration);
+            setTimeout(
+                () => setResetKey((prevResetKey) => prevResetKey + 1),
+                fadeDuration
+            );
             return undefined;
         }
 

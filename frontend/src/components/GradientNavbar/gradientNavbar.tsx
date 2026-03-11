@@ -91,7 +91,7 @@ export default function GradientNavbar({
                         aria-selected={idx === currentRouteIdx}
                         {...itemProps}
                         ref={(element) => setItemRef(element, idx)}
-                        key={idx}
+                        key={item.route}
                         onClick={(event) => {
                             event.preventDefault();
                             linkRefs.current[idx]?.click();

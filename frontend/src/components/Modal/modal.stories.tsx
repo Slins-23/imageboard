@@ -26,6 +26,7 @@ export const Uncontrolled: StoryObj<typeof meta> = {
         backgroundColor: "var(--secondary)",
         backgroundBlurOpacity: "var(--background-blur-opacity)",
         backgroundBlurRadius: "var(--background-blur-radius)",
+        fadeDuration: 500,
     },
     render: (args) => {
         const {
@@ -91,22 +92,23 @@ export const Controlled: StoryObj<typeof meta> = {
         defaultIsOpen: false,
         onOpen: () => alert("Dialog opened!"),
         onClose: () => alert("Dialog closed!"),
-        isDismissible: useRef(true),
         defaultIsDismissible: true,
         backgroundColor: "var(--secondary)",
         backgroundBlurOpacity: "var(--background-blur-opacity)",
         backgroundBlurRadius: "var(--background-blur-radius)",
+        fadeDuration: 500,
     },
     render: (args) => {
+        const isDismissible = useRef(true);
+
         const [, setArgs] = useArgs();
         const setIsOpen = (isOpen: boolean) => setArgs({ isOpen });
-        const setIsDismissible = (isDismissible: boolean) =>
-            setArgs({ isDismissible });
+        const setIsDismissible = (newIsDismissible: boolean) =>
+            (isDismissible.current = newIsDismissible);
 
         const {
             isOpen,
             defaultIsOpen,
-            isDismissible,
             defaultIsDismissible,
 
             onClose,

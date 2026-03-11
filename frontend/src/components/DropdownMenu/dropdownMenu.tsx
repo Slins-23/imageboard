@@ -409,7 +409,7 @@ export function DropdownMenu({
                                               ...itemProps?.style,
                                           }
                                 }
-                                key={idx}
+                                key={entry.value}
                                 onClick={(event: MouseEvent<HTMLLIElement>) =>
                                     handleItemClick(event, entry, idx)
                                 }

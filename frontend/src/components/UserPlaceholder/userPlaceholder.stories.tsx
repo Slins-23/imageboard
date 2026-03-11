@@ -10,9 +10,7 @@ export default meta;
 
 export const Primary: StoryObj<typeof meta> = {
     args: {
-        width: "200px",
-        height: "200px",
-        iconSize: "125px",
+        size: "200px",
         iconWidthScale: 1.25,
         iconHeightScale: 1.22,
     },
