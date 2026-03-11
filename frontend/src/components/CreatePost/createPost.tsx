@@ -7,16 +7,24 @@ import Loading from "./loading";
 import Failure from "./failure";
 import Success from "./success";
 import { PostProvider } from "./context";
+import { useControllableState } from "@/utils/utils";
+import { useModalContext } from "@/components/Modal/modal";
 
 interface CreatePostArgs {
     defaultStage?: Stage;
+    currentStage?: Stage;
+    onStageChanged?: (next: Stage) => void;
     children?: ReactNode;
 }
 
 export default function CreatePost({
     defaultStage = "Upload",
+    currentStage = undefined,
+    onStageChanged = undefined,
     children = undefined,
 }: CreatePostArgs) {
+    const { internalIsDismissible } = useModalContext();
+
     const stages = {
         Upload,
         Loading,
@@ -30,8 +38,15 @@ export default function CreatePost({
     const fadeInDuration = 3000;
     const transitionDuration = useRef(fadeOutDuration);
 
-    const [currentStage, setCurrentStage] = useState<Stage>(defaultStage);
-    const StageComponent = stages[currentStage];
+    // const [currentStage, setCurrentStage] = useState<Stage>(defaultStage);
+    const [internalCurrentStage, setInternalCurrentStage] =
+        useControllableState<Stage>({
+            defaultValue: defaultStage,
+            value: currentStage,
+            onChange: onStageChanged,
+        });
+
+    const StageComponent = stages[internalCurrentStage ?? "Upload"];
 
     const postDataRef = useRef({
         errorMessage: "Some default error message.",
@@ -39,13 +54,17 @@ export default function CreatePost({
     });
 
     const onStageChange = (next: Stage) => {
+        if (next === "Loading") internalIsDismissible.current = false;
+
         transitionDuration.current = fadeOutDuration;
         setIsVisible(false);
 
         setTimeout(() => {
-            setCurrentStage(next);
+            setInternalCurrentStage(next);
             transitionDuration.current = fadeInDuration;
             setIsVisible(true);
+
+            if (next !== "Loading") internalIsDismissible.current = true;
         }, transitionDuration.current);
     };
 
@@ -69,7 +88,7 @@ export default function CreatePost({
         >
             <PostProvider value={postDataRef}>
                 <StageComponent
-                    currentStage={currentStage}
+                    currentStage={internalCurrentStage}
                     onStageChange={onStageChange}
                 />
             </PostProvider>

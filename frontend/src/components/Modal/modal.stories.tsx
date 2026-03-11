@@ -3,7 +3,7 @@ import { useArgs } from "storybook/preview-api";
 import Button from "@/components/Button/button";
 import Card from "@/components/InterestCard/interestCard";
 import * as Modal from "./modal";
-import { ComponentProps } from "react";
+import { ComponentProps, useRef } from "react";
 
 type ModalArgs = ComponentProps<typeof Modal.Root> &
     ComponentProps<typeof Modal.Content>;
@@ -33,7 +33,7 @@ export const Uncontrolled: StoryObj<typeof meta> = {
             defaultIsOpen,
             isDismissible,
             defaultIsDismissible,
-            onDismissibleChange,
+
             onClose,
             onOpen,
             onOpenChange,
@@ -47,7 +47,7 @@ export const Uncontrolled: StoryObj<typeof meta> = {
             defaultIsOpen,
             isDismissible,
             defaultIsDismissible,
-            onDismissibleChange,
+
             onOpen,
             onClose,
             onOpenChange,
@@ -91,7 +91,7 @@ export const Controlled: StoryObj<typeof meta> = {
         defaultIsOpen: false,
         onOpen: () => alert("Dialog opened!"),
         onClose: () => alert("Dialog closed!"),
-        isDismissible: true,
+        isDismissible: useRef(true),
         defaultIsDismissible: true,
         backgroundColor: "var(--secondary)",
         backgroundBlurOpacity: "var(--background-blur-opacity)",
@@ -108,7 +108,7 @@ export const Controlled: StoryObj<typeof meta> = {
             defaultIsOpen,
             isDismissible,
             defaultIsDismissible,
-            onDismissibleChange,
+
             onClose,
             onOpen,
             onOpenChange,
@@ -122,7 +122,7 @@ export const Controlled: StoryObj<typeof meta> = {
             defaultIsOpen,
             isDismissible,
             defaultIsDismissible,
-            onDismissibleChange,
+
             onOpen,
             onClose,
             onOpenChange,
@@ -139,7 +139,6 @@ export const Controlled: StoryObj<typeof meta> = {
                 onOpenChange={setIsOpen}
                 onOpen={onOpen}
                 onClose={onClose}
-                onDismissibleChange={setIsDismissible}
             >
                 <Modal.Trigger
                     triggerValue={true}

@@ -1,7 +1,4 @@
-import { useLayoutEffect, useRef, useState } from "react";
 import tooltipStyle from "./tooltip.module.css";
-import { delayUntilRuntimeStage } from "next/dist/server/app-render/dynamic-rendering";
-import { createPortal } from "react-dom";
 
 export default function Tooltip(
     text = "This is a tooltip!",

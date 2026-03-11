@@ -112,7 +112,17 @@ export default function Profile() {
                     { value: "Opt3 A IO K OW PQ OW" },
                 ]}
             />
-            <CreatePost />
+            <Modal.Root>
+                <Modal.Trigger
+                    triggerValue={true}
+                    asChild
+                >
+                    <Button>Create Post</Button>
+                </Modal.Trigger>
+                <Modal.Content>
+                    <CreatePost />
+                </Modal.Content>
+            </Modal.Root>
         </div>
     );
 }

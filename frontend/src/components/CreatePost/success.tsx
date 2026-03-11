@@ -1,3 +1,5 @@
+"use client";
+
 import { useControllableState } from "@/utils/utils";
 import type { Stage, StageComponentArgs } from "./types";
 import { usePostContext } from "./context";
@@ -5,8 +7,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faLink } from "@fortawesome/free-solid-svg-icons";
 import successStyle from "./success.module.css";
 import Button from "@/components/Button/button";
-import { CSSProperties } from "react";
 import Tooltip from "@/components/Tooltip/tooltip";
+import { useModalContext } from "@/components/Modal/modal";
 
 export default function Success({
     defaultStage = "Success",
@@ -14,6 +16,7 @@ export default function Success({
     onStageChange = undefined,
 }: StageComponentArgs) {
     const postContext = usePostContext();
+    const modalContext = useModalContext();
 
     const [internalCurrentStage, setInternalCurrentStage] =
         useControllableState<Stage>({
@@ -33,7 +36,12 @@ export default function Success({
                     Successfully uploaded
                 </span>
                 <div className={successStyle.buttonsWrapper}>
-                    <Button style={{ padding: "0em 1.675em" }}>OK</Button>
+                    <Button
+                        style={{ padding: "0em 1.675em" }}
+                        onClick={() => modalContext.setInternalIsOpen(false)}
+                    >
+                        OK
+                    </Button>
                     <Button
                         style={{ padding: "0.25em 0.4em" }}
                         onClick={async () => {

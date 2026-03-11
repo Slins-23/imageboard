@@ -14,6 +14,7 @@ import {
     type ReactNode,
     type HTMLAttributes,
     ComponentProps,
+    RefObject,
 } from "react";
 import { useControllableState } from "@/utils/utils";
 import modalStyle from "./modal.module.css";
@@ -24,8 +25,8 @@ const ModalContext = createContext<
     | {
           internalIsOpen: boolean | undefined;
           setInternalIsOpen: (isOpen: boolean) => void;
-          internalIsDismissible: boolean | undefined;
-          setInternalIsDismissible: (isDismissible: boolean) => void;
+          internalIsDismissible: RefObject<boolean | undefined>;
+          fadeDuration: number;
       }
     | undefined
 >(undefined);
@@ -47,9 +48,9 @@ interface RootArgs extends HTMLAttributes<HTMLDivElement> {
     onOpenChange?: (isOpen: boolean) => void;
     onOpen?: () => void;
     onClose?: () => void;
-    isDismissible?: boolean;
+    isDismissible?: RefObject<boolean | undefined>;
     defaultIsDismissible?: boolean;
-    onDismissibleChange?: (isDismissible: boolean) => void;
+    fadeDuration?: number;
     children?: ReactNode;
 }
 
@@ -61,7 +62,7 @@ export function Root({
     onClose = undefined,
     isDismissible = undefined,
     defaultIsDismissible = true,
-    onDismissibleChange = undefined,
+    fadeDuration = 500,
     children,
     ...args
 }: RootArgs) {
@@ -71,12 +72,7 @@ export function Root({
         onChange: onOpenChange,
     });
 
-    const [internalIsDismissible, setInternalIsDismissible] =
-        useControllableState<boolean>({
-            value: isDismissible,
-            defaultValue: defaultIsDismissible,
-            onChange: onDismissibleChange,
-        });
+    const internalIsDismissible = isDismissible ?? useRef(defaultIsDismissible);
 
     const modalId = useId();
 
@@ -111,7 +107,7 @@ export function Root({
                     internalIsOpen,
                     setInternalIsOpen,
                     internalIsDismissible,
-                    setInternalIsDismissible,
+                    fadeDuration,
                 }}
             >
                 {children}
@@ -206,9 +202,10 @@ function ModalOverlay({
     backgroundColor = "var(--secondary)",
     backgroundBlurRadius = "var(--background-blur-radius)",
     backgroundBlurOpacity = "var(--background-blur-opacity)",
+    contentWrapperRef,
     ...args
-}: ModalOverlayArgs) {
-    const { internalIsOpen } = useModalContext();
+}: ModalOverlayArgs & { contentWrapperRef: RefObject<HTMLDivElement | null> }) {
+    const { internalIsOpen, fadeDuration } = useModalContext();
 
     useEffect(() => {
         document.documentElement.style.overflow = internalIsOpen
@@ -227,22 +224,35 @@ function ModalOverlay({
     )`,
                 backdropFilter: `blur(${backgroundBlurRadius})`,
                 ...args.style,
+                transitionDuration: `${fadeDuration}ms`,
             }}
         >
-            <div className={modalStyle.wrapper}>{children}</div>
+            <div
+                ref={contentWrapperRef}
+                className={modalStyle.wrapper}
+            >
+                {children}
+            </div>
         </div>
     );
 }
 
 export function Content({ children, ...args }: ModalOverlayArgs) {
-    const { internalIsOpen, internalIsDismissible, setInternalIsOpen } =
-        useModalContext();
+    const {
+        internalIsOpen,
+        internalIsDismissible,
+        setInternalIsOpen,
+        fadeDuration,
+    } = useModalContext();
 
-    const overlayWrapperRef = useRef<HTMLDivElement>(null);
+    const overlayWrapperRef = useRef<HTMLDivElement | null>(null);
+    const contentWrapperRef = useRef<HTMLDivElement | null>(null);
 
     const modalId = useId();
 
     const [isMounted, setIsMounted] = useState<boolean>(false);
+
+    const [resetKey, setResetKey] = useState(0);
 
     useEffect(() => {
         const bodyElements = [...document.body.children];
@@ -265,8 +275,12 @@ export function Content({ children, ...args }: ModalOverlayArgs) {
     }, [internalIsOpen]);
 
     useEffect(() => {
-        if (!internalIsOpen || overlayWrapperRef.current === undefined)
+        if (!internalIsOpen) {
+            setTimeout(() => setResetKey(resetKey + 1), fadeDuration);
             return undefined;
+        }
+
+        if (overlayWrapperRef.current === undefined) return undefined;
 
         const focusableElements =
             overlayWrapperRef.current?.querySelectorAll<HTMLElement>(
@@ -291,7 +305,7 @@ export function Content({ children, ...args }: ModalOverlayArgs) {
                 return;
 
             if (event.code === "Escape") {
-                if (internalIsDismissible) setInternalIsOpen(false);
+                if (internalIsDismissible.current) setInternalIsOpen(false);
                 return;
             }
 
@@ -302,23 +316,39 @@ export function Content({ children, ...args }: ModalOverlayArgs) {
 
         document.addEventListener("keydown", handleKeyDown);
 
-        firstElement.focus();
+        firstElement?.focus();
 
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
         };
-    }, [internalIsOpen, internalIsDismissible]);
+    }, [internalIsOpen]);
 
     useEffect(() => setIsMounted(true), []);
 
     if (!isMounted) return undefined;
 
+    function dismiss(event: ReactMouseEvent<HTMLDivElement>) {
+        if (contentWrapperRef.current === null) return;
+
+        if (internalIsDismissible.current) {
+            if ((event.target as Node) === contentWrapperRef.current) {
+                setInternalIsOpen(false);
+            }
+        }
+    }
+
     return createPortal(
         <div
             id={modalId}
             ref={overlayWrapperRef}
+            onClick={dismiss}
         >
-            <ModalOverlay {...args}>{children}</ModalOverlay>
+            <ModalOverlay
+                {...args}
+                contentWrapperRef={contentWrapperRef}
+            >
+                <div key={resetKey}>{children}</div>
+            </ModalOverlay>
         </div>,
         document.body
     );
