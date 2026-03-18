@@ -312,14 +312,25 @@ export function Content({ children, ...args }: ModalOverlayArgs) {
                 return;
             }
 
-            if (document.activeElement === lastElement) {
-                firstElement.focus();
+            if (
+                event.code === "Tab" &&
+                document.activeElement === lastElement
+            ) {
+                event.preventDefault();
+                firstElement?.focus();
+            } else if (
+                event.shiftKey &&
+                event.code === "Tab" &&
+                document.activeElement === firstElement
+            ) {
+                event.preventDefault();
+                lastElement?.focus();
             }
         }
 
         document.addEventListener("keydown", handleKeyDown);
 
-        firstElement?.focus();
+        if (firstElement?.tagName !== "BUTTON") firstElement?.focus();
 
         return () => {
             document.removeEventListener("keydown", handleKeyDown);

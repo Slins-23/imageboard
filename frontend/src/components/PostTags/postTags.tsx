@@ -11,7 +11,30 @@ interface PostTagsArgs {
 }
 
 export default function PostTags({
-    tags = [],
+    tags = [
+        "Anime",
+        "Rain",
+        "City",
+        "Mountains",
+        "Character",
+        "Melancholic",
+        "Sky",
+        "Night",
+        "Stars",
+        "Dawn",
+        "Ethereal",
+        "Dusk",
+        "Nebula",
+        "Female",
+        "Short hair",
+        "Staring",
+        "Solitude",
+        "Wanderlust",
+        "Woman",
+        "Skyscraper",
+        "Girl",
+        "Fiction",
+    ],
     children = undefined,
 }: PostTagsArgs) {
     return (
