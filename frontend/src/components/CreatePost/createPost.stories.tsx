@@ -3,7 +3,7 @@ import CreatePost from "./createPost";
 import * as Modal from "@/components/Modal/modal";
 import { useArgs } from "storybook/internal/preview-api";
 import { Stage } from "./types";
-import Button from "../Button/button";
+import Button from "@/components/Button/button";
 import { useEffect, useRef } from "react";
 import UploadComponent from "./upload";
 import LoadingComponent from "./loading";

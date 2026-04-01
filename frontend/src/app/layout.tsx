@@ -1,11 +1,6 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-// import { Fenix } from "next/font/google";
 import "./globals.css";
-
-const fontFenix = localFont({
-    src: "./fonts/Fenix/Fenix-Regular.ttf",
-});
+import { fenixFont } from "@/app/fonts/types";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -19,7 +14,7 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={fontFenix.className}> {children} </body>
+            <body className={fenixFont.className}> {children} </body>
         </html>
     );
 }

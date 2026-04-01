@@ -330,7 +330,8 @@ export function Content({ children, ...args }: ModalOverlayArgs) {
 
         document.addEventListener("keydown", handleKeyDown);
 
-        if (firstElement?.tagName !== "BUTTON") firstElement?.focus();
+        // if (firstElement?.tagName !== "BUTTON") firstElement?.focus();
+        firstElement?.focus();
 
         return () => {
             document.removeEventListener("keydown", handleKeyDown);

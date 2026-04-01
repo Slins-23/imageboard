@@ -1,0 +1,63 @@
+.commentList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    width: 100%;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 0 0.5rem 0.5rem 0.5rem;
+}
+
+.commentWrapper {
+}
+
+.commentSubmitIcon {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+    /* background-color: rgba(from var(--tertiary) r g b / 0.7); */
+    background-color: var(--primary);
+    color: var(--tertiary);
+    border-radius: 50%;
+    padding: 0.4rem;
+    width: 1.05rem;
+    height: 1.05rem;
+    font-size: 1.05rem;
+    transition: 0.2s;
+    transition-property: background-color, outline-color;
+    outline-width: 1.5px;
+    outline-style: solid;
+    outline-color: var(--tertiary);
+}
+
+.commentSubmitIcon[aria-disabled="true"] {
+    filter: brightness(0.6);
+    pointer-events: none;
+    cursor: default;
+    animation-name: spin;
+    animation-duration: 2s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    color: var(--accent);
+    transform-origin: center;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.commentSubmitIcon:hover,
+.commentSubmitIcon:focus-visible {
+    background-color: var(--tertiary);
+    outline-color: var(--tertiary);
+    color: var(--accent);
+}

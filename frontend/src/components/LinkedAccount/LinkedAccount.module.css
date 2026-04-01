@@ -50,3 +50,7 @@
 .button:focus-visible {
     background-color: var(--accent);
 }
+
+.button:focus-visible {
+    outline: none;
+}

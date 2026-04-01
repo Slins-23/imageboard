@@ -11,3 +11,9 @@
     box-sizing: border-box;
     padding: 6.7em;
 }
+
+.avatar-card:focus-visible {
+    outline-style: solid;
+    outline-width: 2px;
+    outline-color: var(--accent);
+}

@@ -1,8 +1,23 @@
 import type { Preview } from "@storybook/nextjs-vite";
-import "./fonts.css";
 import "@/app/globals.css";
+import { fenixFont } from "@/app/fonts/types";
+
+if (typeof document !== undefined) {
+    document.body.classList.add(fenixFont.className);
+}
 
 const preview: Preview = {
+    /*
+    decorators: [
+        (Story) => {
+            return (
+                <div className={fenixFont.className}>
+                    <Story />
+                </div>
+            );
+        },
+    ],
+    */
     parameters: {
         backgrounds: {
             options: {

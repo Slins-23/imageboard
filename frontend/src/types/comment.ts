@@ -3,11 +3,11 @@ export interface Comment {
     posted_by: string;
     post: string;
     reply_to?: string;
-    message: string;
+    text: string;
     created_at: number;
 }
 
-export interface CommentMetric {
+export interface CommentMetrics {
     id: string;
     likes: number;
     replies: number;

@@ -51,6 +51,8 @@ export default function TextArea({
         }
 
         setTextState(currentText);
+
+        args.onChange?.(event);
     };
 
     const updateDimensions = useCallback((width?: number, height?: number) => {

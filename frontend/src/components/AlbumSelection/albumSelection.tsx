@@ -1,7 +1,7 @@
 import albumSelectionStyle from "./albumSelection.module.css";
-import DialogCard from "../DialogCard/dialogCard";
-import TextBox from "../TextBox/textBox";
-import Button from "../Button/button";
+import DialogCard from "@/components/DialogCard/dialogCard";
+import TextBox from "@/components/TextBox/textBox";
+import Button from "@/components/Button/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { ReactNode, useCallback, useRef, useState } from "react";
@@ -11,7 +11,7 @@ import DeleteAlbumDialog from "@/components/DialogCard/deleteAlbum";
 import * as Modal from "@/components/Modal/modal";
 import Tooltip from "@/components/Tooltip/tooltip";
 import type { Album } from "@/types/album";
-import CreateAlbumDialog from "../DialogCard/createAlbum";
+import CreateAlbumDialog from "@/components/DialogCard/createAlbum";
 import type { PostBody } from "@/types/post";
 import { UserPII } from "@/types/user";
 import type { KeyboardEvent } from "react";
@@ -40,7 +40,7 @@ export default function AlbumSelection({
         {
             title: "Cars",
             id: "albumIdA",
-            cover: "images/thumb/albumcars.png",
+            cover: "/images/thumb/albumcars.png",
             created_at: -1,
             last_update: -1,
             owner: "",
@@ -49,7 +49,7 @@ export default function AlbumSelection({
         {
             title: "Contrasting",
             id: "albumIdB",
-            cover: "images/thumb/albumcontrasting.png",
+            cover: "/images/thumb/albumcontrasting.png",
             created_at: -1,
             last_update: -1,
             owner: "",
@@ -58,7 +58,7 @@ export default function AlbumSelection({
         {
             title: "Cozy images",
             id: "albumIdC",
-            cover: "images/thumb/albumcozyimages.jpg",
+            cover: "/images/thumb/albumcozyimages.jpg",
             created_at: -1,
             last_update: -1,
             owner: "",
@@ -67,7 +67,7 @@ export default function AlbumSelection({
         {
             title: "Fantasy",
             id: "albumIdD",
-            cover: "images/thumb/albumfantasy.jpg",
+            cover: "/images/thumb/albumfantasy.jpg",
             created_at: -1,
             last_update: -1,
             owner: "",
@@ -76,7 +76,7 @@ export default function AlbumSelection({
         {
             title: "Nice wallpapers",
             id: "albumIdE",
-            cover: "images/thumb/albumnicewallpapers.png",
+            cover: "/images/thumb/albumnicewallpapers.png",
             created_at: -1,
             last_update: -1,
             owner: "",
@@ -85,7 +85,7 @@ export default function AlbumSelection({
         {
             title: "Snowy places",
             id: "albumIdF",
-            cover: "images/thumb/albumsnowyplaces.jpg",
+            cover: "/images/thumb/albumsnowyplaces.jpg",
             created_at: -1,
             last_update: -1,
             owner: "",
@@ -94,7 +94,7 @@ export default function AlbumSelection({
         {
             title: "Unique",
             id: "albumIdG",
-            cover: "images/thumb/albumunique.jpg",
+            cover: "/images/thumb/albumunique.jpg",
             created_at: -1,
             last_update: -1,
             owner: "",
@@ -188,7 +188,7 @@ export default function AlbumSelection({
                             onClick={(event) => {
                                 event.preventDefault();
 
-                                // const success = onPostAdded?.(album);
+                                // const success = onPostAdd?.(album);
                                 const success = Math.round(Math.random());
 
                                 if (success) {
@@ -252,7 +252,7 @@ export default function AlbumSelection({
                                 className={albumSelectionStyle.albumTrash}
                                 icon={faTrash}
                                 tabIndex={0}
-                                aria-label="Trash"
+                                aria-label="Delete"
                                 aria-hidden="false"
                                 onClick={(event) => {
                                     event.stopPropagation();
@@ -319,6 +319,7 @@ export default function AlbumSelection({
                             if (selectedDeleteAlbum === null) return;
 
                             // Placeholder for server-side function to delete the album
+                            // const success = onAlbumDelete(selectedDeleteAlbum);
                             const success = Math.round(Math.random());
 
                             if (success) {
@@ -346,6 +347,7 @@ export default function AlbumSelection({
                     <CreateAlbumDialog
                         onCreate={(albumTitle: string) => {
                             // Placeholder for server-side function to create the album and add post
+                            //const success = onAlbumCreate?.(album)
                             const success = Math.round(Math.random());
 
                             if (success) {
@@ -367,7 +369,7 @@ export default function AlbumSelection({
                                     id: "",
                                     blurhash_full: "",
                                     created_at: -1,
-                                    image: "images/thumb/albumnew.jpg",
+                                    image: "/images/thumb/albumnew.jpg",
                                     original_height: -1,
                                     original_width: -1,
                                     owner: "",

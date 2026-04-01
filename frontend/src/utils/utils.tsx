@@ -110,3 +110,12 @@ export async function filledElementFromSVG(
 export async function delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+export function randomRecentUploadTimestamp() {
+    const now = Date.now();
+    const twoYearsAgo = new Date();
+    twoYearsAgo.setFullYear(twoYearsAgo.getFullYear() - 2);
+    const twoYearsAgoMS = twoYearsAgo.getTime();
+
+    return Math.random() * (now - twoYearsAgoMS) + twoYearsAgoMS;
+}

@@ -1,5 +1,4 @@
 .textArea {
-    font-family: "Fenix";
     background-color: var(--secondary);
     color: var(--accent);
     border: none;
@@ -11,6 +10,7 @@
     width: 310px;
     height: 130px;
     font-size: var(--font-size-lg);
+    font-family: inherit;
     transition: 0.1s;
     transition-property: outline-width, outline-color;
 }

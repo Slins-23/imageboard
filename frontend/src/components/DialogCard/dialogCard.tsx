@@ -19,6 +19,8 @@ export default function DialogCard({
         <Card
             {...cardProps}
             style={{
+                // width: "fit-content",
+                // height: "fit-content",
                 backgroundColor: "var(--primary)",
                 borderRadius: "10px",
                 boxShadow: "0px 0px 66.5px 26px var(--secondary)",

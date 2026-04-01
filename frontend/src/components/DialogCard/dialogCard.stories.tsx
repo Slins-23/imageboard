@@ -6,6 +6,7 @@ import CreateAlbumErrorDialog from "./createAlbumError";
 import DeletePostDialog from "./deletePost";
 import DeleteAccountDialog from "./deleteAccount";
 import SignupConfirmationDialog from "./signupConfirmation";
+import DeleteCommentDialog from "./deleteComment";
 
 const meta: Meta = {
     title: "Components/DialogCard",
@@ -31,6 +32,10 @@ export const CreateAlbumError: StoryObj<typeof CreateAlbumErrorDialog> = {
 
 export const DeletePost: StoryObj<typeof DeletePostDialog> = {
     render: DeletePostDialog,
+};
+
+export const DeleteComment: StoryObj<typeof DeleteCommentDialog> = {
+    render: DeleteCommentDialog,
 };
 
 export const DeleteAccount: StoryObj<typeof DeleteAccountDialog> = {

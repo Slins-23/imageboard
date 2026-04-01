@@ -1,23 +1,24 @@
-import { ReactNode, useState } from "react";
-import DialogCard from "../DialogCard/dialogCard";
+import {
+    ReactNode,
+    useRef,
+    useState,
+    type KeyboardEvent,
+    type MouseEvent,
+} from "react";
+import DialogCard from "@/components/DialogCard/dialogCard";
 import followListStyle from "./followList.module.css";
 import Image from "next/image";
-import Button from "../Button/button";
-import UserPlaceholder from "../UserPlaceholder/userPlaceholder";
-
-// `followRelation` could be either `following` or `follows`
-// As this component behaves the same way when displaying a list
-// of user this user follows, or users that follow this user
-interface User {
-    avatar?: string;
-    name: string;
-    followed: boolean;
-}
-
-type Users = User[];
+import Button from "@/components/Button/button";
+import UserPlaceholder from "@/components/UserPlaceholder/userPlaceholder";
+import Tooltip from "../Tooltip/tooltip";
+import { User, Users } from "./types";
 
 interface FollowListArgs {
     users: Users;
+    onFollow?: (user: User) => boolean;
+    onUnfollow?: (user: User) => boolean;
+    onFollowed?: (user: User) => void;
+    onUnfollowed?: (user: User) => void;
     children?: ReactNode;
 }
 
@@ -29,25 +30,64 @@ export default function FollowList({
             followed: true,
         },
         {
-            avatar: "images/thumb/userb.jpg",
+            avatar: "/images/thumb/userb.jpg",
             name: "UsernameB",
             followed: true,
         },
         { avatar: undefined, name: "UsernameC", followed: false },
         {
-            avatar: "images/thumb/userd.png",
+            avatar: "/images/thumb/userd.png",
             name: "UsernameD",
             followed: true,
         },
         {
-            avatar: "images/thumb/usere.png",
+            avatar: "/images/thumb/usere.png",
             name: "UsernameEEEz",
             followed: false,
         },
         { avatar: undefined, name: "UsernameFFFA", followed: true },
     ],
+    onFollow,
+    onUnfollow,
+    onFollowed,
+    onUnfollowed,
 }: FollowListArgs) {
     const followStates = [...users.map((user) => useState(user.followed))];
+
+    const debouncedFollowDelayMS = 1000;
+    const followTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+    const handleFollow = (
+        event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>,
+        user: User,
+        idx: number
+    ) => {
+        const nextValue = !followStates[idx][0];
+
+        followStates[idx][1](nextValue);
+        user.followed = nextValue;
+
+        if (followTimerRef.current) clearTimeout(followTimerRef.current);
+
+        followTimerRef.current = setTimeout(() => {
+            // Placeholder for result of server-side function for either following or unfollowing
+            /*const success = nextValue
+                                        ? onFollow?.(user)
+                                        : onUnfollow?.(user);*/
+            const success = Math.round(Math.random());
+
+            if (success) {
+                if (nextValue) onFollowed?.(user);
+                else onUnfollowed?.(user);
+            } else {
+                followStates[idx][1](!nextValue);
+                user.followed = !nextValue;
+                Tooltip(
+                    `Error: Could not ${nextValue ? "follow" : "unfollow"} user ${user.name}`
+                );
+            }
+        }, debouncedFollowDelayMS);
+    };
 
     return (
         <DialogCard
@@ -99,9 +139,23 @@ export default function FollowList({
                         </span>
 
                         <Button
-                            onClick={() => {
-                                user.followed = !user.followed;
-                                followStates[idx][1]((prev) => !prev);
+                            onClick={(event) => handleFollow(event, user, idx)}
+                            onKeyDown={(
+                                event: KeyboardEvent<HTMLButtonElement>
+                            ) => {
+                                switch (event.code) {
+                                    case "Space":
+                                    case "Enter": {
+                                        event.stopPropagation();
+                                        event.preventDefault();
+
+                                        handleFollow(event, user, idx);
+                                        break;
+                                    }
+                                    default: {
+                                        break;
+                                    }
+                                }
                             }}
                             style={{
                                 flexShrink: "0",

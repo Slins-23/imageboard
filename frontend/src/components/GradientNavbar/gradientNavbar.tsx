@@ -75,9 +75,7 @@ export default function GradientNavbar({
             {...args}
         >
             <header>
-                <h1 style={{ color: "var(--tertiary)", fontWeight: "500" }}>
-                    {title}
-                </h1>
+                <h1 className={gradientNavbarStyle.title}>{title}</h1>
             </header>
             <ul
                 role="listbox"

@@ -27,7 +27,6 @@ export default function UserPlaceholder({
             style={{ width: size, height: size, ...props.cardProps?.style }}
         >
             <FontAwesomeIcon
-                className={placeholderStyle["avatar-icon"]}
                 icon={faUser}
                 {...props.iconProps}
                 style={{

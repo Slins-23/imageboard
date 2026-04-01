@@ -48,7 +48,8 @@ export default function Button({
             onClick={handleClick}
             onKeyDown={handleKeyDown}
         >
-            <div style={{ position: "relative", zIndex: 1 }}>{children}</div>
+            {/* <div style={{ position: "relative", zIndex: 1 }}>{children}</div> */}
+            {children}
         </button>
     );
 }

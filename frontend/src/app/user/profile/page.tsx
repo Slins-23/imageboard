@@ -7,6 +7,7 @@ import RadioButton from "@/components/RadioGroup/radioButton";
 import RadioGroup from "@/components/RadioGroup/radioGroup";
 import Button from "@/components/Button/button";
 import CreatePost from "@/components/CreatePost/createPost";
+import CommentsOverlay from "@/components/CommentsOverlay/commentsOverlay";
 
 export default function Profile() {
     return (
@@ -112,6 +113,7 @@ export default function Profile() {
                     { value: "Opt3 A IO K OW PQ OW" },
                 ]}
             />
+            <CommentsOverlay />
             <Modal.Root>
                 <Modal.Trigger
                     triggerValue={true}

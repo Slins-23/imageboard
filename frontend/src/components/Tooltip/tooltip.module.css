@@ -23,6 +23,7 @@
     -ms-user-select: none;
     -webkit-user-select: none;
     -o-user-select: none;
+    font-family: inherit;
 }
 
 .visible {

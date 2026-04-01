@@ -5,8 +5,8 @@
         var(--secondary) 69%,
         var(--primary) 100%
     );
-    border-radius: 10px;
-    padding-left: 0.75em;
+    border-radius: 0px 10px 0 10px;
+    padding-left: 1.25em;
     padding-right: 0.5em;
     padding-top: 0.85em;
     padding-bottom: 0.85em;
@@ -25,7 +25,7 @@
     cursor: pointer;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
-    padding-left: 0.6em;
+    padding-left: 0.75em;
     padding-right: 2em;
     appearance: none;
     text-wrap: nowrap;
@@ -52,4 +52,8 @@
 
 .navbar ul li:focus-visible {
     outline: 0;
+}
+
+.title {
+    color: var(--tertiary);
 }

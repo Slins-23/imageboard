@@ -43,7 +43,7 @@ export const Primary: StoryObj<typeof meta> = {
                         position: "absolute",
                         width: "100%",
                         height: "100%",
-                        backgroundImage: "url('images/thumb/userb.jpg')",
+                        backgroundImage: "url('/images/thumb/userb.jpg')",
                         backgroundRepeat: "no-repeat",
                         backgroundSize: "cover",
                         top: 0,
