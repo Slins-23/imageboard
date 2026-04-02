@@ -16,8 +16,8 @@ import {
 
 interface CheckboxArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
     iconSize: string;
-    iconWidthScale: number;
-    iconHeightScale: number;
+    iconWidthScale?: number;
+    iconHeightScale?: number;
     defaultChecked?: boolean;
     isChecked?: boolean;
     onChecked?: (

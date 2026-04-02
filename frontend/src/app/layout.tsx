@@ -1,6 +1,21 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { fenixFont } from "@/app/fonts/types";
+import IconButton from "@/components/IconButton/iconButton";
+import {
+    faHouse,
+    faTags,
+    faGear,
+    faSearch,
+    faMessage,
+    faBell,
+    faUser,
+    faCircleHalfStroke,
+} from "@fortawesome/free-solid-svg-icons";
+import Link from "next/link";
+import CreatePostBtn from "./createPostBtn";
+import SearchIconBtn from "./searchIconBtn";
+import Navbar from "./navbar";
 
 export const metadata: Metadata = {
     title: "Create Next App",
@@ -14,7 +29,24 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-            <body className={fenixFont.className}> {children} </body>
+            <body className={fenixFont.className}>
+                <Navbar />
+                <main
+                    style={{
+                        position: "relative",
+                        // minHeight: "100%",
+                    }}
+                >
+                    {children}
+                </main>
+                <IconButton
+                    style={{ position: "fixed", bottom: "10px", right: "10px" }}
+                    btnIcon={faCircleHalfStroke}
+                    width="50px"
+                    height="50px"
+                    iconSize="25px"
+                />
+            </body>
         </html>
     );
 }

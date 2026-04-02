@@ -19,7 +19,7 @@ export interface NavigationItem {
 
 export type NavigationItems = Array<Readonly<NavigationItem>>;
 
-interface GradientNavbarArgs {
+interface GradientNavbarArgs extends HTMLAttributes<HTMLDivElement> {
     title: string;
     items: NavigationItems;
     listProps?: HTMLAttributes<HTMLUListElement>;

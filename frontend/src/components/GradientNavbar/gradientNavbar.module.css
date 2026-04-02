@@ -1,11 +1,12 @@
 .navbar {
     display: inline-block;
+    height: fit-content;
     background-image: linear-gradient(
         var(--secondary) 0%,
         var(--secondary) 69%,
         var(--primary) 100%
     );
-    border-radius: 0px 10px 0 10px;
+    border-radius: 0px 10px 10px 0;
     padding-left: 1.25em;
     padding-right: 0.5em;
     padding-top: 0.85em;

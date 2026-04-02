@@ -1,3 +1,5 @@
+"use client";
+
 import buttonStyle from "./iconButton.module.css";
 import {
     FontAwesomeIcon,
@@ -37,6 +39,7 @@ export default function IconButton({
     iconHeightScale = 1,
     hasNotifications = false,
     onActiveChange = undefined,
+    notificationProps = undefined,
     ...args
 }: IconButtonArgs) {
     const [internalIsActive, setInternalIsActive] =
@@ -60,7 +63,7 @@ export default function IconButton({
         <button
             type="button"
             className={buttonStyle.iconButton}
-            aria-pressed={internalIsActive}
+            aria-pressed={isActive === undefined ? false : internalIsActive}
             {...args}
             style={{ width, height, ...args.style }}
             onClick={handleClick}
@@ -79,9 +82,7 @@ export default function IconButton({
                 }}
             />
 
-            {hasNotifications && (
-                <NotificationCount {...args.notificationProps} />
-            )}
+            {hasNotifications && <NotificationCount {...notificationProps} />}
         </button>
     );
 }

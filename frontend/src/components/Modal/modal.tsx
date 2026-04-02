@@ -207,11 +207,31 @@ function ModalOverlay({
 }: ModalOverlayArgs & { contentWrapperRef: RefObject<HTMLDivElement | null> }) {
     const { internalIsOpen, fadeDuration } = useModalContext();
 
+    /*
     useEffect(() => {
         document.documentElement.style.overflow = internalIsOpen
             ? "hidden"
             : "visible";
     }, [internalIsOpen]);
+    */
+
+    /*
+    useEffect(() => {
+        // Calculate the physical width of the user's scrollbar
+        const scrollbarWidth =
+            window.innerWidth - document.documentElement.clientWidth;
+
+        if (internalIsOpen) {
+            document.documentElement.style.overflow = "hidden";
+            // Add padding equal to the scrollbar to prevent the layout shift
+            document.body.style.paddingRight = `${scrollbarWidth}px`;
+        } else {
+            // Revert styles when modal closes
+            document.documentElement.style.overflow = "";
+            document.body.style.paddingRight = "";
+        }
+    }, [internalIsOpen]);
+    */
 
     return (
         <div
@@ -276,10 +296,9 @@ export function Content({ children, ...args }: ModalOverlayArgs) {
 
     useEffect(() => {
         if (!internalIsOpen) {
-            setTimeout(
-                () => setResetKey((prevResetKey) => prevResetKey + 1),
-                fadeDuration
-            );
+            setTimeout(() => {
+                setResetKey((prevResetKey) => prevResetKey + 1);
+            }, fadeDuration);
             return undefined;
         }
 

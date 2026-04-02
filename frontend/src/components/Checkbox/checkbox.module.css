@@ -6,6 +6,7 @@
     border-style: solid;
     border-color: var(--tertiary);
     padding: 0.1rem 0 0.1rem 0;
+    scale: 0.95 1;
     transition: 0.1s;
     transition-property: background-color;
 }
