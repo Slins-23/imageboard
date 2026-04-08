@@ -11,7 +11,7 @@ export default meta;
 export const Primary: StoryObj<typeof meta> = {
     render: () => {
         return (
-            <Button onClick={() => Tooltip("Tooltip spawned", 30000)}>
+            <Button onClick={() => Tooltip("Tooltip spawned")}>
                 Spawn tooltip
             </Button>
         );
