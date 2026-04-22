@@ -2,7 +2,7 @@
     background-color: var(--secondary);
     border-style: solid;
     border-color: var(--tertiary);
-    border-width: 1px;
+    border-width: 1.5px;
     border-radius: 8px;
     display: flex;
     align-items: center;

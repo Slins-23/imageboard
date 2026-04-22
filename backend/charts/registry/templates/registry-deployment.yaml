@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cluster-registry
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: cluster-registry
+  template:
+    metadata:
+      labels:
+        app: cluster-registry
+    spec:
+      nodeSelector:
+        name: cluster-registry-vm
+      containers:
+      - name: cluster-registry
+        image: registry:2
+        ports:
+        -  containerPort: {{ .Values.containerPort }}
+        volumeMounts:
+        - name: cluster-registry-data
+          mountPath: /var/lib/registry
+      volumes:
+      -  name: cluster-registry-data
+         persistentVolumeClaim:
+           claimName: registry-pvc

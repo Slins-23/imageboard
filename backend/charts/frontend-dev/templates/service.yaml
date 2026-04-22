@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend-dev-svc
+spec:
+  selector:
+    app: frontend-dev
+  ports:
+    - name: next
+      port: 80
+      targetPort: 3000
+    - name: storybook
+      port: 81
+      targetPort: 6006

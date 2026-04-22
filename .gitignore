@@ -1,0 +1,10 @@
+*
+
+!.gitignore
+
+!backend
+!frontend
+!README.md
+
+!backend/**
+!frontend/**

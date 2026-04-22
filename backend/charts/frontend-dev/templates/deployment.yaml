@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend-dev
+  template:
+    metadata:
+      labels:
+        app: frontend-dev
+    spec:
+      containers:
+        - name: frontend-dev
+          image: node:24.15.0-bookworm
+          ports:
+            - containerPort: 3000 # NextJS
+            - containerPort: 6006 # Storybook
+          volumeMounts:
+            - name: storage-volume
+              mountPath: /app
+              subPath: ""
+          command: ["sh", "-c"]
+          args:
+            - cd /app && npm install && npx concurrently "npm run dev" "npm run storybook"
+          env:
+            - name: WATCHPACK_POLLING
+              value: "true"
+            - name: CHOKIDAR_USEPOLLING
+              value: "true"
+      volumes:
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: frontend-dev-pvc

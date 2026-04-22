@@ -1,0 +1,57 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: api-routing
+spec:
+  gateways:
+    - api-gateway
+  hosts:
+  - "*"
+  #- "prometheus.localhost"
+  #- "localhost"
+  http:
+  - match:
+    - headers:
+        host:
+          exact: jaeger.localhost
+    route:
+    - destination:
+        host: jaeger-query.monitoring.svc.cluster.local
+        port:
+          number: 16686
+  - match:
+    - headers:
+        host:
+          exact: grafana.localhost
+    route:
+    - destination:
+        host: grafana.monitoring.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - headers:
+        host:
+          exact: prometheus.localhost
+    route:
+    - destination:
+        host: prometheus.monitoring.svc.cluster.local
+        port:
+          number: 9090
+  - match:
+    - headers:
+        host:
+          exact: storybook.localhost
+    route:
+    - destination:
+        host: frontend-dev-svc.frontend.svc.cluster.local
+        port:
+          number: 81
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        #host: nginx-svc.default.svc.cluster.local
+        host: frontend-dev-svc.frontend.svc.cluster.local
+        port:
+          number: 80

@@ -1,0 +1,9 @@
+./scripts/stop_frontend.sh
+./scripts/delete_nginx.sh
+./scripts/stop_pods.sh
+#./scripts/delete_registry.sh
+#./scripts/stop_messaging.sh
+./scripts/stop_monitoring.sh
+./scripts/stop_certmanager.sh
+./scripts/delete_namespaces.sh
+./scripts/delete_cluster.sh

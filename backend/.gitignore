@@ -1,0 +1,7 @@
+notes.txt
+todo.txt
+data/grafana/plugins
+data/prometheus/*
+data/registry/*
+*Zone.Identifier
+*.swap

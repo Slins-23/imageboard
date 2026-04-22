@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-proto
+  namespace: databases
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: postgres-proto
+  template:
+    metadata:
+      labels:
+        app: postgres-proto
+        role: db
+    spec:
+      nodeSelector:
+        name: postgres-proto-vm
+      containers:
+        - name: postgres-proto
+          image: postgres:15.17-trixie
+          ports:
+          - containerPort: {{ .Values.containerPort }}
+          env:
+          -  name: POSTGRES_PASSWORD
+             value: "{{ .Values.POSTGRES_PASSWORD }}"
+          -  name: PGUSER
+             value: "{{ .Values.PGUSER }}"
