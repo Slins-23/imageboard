@@ -4,7 +4,7 @@ nodes:
   - role: control-plane
     image: kindest/node:v1.35.0
     labels:
-      name: cluster-controller-vm-01
+      name: cluster-controller
     extraMounts:
       - hostPath: /home/slins/Programming/Web/App/backend/data/grafana
         containerPath: /mnt/grafana-data
@@ -25,22 +25,7 @@ nodes:
   - role: worker
     image: kindest/node:v1.35.0
     labels:
-      name: cluster-registry-vm
-    extraMounts:
-      - hostPath: /home/slins/Programming/Web/App/backend/data/grafana
-        containerPath: /mnt/grafana-data
-      - hostPath: /home/slins/Programming/Web/App/backend/data/prometheus
-        containerPath: /mnt/prometheus-data
-      - hostPath: /home/slins/Programming/Web/App/backend/data/registry
-        containerPath: /mnt/registry-data
-      - hostPath: /home/slins/Programming/Web/App/backend/data/jaeger
-        containerPath: /mnt/jaeger-data
-      - hostPath: /home/slins/Programming/Web/App/backend/../frontend
-        containerPath: /mnt/frontend-dev-data
-  - role: worker
-    image: kindest/node:v1.35.0
-    labels:
-      name: postgres-proto-vm
+      name: cluster-registry
     extraMounts:
       - hostPath: /home/slins/Programming/Web/App/backend/data/grafana
         containerPath: /mnt/grafana-data

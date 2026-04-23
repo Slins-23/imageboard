@@ -1,0 +1,8 @@
+apiVersion: security.istio.io/v1beta1
+kind: PeerAuthentication
+metadata:
+  name: bypass-tls-messaging
+  namespace: messaging
+spec:
+  mtls:
+    mode: PERMISSIVE

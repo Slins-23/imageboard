@@ -1,4 +1,0 @@
-FROM kindest/node:v1.35.0
-
-COPY certs/registry.crt /usr/local/share/ca-certificates/main-cluster-registry.crt
-RUN update-ca-certificates

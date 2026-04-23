@@ -15,6 +15,9 @@ envsubst < nginx/default.template.conf > nginx/default.conf
 # Start cert-manager (manages intra-cluster TLS certificates)
 ./scripts/start_certmanager.sh
 
+# Start databases
+./scripts/start_databases.sh
+
 # Starts monitoring services (e.g. Jaeger, Prometheus, Grafana, etc.)
 ./scripts/start_monitoring.sh
 
@@ -25,7 +28,7 @@ envsubst < nginx/default.template.conf > nginx/default.conf
 ./scripts/start_istio.sh
 
 # Start services (e.g. docker registry, databases, logging, etc.)
-./scripts/start_pods.sh
+#./scripts/start_pods.sh
 
 # Start frontend next.js server and storybook
 ./scripts/start_frontend.sh
@@ -35,7 +38,7 @@ envsubst < nginx/default.template.conf > nginx/default.conf
 ./scripts/start_nginx.sh
 
 echo -e "\n"
-echo "(Default): Listening on localhost:$NGINX_PROXY_PORT"
-echo "(Default): Redirecting to localhost:$ISTIO_INGRESS_PORT (Istio ingress)"
+echo "Listening on localhost:$NGINX_PROXY_PORT"
+echo "Redirecting to localhost:$ISTIO_INGRESS_PORT (Istio ingress)"
 echo "Change these ports in the 'start.sh' file's environment variables."
 echo -e "\n"

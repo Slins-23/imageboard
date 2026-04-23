@@ -4,7 +4,7 @@ metadata:
   name: postgres-proto
   namespace: databases
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: { { .Values.replicaCount } }
   selector:
     matchLabels:
       app: postgres-proto
@@ -14,15 +14,13 @@ spec:
         app: postgres-proto
         role: db
     spec:
-      nodeSelector:
-        name: postgres-proto-vm
       containers:
         - name: postgres-proto
           image: postgres:15.17-trixie
           ports:
-          - containerPort: {{ .Values.containerPort }}
+            - containerPort: { { .Values.containerPort } }
           env:
-          -  name: POSTGRES_PASSWORD
-             value: "{{ .Values.POSTGRES_PASSWORD }}"
-          -  name: PGUSER
-             value: "{{ .Values.PGUSER }}"
+            - name: POSTGRES_PASSWORD
+              value: "{{ .Values.POSTGRES_PASSWORD }}"
+            - name: PGUSER
+              value: "{{ .Values.PGUSER }}"
