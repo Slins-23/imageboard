@@ -34,6 +34,8 @@ Some things can only stay on paper, or Figma and my mind I guess. Though it wasn
 
 #### (Tested on Ubuntu 24.04 under WSL2 in a Windows 11 host)
 
+Docker: <b><i>v29.4.0</i></b>
+
 Kubernetes client: <b><i>v1.35</i></b>
 
 Kind: <b><i>v0.31.0</i></b>
@@ -60,7 +62,6 @@ CD into `backend` and run `start.sh` in the root directory (<b>MUST</b>, for now
 
 - Jaeger: `jaeger.localhost:8080`
   - No data persistence for now
-  - Currently has a startup websocket problem, sometimes it works sometimes it doesn't
 
 - Istio API gateway: `localhost:5000`
 
@@ -81,11 +82,11 @@ Connection is meant to mirror a real-world pathway. Thus, I have separated it in
 
 This distinction is important as although you can access these services externally due to proxy routing and redirection at the aforementioned addresses and ports, this is not where or how service inter-communication and direct calls to services happen (only indirectly).
 
-Internally, services have their own names and ports, likely distinct from those exposed to the users, and like in a real-world scenario, as a user which has access to these public facing services/interfaces, you cannot directly query them without being part of the cluster (which the services themselves are, but NGINX isn't, and neither are you).
+Internally, services have their own names and ports, likely distinct from those exposed to the users, and like in a real-world scenario, as a user which has access to these public facing services/interfaces, you cannot directly query them without being part of the cluster (which the services themselves are, but NGINX isn't, and neither are you, unless you enter the pods/containers and/or execute commands from within).
 
 All that to say: The service names and ports are different intra-cluster from those I've listed, and are not directly accessible.
 
-You can only access them directly through `kubectl exec`, through proxying `backend/charts/istio-ingress-cfg/routing_table.yaml`, or by querying from another service within the cluster itself, through `app-svc:svc-port` (if on the same namespace) or `app-svc.namespace.svc.cluster.local` in any.
+You can only access them directly through `kubectl run` or `kubectl exec`, through proxying `backend/charts/istio-ingress-cfg/routing_table.yaml`, or by querying from another service within the cluster itself, through `app-svc:svc-port` (if on the same namespace) or `app-svc.namespace.svc.cluster.local` in any.
 
 At this point you could run `kubectl get svc --all-namespaces` to check them out.
 

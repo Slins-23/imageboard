@@ -1,5 +1,0 @@
-Forwarding from 127.0.0.1:5000 -> 5000
-Forwarding from [::1]:5000 -> 5000
-Handling connection for 5000
-E0415 17:08:56.996456   28146 portforward.go:424] "Unhandled Error" err="an error occurred forwarding 5000 -> 5000: error forwarding port 5000 to pod c4bd3ab9dfc7cade1723b4a25eb52d85f8da9a5f8aab7d46af002880de2f886d, uid : network namespace for sandbox \"c4bd3ab9dfc7cade1723b4a25eb52d85f8da9a5f8aab7d46af002880de2f886d\" is closed"
-error: lost connection to pod

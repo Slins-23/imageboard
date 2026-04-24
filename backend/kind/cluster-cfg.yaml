@@ -14,18 +14,10 @@ nodes:
         containerPath: /mnt/registry-data
       - hostPath: /home/slins/Programming/Web/App/backend/../frontend
         containerPath: /mnt/frontend-dev-data
-  #- role: control-plane
-  #  image: kindest/node-custom:v1.35.0
-  #  labels:
-  #    name: cluster-controller-vm-02
-  #- role: control-plane
-  #  image: kindest/node-custom:v1.35.0
-  #  labels:
-  #    name: cluster-controller-vm-03
   - role: worker
     image: kindest/node:v1.35.0
     labels:
-      name: cluster-registry
+      name: cluster-worker
     extraMounts:
       - hostPath: /home/slins/Programming/Web/App/backend/data/grafana
         containerPath: /mnt/grafana-data

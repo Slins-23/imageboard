@@ -1,0 +1,1 @@
+helm install postgresql charts/postgresql -n databases

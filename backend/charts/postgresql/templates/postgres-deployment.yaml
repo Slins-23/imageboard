@@ -2,12 +2,15 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres-proto
-  namespace: databases
+  labels:
+    app: postgres-proto
+    role: db
 spec:
-  replicas: { { .Values.replicaCount } }
   selector:
     matchLabels:
       app: postgres-proto
+      role: db
+  replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:
@@ -18,7 +21,7 @@ spec:
         - name: postgres-proto
           image: postgres:15.17-trixie
           ports:
-            - containerPort: { { .Values.containerPort } }
+            - containerPort: {{ .Values.containerPort }}
           env:
             - name: POSTGRES_PASSWORD
               value: "{{ .Values.POSTGRES_PASSWORD }}"
