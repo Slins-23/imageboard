@@ -9,4 +9,4 @@ spec:
     - ReadWriteOnce
   storageClassName: prometheus-data
   hostPath:
-    path: /mnt/prometheus-data
+    path: /mnt/data/prometheus

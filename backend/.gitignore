@@ -1,8 +1,8 @@
 notes.txt
 todo.txt
-data/grafana/plugins
-data/prometheus/*
-data/registry/*
+data/*
+!data/grafana.db
 *Zone.Identifier
 *.swap
 charts/*/logs/*
+kind/cluster-cfg.yaml

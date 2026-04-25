@@ -6,26 +6,16 @@ nodes:
     labels:
       name: cluster-controller
     extraMounts:
-      - hostPath: ${PROJECT_DIR}/data/grafana
-        containerPath: /mnt/grafana-data
-      - hostPath: ${PROJECT_DIR}/data/prometheus
-        containerPath: /mnt/prometheus-data
-      - hostPath: ${PROJECT_DIR}/data/registry
-        containerPath: /mnt/registry-data
+      - hostPath: ${PROJECT_DIR}/data
+        containerPath: /mnt/data
       - hostPath: ${PROJECT_DIR}/../frontend
-        containerPath: /mnt/frontend-dev-data
+        containerPath: /mnt/frontend-dev
   - role: worker
     image: kindest/node:v1.35.0
     labels:
       name: cluster-worker
     extraMounts:
-      - hostPath: ${PROJECT_DIR}/data/grafana
-        containerPath: /mnt/grafana-data
-      - hostPath: ${PROJECT_DIR}/data/prometheus
-        containerPath: /mnt/prometheus-data
-      - hostPath: ${PROJECT_DIR}/data/registry
-        containerPath: /mnt/registry-data
-      - hostPath: ${PROJECT_DIR}/data/jaeger
-        containerPath: /mnt/jaeger-data
+      - hostPath: ${PROJECT_DIR}/data
+        containerPath: /mnt/data
       - hostPath: ${PROJECT_DIR}/../frontend
-        containerPath: /mnt/frontend-dev-data
+        containerPath: /mnt/frontend-dev

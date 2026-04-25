@@ -9,4 +9,4 @@ spec:
     - ReadWriteOnce
   storageClassName: grafana-data
   hostPath:
-    path: /mnt/grafana-data
+    path: /mnt/data/grafana

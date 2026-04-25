@@ -1,13 +1,32 @@
-# Default values for ..
+# Default values for databases.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
+databases:
+  postgresql:
+    - name: db-images
+      enabled: true
+      storage: 10Gi
+      username: admin
+      password: 12345
+      database: images
+
+    - name: db-users-auth
+      enabled: true
+      storage: 10Gi
+      username: admin
+      password: 12345
+      database: users_auth
+
+    - name: db-users-pii
+      enabled: true
+      storage: 10Gi
+      username: admin
+      password: 12345
+      database: users_pii
+
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1
-containerPort: 5432
-svcPort: 5001
-PGUSER: "postgres"
-POSTGRES_PASSWORD: "123"
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
@@ -52,11 +71,6 @@ securityContext: {}
   # readOnlyRootFilesystem: true
   # runAsNonRoot: true
   # runAsUser: 1000
-
-postgresPrototype:
-  replicas: 1
-  containerPort: 80
-  POSTGRES_PASSWORD: "123"
 
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:

@@ -75,7 +75,7 @@ export default function GradientNavbar({
             {...args}
         >
             <header>
-                <h1 className={gradientNavbarStyle.title}>{title}</h1>
+                <span className={gradientNavbarStyle.title}>{title}</span>
             </header>
             <ul
                 role="listbox"

@@ -42,6 +42,8 @@ Kind: <b><i>v0.31.0</i></b>
 
 Helm: <b><i>v4.1.4</i></b>
 
+yq: <b><i>v4.53.2</i></b> - https://github.com/mikefarah/yq/
+
 ## Usage
 
 CD into `backend` and run `start.sh` in the root directory (<b>MUST</b>, for now).
