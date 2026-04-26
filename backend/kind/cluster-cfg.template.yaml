@@ -6,16 +6,21 @@ nodes:
     labels:
       name: cluster-controller
     extraMounts:
-      - hostPath: ${PROJECT_DIR}/data
+      - hostPath: ${BACKEND_DIR}/data
         containerPath: /mnt/data
-      - hostPath: ${PROJECT_DIR}/../frontend
-        containerPath: /mnt/frontend-dev
+      - hostPath: ${BACKEND_DIR}/apps
+        containerPath: /mnt/apps
+      - hostPath: ${BACKEND_DIR}/../frontend
+        containerPath: /mnt/apps/frontend-dev
+      
   - role: worker
     image: kindest/node:v1.35.0
     labels:
       name: cluster-worker
     extraMounts:
-      - hostPath: ${PROJECT_DIR}/data
+      - hostPath: ${BACKEND_DIR}/data
         containerPath: /mnt/data
-      - hostPath: ${PROJECT_DIR}/../frontend
-        containerPath: /mnt/frontend-dev
+      - hostPath: ${BACKEND_DIR}/apps
+        containerPath: /mnt/apps
+      - hostPath: ${BACKEND_DIR}/../frontend
+        containerPath: /mnt/apps/frontend-dev

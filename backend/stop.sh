@@ -1,4 +1,5 @@
 ./scripts/stop_frontend.sh
+./scripts/stop_apps.sh
 ./scripts/delete_nginx.sh
 #./scripts/stop_pods.sh
 #./scripts/delete_registry.sh

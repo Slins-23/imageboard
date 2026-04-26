@@ -1,4 +1,4 @@
-export PROJECT_DIR="$(pwd)"
+export BACKEND_DIR="$(pwd)"
 export NGINX_PROXY_PORT=8080
 export ISTIO_INGRESS_PORT=5000
 export BASE_POSTGRESQL_DIR="data/postgresql"
@@ -30,8 +30,8 @@ envsubst < nginx/default.template.conf > nginx/default.conf
 # Start istio (API gateway as ingress)
 ./scripts/start_istio.sh
 
-# Start services (e.g. docker registry, databases, logging, etc.)
-#./scripts/start_pods.sh
+# Start apps/services (e.g. BFF, database interop services, etc.)
+./scripts/start_apps.sh
 
 # Start frontend next.js server and storybook
 ./scripts/start_frontend.sh

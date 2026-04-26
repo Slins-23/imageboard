@@ -562,7 +562,6 @@ spec:
               mountPath: /etc/config
             - name: storage-volume
               mountPath: /data
-              subPath: ""
       dnsPolicy: ClusterFirst
       terminationGracePeriodSeconds: 300
       volumes:

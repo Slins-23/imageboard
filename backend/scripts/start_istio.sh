@@ -5,6 +5,7 @@ kubectl label namespace messaging istio-injection=disabled
 kubectl label namespace registry istio-injection=enabled
 #kubectl label namespace monitoring istio-injection=disabled
 kubectl label namespace monitoring istio-injection=enabled
+kubectl label namespace apps istio-injection=enabled
 
 helm install istio-base charts/istio-base -n istio-system
 helm install istiod charts/istiod -n istio-system

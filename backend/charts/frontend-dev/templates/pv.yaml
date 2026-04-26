@@ -9,4 +9,4 @@ spec:
     - ReadWriteOnce
   storageClassName: frontend-dev-data
   hostPath:
-    path: /mnt/frontend-dev
+    path: /mnt/apps/frontend-dev

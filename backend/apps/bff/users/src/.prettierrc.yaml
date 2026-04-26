@@ -1,0 +1,11 @@
+trailingComma: "es5"
+tabWidth: 4
+semi: true
+singleQuote: false
+quoteProps: "as-needed"
+bracketSpacing: true
+objectWrap: "preserve"
+bracketSameLine: false
+arrowParens: "always"
+singleAttributePerLine: true
+embeddedLanguageFormatting: "auto"
