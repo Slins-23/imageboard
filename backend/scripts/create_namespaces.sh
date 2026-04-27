@@ -5,4 +5,4 @@ kubectl create namespace monitoring
 kubectl create namespace messaging
 kubectl create namespace databases
 kubectl create namespace apps
-kubectl create namespace frontend
+#kubectl create namespace frontend

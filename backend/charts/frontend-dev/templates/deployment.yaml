@@ -17,7 +17,7 @@ spec:
           image: node:24.15.0-bookworm
           ports:
             - containerPort: 3000 # NextJS
-            - containerPort: 6006 # Storybook
+            - containerPort: 8080 # Storybook
           volumeMounts:
             - name: storage-volume
               mountPath: /app

@@ -30,11 +30,11 @@ envsubst < nginx/default.template.conf > nginx/default.conf
 # Start istio (API gateway as ingress)
 ./scripts/start_istio.sh
 
-# Start apps/services (e.g. BFF, database interop services, etc.)
+# Start apps/services (e.g. Frontend, Storybook, BFF, database interop services, etc.)
 ./scripts/start_apps.sh
 
 # Start frontend next.js server and storybook
-./scripts/start_frontend.sh
+#./scripts/start_frontend.sh
 
 # Start nginx @ port 8080 (setup on nginx/default.conf) as reverse proxy (shares network with localhost)
 # It is started as a standalone docker container outside of the cluster, as in real-world scenario.

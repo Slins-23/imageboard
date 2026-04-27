@@ -1,7 +1,7 @@
 kubectl label namespace frontend istio-injection=enabled
 kubectl label namespace default istio-injection=enabled
 kubectl label namespace databases istio-injection=enabled
-kubectl label namespace messaging istio-injection=disabled
+kubectl label namespace messaging istio-injection=enabled
 kubectl label namespace registry istio-injection=enabled
 #kubectl label namespace monitoring istio-injection=disabled
 kubectl label namespace monitoring istio-injection=enabled

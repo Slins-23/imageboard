@@ -1,1 +1,1 @@
-helm uninstall frontend-dev -n frontend
+helm uninstall frontend-dev -n apps

@@ -43,7 +43,7 @@ spec:
           exact: storybook.localhost
     route:
     - destination:
-        host: frontend-dev-svc.frontend.svc.cluster.local
+        host: frontend-dev-svc.apps.svc.cluster.local
         port:
           number: 81
   - match:
@@ -52,6 +52,6 @@ spec:
     route:
     - destination:
         #host: nginx-svc.default.svc.cluster.local
-        host: frontend-dev-svc.frontend.svc.cluster.local
+        host: frontend-dev-svc.apps.svc.cluster.local
         port:
           number: 80

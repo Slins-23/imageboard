@@ -11,4 +11,4 @@ spec:
       targetPort: 3000
     - name: storybook
       port: 81
-      targetPort: 6006
+      targetPort: 8080

@@ -11,7 +11,7 @@
         "start": "next start",
         "lint": "eslint",
         "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js",
-        "storybook": "storybook dev -p 6006 --no-open",
+        "storybook": "storybook dev -p 8080 --no-open",
         "build-storybook": "storybook build"
     },
     "dependencies": {
