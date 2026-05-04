@@ -2,10 +2,10 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-databases:
+global:
   postgresql:
     - name: db-images
-      enabled: true
+      enabled: false
       storage: 10Gi
       username: admin
       password: 12345
@@ -19,7 +19,7 @@ databases:
       database: users_auth
 
     - name: db-users-pii
-      enabled: true
+      enabled: false
       storage: 10Gi
       username: admin
       password: 12345

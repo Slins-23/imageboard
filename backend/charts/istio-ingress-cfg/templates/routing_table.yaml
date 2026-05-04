@@ -48,6 +48,14 @@ spec:
           number: 81
   - match:
     - uri:
+        prefix: /api/users
+    route:
+    - destination:
+        host: bff-users.apps.svc.cluster.local
+        port:
+          number: 80
+  - match:
+    - uri:
         prefix: /
     route:
     - destination:

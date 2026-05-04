@@ -1,4 +1,4 @@
-kubectl label namespace frontend istio-injection=enabled
+#kubectl label namespace frontend istio-injection=enabled
 kubectl label namespace default istio-injection=enabled
 kubectl label namespace databases istio-injection=enabled
 kubectl label namespace messaging istio-injection=enabled

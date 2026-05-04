@@ -1,0 +1,19 @@
+{{- range .Values.global.postgresql }}
+{{- if .enabled }}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgresql-migrate-{{ .name }}
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 5Mi
+  accessModes:
+    - ReadOnlyMany
+  hostPath:
+    path: /mnt/apps/services/{{ .name }}/migrations
+{{- end }}
+{{- end }}

@@ -1,0 +1,23 @@
+{
+    "name": "@app/contracts",
+    "version": "1.0.0",
+    "description": "",
+    "license": "ISC",
+    "author": "",
+    "type": "module",
+    "main": "index.ts",
+    "scripts": {
+        "generate": "tsx generate.ts > generated/openapi.json",
+        "dev": "chokidar '**/*.ts' -c 'npm run generate'",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "peerDependencies": {
+        "zod": "^4.4.2"
+    },
+    "devDependencies": {
+        "@asteasolutions/zod-to-openapi": "^8.5.0",
+        "chokidar": "^5.0.0",
+        "tsx": "^4.21.0",
+        "zod": "^4.4.2"
+    }
+}

@@ -1,0 +1,19 @@
+{{- range .Values.global.postgresql }}
+{{- if .enabled }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgresql-migrate-{{ .name }}
+  annotations:
+    "helm.sh/resource-policy": keep
+spec:
+  storageClassName: ""
+  accessModes:
+      - ReadOnlyMany
+  volumeName: postgresql-migrate-{{ .name }}
+  resources:
+    requests:
+      storage: 5Mi
+{{- end }}
+{{- end }}

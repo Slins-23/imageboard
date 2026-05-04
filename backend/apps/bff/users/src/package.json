@@ -1,5 +1,5 @@
 {
-    "name": "db-users-auth",
+    "name": "bff-users",
     "version": "1.0.0",
     "description": "",
     "license": "ISC",
@@ -15,7 +15,9 @@
         "clean": "rm -rf dist"
     },
     "dependencies": {
-        "express": "^5.2.1"
+        "express": "^5.2.1",
+        "http-proxy-middleware": "^3.0.5",
+        "zod": "^4.4.1"
     },
     "devDependencies": {
         "@microsoft/tsdoc": "^0.16.0",

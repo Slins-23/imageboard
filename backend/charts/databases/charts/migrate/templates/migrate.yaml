@@ -1,0 +1,43 @@
+{{- range .Values.global.postgresql }}
+{{- if .enabled }}
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: postgresql-migrate-{{ .name }}
+  annotations:
+    "helm.sh/hook": post-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    role: migration
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+      initContainers:
+        - name: wait-for-postgres-{{ .name }}
+          image: busybox:stable
+          command: ["sh", "-c", "until nc -z postgresql-{{ .name }} 5432; do echo Waiting postgresql-{{ .name }}...; sleep 2; done;"]
+      containers:
+        - name: migrate
+          image: migrate/migrate:4
+          command:
+            - "sh"
+            - "-c"
+            - |
+              for i in $(seq 1 30); do
+                migrate -path=/migrations -database="postgres://{{ .username }}:{{ .password }}@postgresql-{{ .name }}:5432/{{ .database }}?sslmode=disable" -lock-timeout=60 up && exit 0
+                echo "Retrying migrations..."
+                sleep 2
+              done
+              exit 1
+          volumeMounts:
+            - name: postgresql-migrate-{{ .name }}
+              mountPath: /migrations
+              readOnly: true
+      volumes:
+        - name: postgresql-migrate-{{ .name }}
+          persistentVolumeClaim:
+            claimName: postgresql-migrate-{{ .name }}
+{{- end }}
+{{- end }}

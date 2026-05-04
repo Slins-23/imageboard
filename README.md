@@ -44,6 +44,8 @@ Helm: <b><i>v4.1.4</i></b>
 
 yq: <b><i>v4.53.2</i></b> - https://github.com/mikefarah/yq/
 
+(Optional for creating database migrations) golang-migrate: <b><i>v4.19.1</i></b>
+
 ## Usage
 
 CD into `backend` and run `start.sh` in the root directory (<b>MUST</b>, for now).

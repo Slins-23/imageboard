@@ -1,5 +1,5 @@
 # Start database interop services
-yq -r ".databases.postgresql[].name" charts/databases/values.yaml | while read name; do
+yq -r ".global.postgresql[].name" charts/databases/values.yaml | while read name; do
    helm install $name charts/node-app -f apps/services/$name/values.yaml -n apps
 done
 

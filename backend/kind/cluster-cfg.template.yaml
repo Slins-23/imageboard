@@ -12,7 +12,8 @@ nodes:
         containerPath: /mnt/apps
       - hostPath: ${BACKEND_DIR}/../frontend
         containerPath: /mnt/apps/frontend-dev
-      
+      - hostPath: ${BACKEND_DIR}/contracts
+        containerPath: /mnt/contracts
   - role: worker
     image: kindest/node:v1.35.0
     labels:
@@ -24,3 +25,5 @@ nodes:
         containerPath: /mnt/apps
       - hostPath: ${BACKEND_DIR}/../frontend
         containerPath: /mnt/apps/frontend-dev
+      - hostPath: ${BACKEND_DIR}/contracts
+        containerPath: /mnt/contracts

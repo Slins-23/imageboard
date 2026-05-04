@@ -1,0 +1,17 @@
+{{- range .Values.global.postgresql}}
+{{- if .enabled}}
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgresql-{{ .name }}
+spec:
+  capacity:
+    storage: {{ .storage | default "10Gi" }}
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: postgresql-data-{{ .name }}
+  hostPath:
+    path: /mnt/data/postgresql/{{ .name }}
+{{- end }}
+{{- end }}

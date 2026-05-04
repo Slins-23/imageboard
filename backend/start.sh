@@ -3,6 +3,10 @@ export NGINX_PROXY_PORT=8080
 export ISTIO_INGRESS_PORT=5000
 export BASE_POSTGRESQL_DIR="data/postgresql"
 
+sudo chown -R $(id -u):$(id -g) apps data
+
+npm install
+
 envsubst < kind/cluster-cfg.template.yaml > kind/cluster-cfg.yaml
 envsubst < nginx/default.template.conf > nginx/default.conf
 #envsubst < scripts/start_istio.sh.template > scripts/start_istio.sh

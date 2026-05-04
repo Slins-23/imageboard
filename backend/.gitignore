@@ -6,3 +6,5 @@ data/*
 *.swap
 charts/*/logs/*
 kind/cluster-cfg.yaml
+node_modules
+package-lock.json
