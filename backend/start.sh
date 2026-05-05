@@ -4,6 +4,7 @@ export ISTIO_INGRESS_PORT=5000
 export BASE_POSTGRESQL_DIR="data/postgresql"
 
 sudo chown -R $(id -u):$(id -g) apps data
+sudo chown -R 65534:65534 data/prometheus
 
 npm install
 

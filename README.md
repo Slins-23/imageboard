@@ -7,6 +7,7 @@
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Usage](#usage)
+- [User-facing endpoints](#user-facing-endpoints)
 - [Notes](#notes)
 
 ## Introduction
@@ -48,13 +49,29 @@ yq: <b><i>v4.53.2</i></b> - https://github.com/mikefarah/yq/
 
 ## Usage
 
-CD into `backend` and run `start.sh` in the root directory (<b>MUST</b>, for now).
+CD into `backend` and run `start.sh` from there directory (<b>MUST</b>, for now).
 
-## Relevant user-facing services
+Root access is required for some permission workarounds, primarily for the `backend/data` folder.
+
+This is due to the messy combination of attempting to emulate production to an extent within the same development environment, while also using WSL2, kind, local storage file mounts, persistence, permission requirements within containers (which also often reset permissions through init containers or require explicit users/permissions), etc.
+
+It boils down to a simple recursive chown of the `backend/data` folder which transfers ownership to the current user, then another to `65534`/`nobody` for `backend/data/prometheus`.
+
+## User-facing endpoints
 
 - Next.js dev server/NGINX reverse proxy: `localhost:8080`
 
 - Storybook: `storybook.localhost:8080`
+
+- Public API: `localhost:8080/api`
+  - Endpoints are described in:
+  - Zod schemas at `backend/contracts`
+  - OpenAPI schema generated from Zod schemas at `backend/contracts/generated/openapi.json`
+  - Swagger UI as a frontend for the OpenAPI schema
+  - This is exposed through a BFF (Backend-for-frontend) which intermediates communication with the internal API services (e.g. db-users-auth, db-images, etc.)
+
+- Swagger UI: `swagger.localhost:8080`
+  - Uses OpenAPI schema generated from Zod schemas for the API
 
 - Prometheus: `prometheus.localhost:8080`
   - Data persisted in `backend/data/prometheus`

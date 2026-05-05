@@ -47,6 +47,15 @@ spec:
         port:
           number: 81
   - match:
+    - headers:
+        host:
+          exact: swagger.localhost
+    route:
+    - destination:
+        host: swagger-ui.apps.svc.cluster.local
+        port:
+          number: 80
+  - match:
     - uri:
         prefix: /api/users
     route:

@@ -5,7 +5,7 @@ import { GetUserParams } from "./schemas.ts";
 
 export const GetUserContract = {
     method: "GET",
-    path: "/api/users/:column/:value",
+    path: "/api/users/{column}/{value}",
 
     request: {
         params: {

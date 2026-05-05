@@ -9,6 +9,12 @@ const doc = generator.generateDocument({
         title: "API",
         version: "1.0.0",
     },
+    servers: [
+        {
+            url: "http://localhost:8080",
+            description: "Backend-for-frontend public API",
+        },
+    ],
 });
 
 console.log(JSON.stringify(doc, null, 2));

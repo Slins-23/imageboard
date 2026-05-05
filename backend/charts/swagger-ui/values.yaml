@@ -1,4 +1,4 @@
-# Default values for node-app.
+# Default values for swagger-ui.
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
@@ -7,21 +7,15 @@ replicaCount: 1
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: node
-  tag: 24.15.0-bookworm
+  repository: swaggerapi/swagger-ui
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  #tag: ""
+  tag: "v5.32.5"
 
 env:
-  CHOKIDAR_USEPOLLING: true
-  CHOKIDAR_INTERVAL: 1000
-
-pv:
-  storageCapacity: 10Gi
-pvc:
-  storageRequest: 10Gi
+  - name: SWAGGER_JSON
+    value: "/app/openapi.json"
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets: []
@@ -64,8 +58,8 @@ service:
   # This sets the service type more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#publishing-services-service-types
   type: ClusterIP
   # This sets the ports more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/#field-spec-ports
+  containerPort: 8080
   port: 80
-  containerPort: 3000
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -135,20 +129,14 @@ resources: {}
   #   memory: 128Mi
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
-startupProbe:
-  httpGet:
-    path: /health
-    port: http
-  failureThreshold: 30
-  periodSeconds: 2
 livenessProbe:
   httpGet:
-    path: /health
-    port: http
+    path: /
+    port: 8080
 readinessProbe:
   httpGet:
-    path: /health
-    port: http
+    path: /
+    port: 8080
 
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
@@ -159,17 +147,24 @@ autoscaling:
   # targetMemoryUtilizationPercentage: 80
 
 # Additional volumes on the output Deployment definition.
-volumes: []
+volumes:
   # - name: foo
   #   secret:
   #     secretName: mysecret
   #     optional: false
+  - name: openapi-schema
+    hostPath:
+      path: "/mnt/contracts/generated/openapi.json"
+      type: File
 
 # Additional volumeMounts on the output Deployment definition.
-volumeMounts: []
+volumeMounts:
   # - name: foo
   #   mountPath: "/etc/foo"
   #   readOnly: true
+  - name: openapi-schema
+    mountPath: "/app/openapi.json"
+    readOnly: true
 
 nodeSelector: {}
 

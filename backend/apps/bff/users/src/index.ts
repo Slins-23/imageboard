@@ -6,6 +6,7 @@ import express, {
 import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 import { z } from "zod";
 import { Agent, type IncomingMessage } from "http";
+import cors from "cors";
 
 const app = express();
 
@@ -63,6 +64,12 @@ const usersAuthDBProxy = createProxyMiddleware({
 });
 
 app.use(express.json());
+
+app.use(
+    cors({
+        origin: ["http://swagger.localhost:8080"],
+    })
+);
 
 app.get("/api/users/all", usersAuthDBProxy);
 
