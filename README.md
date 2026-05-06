@@ -24,7 +24,7 @@ I have already integrated Docker and Kubernetes for containerization and orchest
 
 My plan is to adapt their settings to more production ready as the need arises, complexity increases, everything else is stable, and assuming I can reasonably do so without drastically slowing down my workflow. The same goes for unit (e.g. Jest/Vite) and integration (e.g. Cypress) testing, as well as CI/CD (e.g. Jenkins, Argo, GitHub actions).
 
-I am soon to integrate Kafka, Logstash, Elasticsearch, PostgreSQL, Cassandra, and Redis. Then later down the line Zod, API endpoints, security measures, and many other things.
+I am soon to integrate Kafka, Logstash, Elasticsearch, Cassandra, Sentry, and Redis. Then later down the line more API endpoints, database instances, security measures, among many other things.
 
 Some things I planned on in the design are not feasible in my local machine, such as replicated pods/containers, sharding, fail-over, load balancing, worldwide server distribution, cross-region cluster synchronization, cold storage backups, CDNs, etc. Either because it's physically impossible or my single machine can't handle everything.
 In fact, it barely handles it right now, reaching 10-20GB+ RAM by itself under WSL2, which made me give up emulating many nodes with Kind.
@@ -45,7 +45,8 @@ Helm: <b><i>v4.1.4</i></b>
 
 yq: <b><i>v4.53.2</i></b> - https://github.com/mikefarah/yq/
 
-(Optional for creating database migrations) golang-migrate: <b><i>v4.19.1</i></b>
+<i>(Optional for creating database migrations)</i><br>
+golang-migrate: <b><i>v4.19.1</i></b>
 
 ## Usage
 
@@ -64,10 +65,10 @@ It boils down to a simple recursive chown of the `backend/data` folder which tra
 - Storybook: `storybook.localhost:8080`
 
 - Public API: `localhost:8080/api`
-  - Endpoints are described in:
-  - Zod schemas at `backend/contracts`
-  - OpenAPI schema generated from Zod schemas at `backend/contracts/generated/openapi.json`
-  - Swagger UI as a frontend for the OpenAPI schema
+  - Endpoints are implemented at `backend/apps/`, and described through:
+    - Zod schemas at `backend/contracts`
+    - OpenAPI schema generated from Zod schemas at `backend/contracts/generated/openapi.json`
+    - Swagger UI as a frontend for the OpenAPI schema
   - This is exposed through a BFF (Backend-for-frontend) which intermediates communication with the internal API services (e.g. db-users-auth, db-images, etc.)
 
 - Swagger UI: `swagger.localhost:8080`

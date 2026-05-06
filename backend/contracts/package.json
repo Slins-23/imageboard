@@ -5,7 +5,6 @@
     "license": "ISC",
     "author": "",
     "type": "module",
-    "main": "index.ts",
     "scripts": {
         "generate": "tsx generate.ts > generated/openapi.json",
         "dev": "chokidar '**/*.ts' -c 'npm run generate'",

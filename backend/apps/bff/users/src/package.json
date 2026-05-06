@@ -14,6 +14,9 @@
         "serve": "npm run clean && npm run build && npm run start",
         "clean": "rm -rf dist"
     },
+    "optionalDependencies": {
+        "@app/contracts": "*"
+    },
     "dependencies": {
         "@types/cors": "^2.8.19",
         "cors": "^2.8.6",

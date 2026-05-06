@@ -7,6 +7,8 @@ import { createProxyMiddleware, fixRequestBody } from "http-proxy-middleware";
 import { z } from "zod";
 import { Agent, type IncomingMessage } from "http";
 import cors from "cors";
+import { GetUserParams } from "@app/contracts/domains/users/shared/operations/getUser/schemas.ts";
+import { CreateUserInput } from "@app/contracts/domains/users/shared/operations/createUser/schemas.ts";
 
 const app = express();
 
@@ -16,31 +18,19 @@ app.get("/health", (req: Request, res: Response) => {
     });
 });
 
-type SchemaSource = "body" | "params" | "query";
-
-const GetUserSchema: z.ZodObject = z.object({
-    column: z.enum(["id", "username", "email"]),
-    value: z.string(),
-});
-
-const CreateUserSchema: z.ZodObject = z.object({
-    username: z.string().min(2).max(15),
-    email: z.email().max(254),
-    password: z.string().min(8).max(72),
-});
-
 const validate =
-    (schema: z.ZodType, source: SchemaSource) =>
+    (schema: z.ZodType, source: "body" | "params" | "query") =>
     (req: Request, res: Response, next: NextFunction) => {
-        try {
-            schema.parse(req[source]);
-            next();
-        } catch (err: unknown) {
+        const result = schema.safeParse(req[source]);
+
+        if (!result.success) {
             console.log("Error: Invalid data.");
             return res.status(400).json({
                 message: "Error: Invalid data.",
             });
         }
+
+        next();
     };
 
 const keepAliveAgent = new Agent({
@@ -75,13 +65,13 @@ app.get("/api/users/all", usersAuthDBProxy);
 
 app.get(
     "/api/users/:column/:value",
-    validate(GetUserSchema, "params"),
+    validate(GetUserParams, "params"),
     usersAuthDBProxy
 );
 
 app.post(
     "/api/users/create",
-    validate(CreateUserSchema, "body"),
+    validate(CreateUserInput, "body"),
     usersAuthDBProxy
 );
 

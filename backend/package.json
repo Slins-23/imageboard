@@ -10,7 +10,7 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
+  "type": "module",
   "overrides": {
     "zod": "^4.4.2"
   },

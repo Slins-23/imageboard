@@ -83,10 +83,9 @@ app.get("/api/users/all", async (req: Request, res: Response) => {
     }
 });
 
-async function getUser(
-    column: "id" | "username" | "email",
-    value: string
-): Promise<ResultGetUser> {
+async function getUser(params: GetUserParams): Promise<ResultGetUser> {
+    const { column, value } = params;
+
     try {
         const pgResponse = await pgPool.query(
             `SELECT * FROM users_auth WHERE ${column} = $1`,
@@ -119,7 +118,7 @@ app.get(
 
         console.log(`Getting user by column '${column}' with value '${value}'`);
 
-        const result = await getUser(column, value);
+        const result = await getUser(req.params);
 
         switch (result.type) {
             case "success":
