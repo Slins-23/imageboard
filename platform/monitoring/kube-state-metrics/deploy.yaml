@@ -1,0 +1,5 @@
+name: kube-state-metrics
+enabled: true
+type: monitoring
+namespace: monitoring
+chart: ./chart

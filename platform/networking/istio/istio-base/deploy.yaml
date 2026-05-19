@@ -1,0 +1,5 @@
+name: istio-base
+enabled: true
+type: networking
+namespace: istio-system
+chart: ./chart

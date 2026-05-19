@@ -1,0 +1,14 @@
+name: jaeger
+enabled: true
+type: monitoring
+namespace: monitoring
+chart: ./chart
+dependsOn:
+  - jaeger-operator
+mounts:
+  - name: data
+    enabled: true
+    type: persistent
+    readOnly: false
+    hostPath: ./data
+    containerPath: /badger

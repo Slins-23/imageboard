@@ -7,6 +7,7 @@
 - [Introduction](#introduction)
 - [Prerequisites](#prerequisites)
 - [Usage](#usage)
+- [User-facing endpoints](#user-facing-endpoints)
 - [Notes](#notes)
 
 ## Introduction
@@ -23,7 +24,7 @@ I have already integrated Docker and Kubernetes for containerization and orchest
 
 My plan is to adapt their settings to more production ready as the need arises, complexity increases, everything else is stable, and assuming I can reasonably do so without drastically slowing down my workflow. The same goes for unit (e.g. Jest/Vite) and integration (e.g. Cypress) testing, as well as CI/CD (e.g. Jenkins, Argo, GitHub actions).
 
-I am soon to integrate Kafka, Logstash, Elasticsearch, PostgreSQL, Cassandra, and Redis. Then later down the line Zod, API endpoints, security measures, and many other things.
+I am soon to integrate Kafka, Logstash, Elasticsearch, Cassandra, Sentry, and Redis. Then later down the line more API endpoints, database instances, security measures, among many other things.
 
 Some things I planned on in the design are not feasible in my local machine, such as replicated pods/containers, sharding, fail-over, load balancing, worldwide server distribution, cross-region cluster synchronization, cold storage backups, CDNs, etc. Either because it's physically impossible or my single machine can't handle everything.
 In fact, it barely handles it right now, reaching 10-20GB+ RAM by itself under WSL2, which made me give up emulating many nodes with Kind.
@@ -33,6 +34,8 @@ Some things can only stay on paper, or Figma and my mind I guess. Though it wasn
 ## Prerequisites
 
 #### (Tested on Ubuntu 24.04 under WSL2 in a Windows 11 host)
+
+Python: <b><i>v3.12.3</i></b>
 
 Docker: <b><i>v29.4.0</i></b>
 
@@ -44,17 +47,37 @@ Helm: <b><i>v4.1.4</i></b>
 
 yq: <b><i>v4.53.2</i></b> - https://github.com/mikefarah/yq/
 
-(Optional for creating database migrations) golang-migrate: <b><i>v4.19.1</i></b>
+<i>(Optional for creating database migrations)</i><br>
+golang-migrate: <b><i>v4.19.1</i></b>
 
 ## Usage
 
-CD into `backend` and run `start.sh` in the root directory (<b>MUST</b>, for now).
+Run `start.sh`.
 
-## Relevant user-facing services
+Root access is required for mounting host-owned directories/files and enabling read/write from the WSL2 host on container owned directories/files (see `fix_permissions_and_folders` in `orchestrator/core/deployment.py`). It also sets specific user ID and group for services which expect them.
+
+This is because the request path flows as Host (WSL2) -> Kind -> Nodes (Kubernetes) -> Pods (Kubernetes) -> Container (Docker), where the host folders are sometimes created by the user or the container where neither has read/write access over the other.
+
+This happens due to the messy combination of attempting to emulate production to an extent within the same development environment, while also using WSL2, kind, local storage file mounts, persistence, permission requirements within containers (which also often reset permissions through init containers or require explicit users/permissions), etc.
+
+Ideally, in a production environment you would instead use the VM host for persistence or a network volume.
+Instead of bi-directionally (from WSL2 host or from within the docker container) modifying source code/development files in real-time, it would be preferred to build docker images for each service, using a local development environment and a CI layer for building the production container image including the necessary files, without the need for all of the cognitive, theoretical and practical overhead that synchronizing mounts accross these mutually exclusive environments as is done here.
+
+## User-facing endpoints
 
 - Next.js dev server/NGINX reverse proxy: `localhost:8080`
 
 - Storybook: `storybook.localhost:8080`
+
+- Public API: `localhost:8080/api`
+  - Endpoints are implemented at `backend/apps/`, and described through:
+    - Zod schemas at `backend/contracts`
+    - OpenAPI schema generated from Zod schemas at `backend/contracts/generated/openapi.json`
+    - Swagger UI as a frontend for the OpenAPI schema
+  - This is exposed through a BFF (Backend-for-frontend) which intermediates communication with the internal API services (e.g. db-users-auth, db-images, etc.)
+
+- Swagger UI: `swagger.localhost:8080`
+  - Uses OpenAPI schema generated from Zod schemas for the API
 
 - Prometheus: `prometheus.localhost:8080`
   - Data persisted in `backend/data/prometheus`

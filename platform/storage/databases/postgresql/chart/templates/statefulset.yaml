@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.db.name }}-postgres
+  labels:
+    app: {{ .Values.db.name }}-postgres
+    role: primary
+spec:
+  serviceName: {{ .Values.db.name }}-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.db.name }}-postgres
+      role: primary
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.db.name }}-postgres
+        role: primary
+    spec:
+      containers:
+        - name: postgresql
+          image: postgres:14.22
+          env:
+            - name: POSTGRES_USER
+              value: {{ .Values.db.username | quote }}
+
+            - name: POSTGRES_PASSWORD
+              value: {{ .Values.db.password | quote }}
+
+            - name: POSTGRES_DB
+              value: {{ .Values.db.database | quote }}

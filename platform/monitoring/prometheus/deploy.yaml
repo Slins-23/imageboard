@@ -1,0 +1,12 @@
+name: prometheus
+enabled: true
+type: monitoring
+namespace: monitoring
+chart: ./chart
+mounts:
+  - name: data
+    enabled: true
+    type: persistent
+    readOnly: false
+    hostPath: ./data
+    containerPath: /data

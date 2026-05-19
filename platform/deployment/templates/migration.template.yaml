@@ -1,0 +1,55 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ${JOB_NAME}
+  annotations:
+    "helm.sh/hook": post-install,pre-upgrade
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+  labels:
+    role: migration
+spec:
+  template:
+    spec:
+      restartPolicy: Never
+
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox:stable
+          command:
+            - sh
+            - -c
+            - |
+              until nc -z ${DB_HOST} ${DB_PORT}; do
+                echo "Waiting for ${DB_HOST}:${DB_PORT}..."
+                sleep 2
+              done
+
+      containers:
+        - name: migrate
+          image: migrate/migrate:4
+          command:
+            - sh
+            - -c
+            - |
+              for i in $(seq 1 30); do
+                migrate \
+                  -path=/migrations \
+                  -database="postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable" \
+                  -lock-timeout=60 \
+                  up && exit 0
+
+                echo "Retrying migrations..."
+                sleep 2
+              done
+
+              exit 1
+
+          volumeMounts:
+            - name: migrations
+              mountPath: /migrations
+              readOnly: true
+
+      volumes:
+        - name: migrations
+          hostPath:
+            path: ${MIGRATIONS_HOST_PATH}

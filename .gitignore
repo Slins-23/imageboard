@@ -2,9 +2,38 @@
 
 !.gitignore
 
+!package.json
+
 !backend
+!backend/**
+
 !frontend
+!frontend/**
+
+!platform
+!platform/**
+
+!orchestrator
+!orchestrator/**
+
+!install.sh
+!start.sh
+!stop.sh
+!restart.sh
+
+!requirements.txt
+
+!.env
+
 !README.md
 
-!backend/**
-!frontend/**
+data
+
+!platform/monitoring/grafana/data/grafana.db
+
+generated
+
+__pycache__
+
+logs
+pf.log

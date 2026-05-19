@@ -1,0 +1,5 @@
+name: istio-ingress
+enabled: true
+type: networking
+namespace: istio-system
+chart: ./chart

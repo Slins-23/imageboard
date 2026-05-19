@@ -1,0 +1,17 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    image: kindest/node:v1.35.0
+    labels:
+      name: cluster-controller
+    extraMounts:
+      - hostPath: ${ROOT_DIR}
+        containerPath: /mnt
+  - role: worker
+    image: kindest/node:v1.35.0
+    labels:
+      name: cluster-worker
+    extraMounts:
+      - hostPath: ${ROOT_DIR}
+        containerPath: /mnt

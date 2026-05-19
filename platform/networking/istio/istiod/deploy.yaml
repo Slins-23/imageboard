@@ -1,0 +1,5 @@
+name: istiod
+enabled: true
+type: networking
+namespace: istio-system
+chart: ./chart

@@ -1,0 +1,12 @@
+name: grafana
+enabled: true
+type: monitoring
+namespace: monitoring
+chart: ./chart
+mounts:
+  - name: data
+    enabled: true
+    readOnly: false
+    type: persistent
+    hostPath: ./data
+    containerPath: /var/lib/grafana

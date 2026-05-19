@@ -1,0 +1,20 @@
+name: bff-users
+enabled: true
+type: apps
+namespace: apps
+chart: platform/deployment/charts/node-app
+file: ./values.yaml
+mounts:
+  - name: development
+    type: source
+    enabled: true
+    readOnly: false
+    hostPath: ./src
+    containerPath: /app
+
+  - name: contracts
+    type: source
+    enabled: true
+    readOnly: true
+    hostPath: contracts
+    containerPath: /contracts

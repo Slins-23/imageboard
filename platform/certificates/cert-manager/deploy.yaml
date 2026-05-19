@@ -1,0 +1,5 @@
+name: cert-manager
+enabled: true
+type: infra
+namespace: cert-manager
+chart: ./chart

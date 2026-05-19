@@ -1,0 +1,12 @@
+name: swagger-ui
+enabled: true
+type: apps
+namespace: apps
+chart: ./chart
+mounts:
+  - name: swagger-json
+    enabled: true
+    type: source
+    readOnly: true
+    hostPath: contracts/generated/openapi.json
+    containerPath: /app/openapi.json

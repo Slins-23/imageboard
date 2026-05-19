@@ -1,0 +1,19 @@
+name: frontend-dev
+enabled: true
+type: apps
+namespace: apps
+chart: platform/deployment/charts/frontend-dev
+mounts:
+  - name: development
+    enabled: true
+    type: source
+    readOnly: false
+    hostPath: ./src
+    containerPath: /app
+
+  - name: contracts
+    enabled: true
+    type: source
+    readOnly: true
+    hostPath: contracts
+    containerPath: /contracts

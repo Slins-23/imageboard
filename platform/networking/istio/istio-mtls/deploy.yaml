@@ -1,0 +1,5 @@
+name: istio-mtls
+enabled: false
+type: networking
+namespace: istio-system
+chart: ./chart

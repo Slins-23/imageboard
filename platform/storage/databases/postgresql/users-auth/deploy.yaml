@@ -1,0 +1,13 @@
+name: users-auth-postgres
+enabled: true
+type: storage
+namespace: databases
+chart: platform/storage/databases/postgresql/chart
+file: ./values.yaml
+mounts:
+  - name: data
+    enabled: true
+    type: persistent
+    readOnly: false
+    hostPath: ./data
+    containerPath: /var/lib/postgresql/data

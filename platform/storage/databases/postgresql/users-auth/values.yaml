@@ -1,0 +1,5 @@
+db:
+  name: users-auth
+  username: admin
+  password: 12345
+  database: users_auth
