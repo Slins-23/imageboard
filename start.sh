@@ -4,4 +4,4 @@ fi
 
 source venv/bin/activate
 echo "Starting..."
-python -m orchestrator.cli up
+python -m orchestrator.cli --debug up

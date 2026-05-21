@@ -362,7 +362,9 @@ def discover_services(type_name: str | None = None) -> list[Service]:
 
         services.append(service)
 
-    log.info(f"Discovered {len(services)} services.", "deployment")
+    services_discovered: int = len(services) if type_name else len(ALL_SERVICES.keys())
+
+    log.info(f"Discovered {services_discovered} service(s).", "deployment")
 
     return services
 
@@ -419,7 +421,7 @@ def get_ids() -> tuple[int, int]:
     uid = int(shell.run(["id", "-u"]).stdout.strip())
     gid = int(shell.run(["id", "-g"]).stdout.strip())
 
-    log.info(f"User ID: {uid} | Group ID: ${gid}", "deployment")
+    log.info(f"User ID: {uid} | Group ID: {gid}", "deployment")
 
     return (uid, gid)
 

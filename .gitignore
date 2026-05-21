@@ -7,6 +7,9 @@
 !backend
 !backend/**
 
+!contracts
+!contracts/**
+
 !frontend
 !frontend/**
 
@@ -31,7 +34,9 @@ data
 
 !platform/monitoring/grafana/data/grafana.db
 
-generated
+package-lock.json
+
+platform/**/generated
 
 __pycache__
 

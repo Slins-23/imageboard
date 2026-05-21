@@ -53,6 +53,9 @@ const pgPool = new Pool({
     user: "admin",
     password: "12345",
     port: 5432,
+    max: 20,
+    idleTimeoutMillis: 30000,
+    connectionTimeoutMillis: 2000
 });
 
 const app = express();
@@ -216,6 +219,18 @@ app.post(
     }
 );
 
-app.listen(3000, () => {
+const server = app.listen(3000, () => {
     console.log("Server started on port 3000.");
 });
+
+process.on("SIGTERM", async () => {
+    console.log("Shutting down users-auth DAL")
+
+    server.close(async () => {
+        await pgPool.end();
+
+        console.log("Closed PostgreSQL pool.");
+
+        process.exit(0);
+    })
+})

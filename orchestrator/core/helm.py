@@ -40,7 +40,7 @@ def install(
         cmd.append("--wait")
 
     if values_file is not None:
-        log.info(f"Service includes a values manifest file at '{str(values_file)}'.", "helm")
+        log.info(f"Service '{name}' includes a values manifest file at '{str(values_file)}'.", "helm")
 
         if not values_file.is_file():
             raise FileNotFoundError(f"Values file '{values_file}' doesn't exist.")

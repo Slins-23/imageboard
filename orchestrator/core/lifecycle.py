@@ -82,16 +82,16 @@ def down() -> int:
     log.info("Stopping...", scope="lifecycle")
 
     log.info("Removing 'apps' services...", scope="lifecycle")
-    deployment.delete("apps", cleanup=True)
+    deployment.delete(scope="apps", type_name="apps", cleanup=True)
 
     log.info("Removing 'monitoring' services...", scope="lifecycle")
-    deployment.delete("monitoring", cleanup=True)
+    deployment.delete(scope="monitoring", type_name="monitoring", cleanup=True)
 
     log.info("Removing 'storage' services...", scope="lifecycle")
-    deployment.delete("storage", cleanup=True)
+    deployment.delete(scope="storage", type_name="storage", cleanup=True)
 
     log.info("Removing 'infra' services...", scope="lifecycle")
-    deployment.delete("infra", cleanup=True)
+    deployment.delete(scope="infra", type_name="infra", cleanup=True)
 
     log.info("Removing the network..." , scope="networking")
     networking.down()

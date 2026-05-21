@@ -4,7 +4,8 @@
   "workspaces": [
     "contracts",
     "backend/dal/**/src",
-    "backend/bff/**/src"
+    "backend/bff/**/src",
+    "frontend"
   ],
   "version": "1.0.0",
   "description": "",
@@ -12,7 +13,7 @@
   "author": "",
   "type": "module",
   "overrides": {
-    "zod": "^4.4.2"
+    "zod": "4.4.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

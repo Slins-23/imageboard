@@ -154,7 +154,7 @@ def pf(hostPort: int, targetPort: int, type: str, resource: ResourceType | None 
 
 def wait_crd(name: str, timeout: str = "120s") -> int:
     if log.cfg.debug:
-        log.info(f"Waiting for CRD (Custom Resource Definition): '{name}'. Timeout: {timeout}...", "kubectl")
+        log.info(f"Waiting for CRD (Custom Resource Definition): '{name}'... Timeout: {timeout}", "kubectl")
 
     return _kubectl(
         "wait",
@@ -165,7 +165,7 @@ def wait_crd(name: str, timeout: str = "120s") -> int:
 
 def wait_deployment(name: str, namespace: str = config.DEFAULT_NAMESPACE, timeout: str = "120s") -> int:
     if log.cfg.debug:
-        log.info(f"Waiting for deployment '{name}' in namespace '{namespace}'. Timeout: {timeout}...", "kubectl")
+        log.info(f"Waiting for deployment '{name}' in namespace '{namespace}'... Timeout: {timeout}", "kubectl")
 
     return _kubectl(
         "rollout",
@@ -178,7 +178,7 @@ def wait_deployment(name: str, namespace: str = config.DEFAULT_NAMESPACE, timeou
 
 def wait_endpoint(name: str, namespace: str = config.DEFAULT_NAMESPACE, timeout: str = "120s") -> int:
     if log.cfg.debug:
-        log.info(f"Waiting for endpoint '{name}' in namespace '{namespace}'. Timeout: {timeout}...", "kubectl")
+        log.info(f"Waiting for endpoint '{name}' in namespace '{namespace}'... Timeout: {timeout}", "kubectl")
 
     return _kubectl(
         "wait",
@@ -190,7 +190,7 @@ def wait_endpoint(name: str, namespace: str = config.DEFAULT_NAMESPACE, timeout:
     )
 
 def wait_webhook(url: str, namespace: str = config.DEFAULT_NAMESPACE, interval: int = 2, timeout: int = 120) -> int:
-    log.info(f"Waiting for webhook at '{url}' in namespace '{namespace}' to become reachable. Interval: {interval}s Timeout: {timeout}s...", "kubectl")
+    log.info(f"Waiting for webhook at '{url}' in namespace '{namespace}' to become reachable... Interval: {interval}s Timeout: {timeout}s", "kubectl")
 
     elapsed = 0
 

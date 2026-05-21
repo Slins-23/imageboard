@@ -75,6 +75,18 @@ app.post(
     usersAuthDBProxy
 );
 
-app.listen(3000, () => {
+const server = app.listen(3000, () => {
     console.log("Server started on port 3000.");
+});
+
+process.on("SIGTERM", async () => {
+    console.log("Shutting down bff-users...");
+
+    server.on("close", async () => {
+        keepAliveAgent.destroy();
+
+        console.log("Keep alive agent destryoed.");
+
+        process.exit(0);
+    });
 });
