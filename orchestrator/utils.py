@@ -3,9 +3,8 @@ from typing import Any
 from pathlib import Path
 import orchestrator.core.log as log
 
-def read_yaml(file: Path, scope: str) -> Any:
-    if log.cfg.debug:
-        log.info(f"Reading YAML file '{str(file)}'", scope=scope)
+def read_yaml(file: Path) -> Any:
+    log.info(f"Reading YAML file '{str(file)}'", debug=True)
 
     if not file.is_file():
         return {}

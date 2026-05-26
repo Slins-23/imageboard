@@ -2,6 +2,8 @@ import orchestrator.core.shell as shell
 from pathlib import Path
 from typing import Mapping
 import orchestrator.core.log as log
+from orchestrator.core.log import Scope
+
 
 def install(
         name: str,
@@ -14,64 +16,68 @@ def install(
         post_renderer: Path | None = None,
         post_renderer_context: Path | None = None
 ) -> int:
-    log.info(f"Installing service '{name}' in namespace '{namespace}' using chart at '{str(chart)}'...", "helm")
+    with log.scoped(Scope.helm):
+        log.info(f"Installing service '{name}' in namespace '{namespace}' using chart at '{str(chart)}'...")
+        log.info(f"Service env: {env}", debug=True)
 
-    if log.cfg.debug:
-        log.info(f"Service env: {env}", "helm")
+        if namespace.strip() == "":
+            raise ValueError(f"Could not install chart '{name}'. Namespace was empty.")
+
+        cmd = [
+            "helm",
+            "upgrade",
+            "--install",
+            name,
+            str(chart),
+            "-n",
+            namespace
+        ]
+
+        if wait:
+            log.info(f"Service has wait flag set.", debug=True)
+
+            cmd.append("--wait")
+
+        if values_file is not None:
+            log.info(f"Service '{name}' includes a values manifest file at '{str(values_file)}'.")
+
+            if not values_file.is_file():
+                raise FileNotFoundError(f"Values file '{values_file}' doesn't exist.")
+
+            cmd.extend(["-f", str(values_file)])
+
+        env = dict(env or {})
+        env["POST_RENDERER_DEBUG"] = "1"
+
+        if post_renderer is not None:
+
+            log.info("Service includes a post renderer.", debug=True)
+
+            #if not post_renderer.is_file():
+                #raise FileNotFoundError(f"Post renderer file '{post_renderer}' doesn't exist.")
+
+            # import os
+
+            # script_dir = post_renderer.parent.resolve()
+            # env["PATH"] = f"{str(script_dir)}:{os.environ.get("PATH", "/usr/local/bin:/usr/bin:/bin")}"
+            
+            cmd.extend(["--post-renderer", "post-renderer"])
+            # cmd.extend(["--post-renderer", str(post_renderer.resolve())])
+            # cmd.extend(["--post-renderer", post_renderer.name])
+            #cmd.extend(["--post-renderer-args", str(post_renderer)])
+
+            if post_renderer_context is not None:
+                env["POST_RENDERER_CONTEXT"] = str(post_renderer_context)
 
 
-    if namespace.strip() == "":
-        raise ValueError(f"Could not install chart '{name}'. Namespace was empty.")
+        result = shell.run(cmd, env=env, capture_output=False)
 
-    cmd = [
-        "helm",
-        "upgrade",
-        "--install",
-        name,
-        str(chart),
-        "-n",
-        namespace
-    ]
+        log.info(f"{result.stdout}", debug=True)
 
-    if wait:
-        if log.cfg.debug:
-            log.info(f"Service has wait flag set.", "helm")
-
-        cmd.append("--wait")
-
-    if values_file is not None:
-        log.info(f"Service '{name}' includes a values manifest file at '{str(values_file)}'.", "helm")
-
-        if not values_file.is_file():
-            raise FileNotFoundError(f"Values file '{values_file}' doesn't exist.")
-
-        cmd.extend(["-f", str(values_file)])
-
-    env = dict(env or {})
-
-    if post_renderer is not None:
-        if log.cfg.debug:
-            log.info("Service includes a post renderer.", "helm")
-
-        #if not post_renderer.is_file():
-            #raise FileNotFoundError(f"Post renderer file '{post_renderer}' doesn't exist.")
-        
-        cmd.extend(["--post-renderer", "post-renderer"])
-        #cmd.extend(["--post-renderer-args", str(post_renderer)])
-
-        if post_renderer_context is not None:
-            env["POST_RENDERER_CONTEXT"] = str(post_renderer_context)
-
-
-    result = shell.run(cmd, env=env, capture_output=True)
-
-    if log.cfg.debug:
-        log.info(f"{result.stdout}", "helm")
-
-    log.success(f"Successfully installed service '{name}'.", "helm")
+        log.success(f"Successfully installed service '{name}'.")
     return 0
 
-def exists(name: str, namespace: str) -> int:
+def _exists(name: str, namespace: str) -> int:
 
     result = shell.run([
         "helm",
@@ -87,21 +93,32 @@ def exists(name: str, namespace: str) -> int:
     return result.returncode == 0
 
 def uninstall(name: str, namespace: str = "default", *, cleanup: bool = False) -> int:
-    log.info(f"Uninstalling service '{name}' in namespace '{namespace}'...", "helm")
+    with log.scoped(Scope.helm):
+        log.info(f"Uninstalling service '{name}' in namespace '{namespace}'...")
 
-    if not exists(name, namespace):
-        log.warn(f"Service does not exist.", "helm")
-        return 0
+        if not _exists(name, namespace):
+            log.warn(f"Service does not exist.")
+            return 0
 
-    cmd = [
-        "helm",
-        "uninstall",
-        name,
-        "-n",
-        namespace
-    ]
+        cmd = [
+            "helm",
+            "uninstall",
+            name,
+            "-n",
+            namespace
+        ]
 
-    shell.run(cmd, capture_output=True)
+        result = shell.run(cmd, capture_output=True)
 
-    log.success(f"Successfully uninstalled service '{name}' in namespace '{namespace}'.", "helm")
+        if result.returncode == 0:
+            log.success(f"Successfully uninstalled service '{name}' in namespace '{namespace}'.")
+        else:
+            message = f"Could not uninstall service '{name}' in namespace '{namespace}.\n {result.stderr}'"
+
+            if cleanup:
+                log.warn(message)
+            else:
+                log.error(message)
+                return 1
+
     return 0

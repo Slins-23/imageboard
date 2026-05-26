@@ -12,12 +12,12 @@ import orchestrator.core.storage as storage
 import json
 import orchestrator.core.kubectl as kubectl
 import orchestrator.core.log as log
+from orchestrator.core.log import Scope
 
 ALL_SERVICES: dict[str, Service] = {}
 
 def render_template(name: str, **values: Any):
-    if log.cfg.debug:
-        log.info(f"Rendering template '{name}'... Values: {values}", "deployment")
+    log.info(f"Rendering template '{name}'... Values: {values}", debug=True)
 
     template = Template(
         (config.TEMPLATES_DIR / name).read_text(encoding="utf-8")
@@ -29,8 +29,7 @@ def render_template(name: str, **values: Any):
     })
 
 def mount_ids(service_name: str, mount_name: str) -> Mapping[str, str]:
-    if log.cfg.debug:
-        log.info(f"Genearting mount ids for mount '{mount_name}' in service '{service_name}'", "deployment")
+    log.info(f"Genearting mount ids for mount '{mount_name}' in service '{service_name}'", debug=True)
     
     base = f"{service_name}-{mount_name}"
 
@@ -41,13 +40,12 @@ def mount_ids(service_name: str, mount_name: str) -> Mapping[str, str]:
         "storageClass": f"{base}-data"
     }
 
-    if log.cfg.debug:
-        log.info(f"Generated ids: {ids}", "deployment")
+    log.info(f"Generated ids: {ids}", debug=True)
 
     return ids
 
 def get_target_database(target: str) -> tuple[Service, Mapping[str, str]]:
-    log.info(f"Getting database '{target}' settings as migration target...", "deployment")
+    log.info(f"Getting database '{target}' settings as migration target...")
 
     if target not in ALL_SERVICES:
         raise ValueError(f"Migration target database service '{target}' was not found.")
@@ -57,11 +55,11 @@ def get_target_database(target: str) -> tuple[Service, Mapping[str, str]]:
     if target_svc.file is None:
         raise ValueError(f"Target service '{target}' does not have a 'values.yaml' file.")
     
-    target_values = utils.read_yaml(target_svc.file, scope="deployment")
+    target_values = utils.read_yaml(target_svc.file)
 
     db_config = storage.get_db_settings(target_values, target)
 
-    log.success(f"Successfully retrieved database '{target}' info.", "deployment")
+    log.success(f"Successfully retrieved database '{target}' info.")
 
     return target_svc, db_config
 
@@ -71,7 +69,7 @@ def generate_mounts_and_docs(
         mounts: list[Mapping[str, Any]],
         documents: list[str],
     ) -> int:
-    log.info(f"Generating mounts and documents for service {service.name}.", "deployment")
+    log.info(f"Generating mounts and documents for service {service.name}.")
 
     generated_dir = config.GENERATED_DIR / service.name
 
@@ -83,7 +81,6 @@ def generate_mounts_and_docs(
             raw=str(mount.hostPath),
             service_dir=service.path.parent,
             default_leaf="data",
-            scope="deployment"
         )
 
         if host_path is None:
@@ -97,7 +94,7 @@ def generate_mounts_and_docs(
         )
 
         if mount.type == "persistent":
-            log.info(f"Generating persistent volume and persistent volume claim for mount '{mount.name}' in service '{service.name}'.", "deployment")
+            log.info(f"Generating persistent volume and persistent volume claim for mount '{mount.name}' in service '{service.name}'.")
 
             source = {
                 "persistentVolumeClaim": {
@@ -132,7 +129,10 @@ def generate_mounts_and_docs(
                 str(pvc_file)
             ])
 
-            log.success(f"Successfully generated persistent volume and persistent volume claim for mount '{mount.name}' in service '{service.name}'.", "deployment")
+            log.success(f"Successfully generated persistent volume and persistent volume claim for mount '{mount.name}' in service '{service.name}'.")
+            
+            log.info(f"Generated manifests stored at '{generated_dir}'", debug=True)
+
         else:
             source = {
                 "hostPath": {
@@ -155,7 +155,7 @@ def generate_mounts_and_docs(
             }
         )
 
-        log.success(f"Added mount '{mount.name}' to mounts for service '{service.name}'.", "deployment")
+        log.success(f"Added mount '{mount.name}' to mounts for service '{service.name}'.")
 
     migrations: Mapping[str, Any] | None = service.migrations
 
@@ -165,7 +165,7 @@ def generate_mounts_and_docs(
         if not target:
             raise ValueError(f"Service '{service.name}' has not migration target.")
     
-        log.info(f"Generating database migration job from service '{service.name}' to database service '{target}'.", "deployment")
+        log.info(f"Generating database migration job from service '{service.name}' to database service '{target}'.")
         
         target_service, db_settings = get_target_database(target)
 
@@ -173,7 +173,6 @@ def generate_mounts_and_docs(
             raw=str(migrations.get("path", "./migrations")),
             service_dir=service.path.parent,
             default_leaf="migrations",
-            scope="deployment"
         )
 
         if migration_path is None:
@@ -198,20 +197,19 @@ def generate_mounts_and_docs(
 
         documents.append(str(job_file))
 
-        log.info(f"Added database migration to documents for service '{service.name}'", "deployment")
+        log.info(f"Added database migration to documents for service '{service.name}'")
 
-    log.info(f"Successfully generated mounts and documents for service {service.name}.", "deployment")
+    log.info(f"Successfully generated mounts and documents for service {service.name}.")
 
     return 0
 
 def generate_service_context(service: Service) -> Mapping[str, Any]:
-    log.info(f"Generating context for service '{service.name}'", "deployment")
+    log.info(f"Generating context for service '{service.name}'")
 
     generated_dir = config.GENERATED_DIR / service.name
     generated_dir.mkdir(parents=True, exist_ok=True)
 
-    if log.cfg.debug:
-        log.info(f"Generated directory for service '{service.name}': {str(generated_dir)}", "deployment")
+    log.info(f"Generated directory for service '{service.name}': {str(generated_dir)}", debug=True)
 
     mounts: list[Mapping[str, Any]] = []
     documents: list[str] = []
@@ -231,7 +229,7 @@ def generate_service_context(service: Service) -> Mapping[str, Any]:
         encoding="utf-8"
     )
 
-    log.success("Successfully generated context.", "deployment")
+    log.success("Successfully generated context.")
 
     return context
 
@@ -239,7 +237,7 @@ def wait_for_service(service: Service) -> int:
     wait_dependencies = service.waitFor or []
 
     if wait_dependencies != []:
-        log.info("Waiting for service dependencies...", "deployment")
+        log.info("Waiting for service dependencies...")
     else:
         return 0
 
@@ -248,8 +246,7 @@ def wait_for_service(service: Service) -> int:
         namespace = item.get("namespace", service.namespace)
         timeout = item.get("timeout", "120s")
 
-        if log.cfg.debug:
-            log.info(f"Must wait for '{wait_type}' in namespace '{namespace}'. Timeout: {timeout}", "deployment")
+        log.info(f"Must wait for '{wait_type}' in namespace '{namespace}'. Timeout: {timeout}", debug=True)
 
         if wait_type == "crd":
             kubectl.wait_crd(
@@ -279,10 +276,9 @@ def wait_for_service(service: Service) -> int:
     return 0
 
 def create_service(service_path: Path) -> Service | None:
-    if log.cfg.debug:
-        log.info(f"Creating Service object from service '{str(service_path)}'", "deployment")
+    log.info(f"Creating Service object from service '{str(service_path)}'", debug=True)
 
-    yaml_data = utils.read_yaml(service_path, scope="deployment")
+    yaml_data = utils.read_yaml(service_path)
 
     enabled = yaml_data.get("enabled", False)
 
@@ -305,8 +301,8 @@ def create_service(service_path: Path) -> Service | None:
     wait = bool(yaml_data.get("wait", False))
     wait_for = yaml_data.get("waitFor", [])
 
-    chart = paths.resolve_relative(raw=chart_raw, service_dir=service_path.parent, scope="deployment") if chart_raw else None
-    file = paths.resolve_relative(raw=file_raw, service_dir=service_path.parent, scope="deployment")
+    chart = paths.resolve_relative(raw=chart_raw, service_dir=service_path.parent) if chart_raw else None
+    file = paths.resolve_relative(raw=file_raw, service_dir=service_path.parent)
 
     for raw_mount in mounts_raw:
         host_path = raw_mount.get("hostPath")
@@ -314,7 +310,7 @@ def create_service(service_path: Path) -> Service | None:
         if host_path is None:
             raise ValueError(f"Host path for mount '{raw_mount.get(raw_mount["name"])}' in service '{yaml_data["name"]}' was not given.")
         
-        raw_mount["hostPath"] = paths.resolve_relative(raw=host_path, service_dir=service_path.parent, scope="deployment")
+        raw_mount["hostPath"] = paths.resolve_relative(raw=host_path, service_dir=service_path.parent)
 
     mounts = [ Mount.from_mapping(mount) for mount in mounts_raw ] if mounts_raw else []
 
@@ -334,12 +330,12 @@ def create_service(service_path: Path) -> Service | None:
     )
 
     if log.cfg.debug:
-        log.success(f"Successfully created service '{service.name}'", "deployment")
+        log.success(f"Successfully created service '{service.name}'")
 
     return service
     
 def discover_services(type_name: str | None = None) -> list[Service]:
-    log.info("Discovering services...", "deployment")
+    log.info("Discovering services...")
 
     global ALL_SERVICES
     services: list[Service] = []
@@ -352,7 +348,7 @@ def discover_services(type_name: str | None = None) -> list[Service]:
 
         if service is None:
             if log.cfg.debug:
-                log.info("Skipping service: Not enabled.", "deployment")
+                log.info("Skipping service: Not enabled.")
             continue
 
         ALL_SERVICES[service.name] = service
@@ -364,12 +360,12 @@ def discover_services(type_name: str | None = None) -> list[Service]:
 
     services_discovered: int = len(services) if type_name else len(ALL_SERVICES.keys())
 
-    log.info(f"Discovered {services_discovered} service(s).", "deployment")
+    log.info(f"Discovered {services_discovered} service(s).")
 
     return services
 
 def sort_services(services: list[Service]) -> list[Service]:
-    log.info("Constructing a DFS dependency graph and sorting services...", "deployment")
+    log.info("Constructing a DFS dependency graph and sorting services...")
 
     visited: set[str] = set()
     visiting: set[str] = set()
@@ -409,25 +405,25 @@ def sort_services(services: list[Service]) -> list[Service]:
     return output
 
 def initialize() -> int:
-    global ALL_SERVICES
-    discover_services()
+    with log.scoped(Scope.deployment):
+        log.info("Discovering all services (deploy.yaml)...")
+        global ALL_SERVICES
+        discover_services()
 
     return 0
 
 def get_ids() -> tuple[int, int]:
-    if log.cfg.debug:
-        log.info("Getting user and group ids...", "deployment")
+    log.info("Getting user and group ids...", debug=True)
 
     uid = int(shell.run(["id", "-u"]).stdout.strip())
     gid = int(shell.run(["id", "-g"]).stdout.strip())
 
-    log.info(f"User ID: {uid} | Group ID: {gid}", "deployment")
+    log.info(f"User ID: {uid} | Group ID: {gid}")
 
     return (uid, gid)
 
 def fix_permissions_and_folders(service: Service) -> int:
-    if log.cfg.debug:
-        log.info(f"Fixing mount permissions for service '{service.name}'", "deployment")
+    log.info(f"Fixing mount permissions for service '{service.name}'", debug=True)
 
     uid, gid = get_ids()
 
@@ -441,29 +437,26 @@ def fix_permissions_and_folders(service: Service) -> int:
         uid = gid = 999
 
     for mount in service.mounts or []:
-        if log.cfg.debug:
-            log.info(f"Fixing permissions for mount '{mount.name}'", "deployment")
+        log.info(f"Fixing permissions for mount '{mount.name}'", debug=True)
 
         if not mount.enabled:
             if log.cfg.debug:
-                log.info(f"Skipping mount '{mount.name}' with host path '{mount.hostPath}' and container path '{mount.containerPath}': Not enabled", "deployment")
+                log.info(f"Skipping mount '{mount.name}' with host path '{mount.hostPath}' and container path '{mount.containerPath}': Not enabled")
 
             continue
 
 
-        if log.cfg.debug:
-            log.info(f"Resolving host path for mount '{mount.name}'...", "deployment")
+        log.info(f"Resolving host path for mount '{mount.name}'...", debug=True)
 
         host_path = paths.resolve_relative(
             raw=str(mount.hostPath),
             service_dir=service.path.parent,
             default_leaf="data",
-            scope="deployment"
         )
 
         if host_path is None:
             if log.cfg.debug:
-                log.info(f"Resolved host path from mount '{str(mount.hostPath)}' is invalid. Skipping mount.", "deployment")
+                log.info(f"Resolved host path from mount '{str(mount.hostPath)}' is invalid. Skipping mount.")
 
             continue
 
@@ -472,8 +465,7 @@ def fix_permissions_and_folders(service: Service) -> int:
         else:
             host_path.parent.mkdir(parents=True, exist_ok=True)
 
-        if log.cfg.debug:
-            log.info(f"Changing ownership: host path '{str(host_path)}' to UID '{uid}' and GID '{gid}'.", "deployment")
+        log.info(f"Changing ownership: host path '{str(host_path)}' to UID '{uid}' and GID '{gid}'.", debug=True)
 
         shell.run([
             "sudo",
@@ -483,8 +475,7 @@ def fix_permissions_and_folders(service: Service) -> int:
             str(host_path)
         ])
 
-        if log.cfg.debug:
-            log.info(f"Changing permissions: host path '{str(host_path)}' to UID '{uid}' and GID '{gid}'.", "deployment")
+        log.info(f"Changing permissions: host path '{str(host_path)}' to UID '{uid}' and GID '{gid}'.", debug=True)
 
         shell.run([
             "sudo",
@@ -499,15 +490,15 @@ def fix_permissions_and_folders(service: Service) -> int:
 # Type = monitoring | apps | frontend | backend | etc...
 def deploy(type_name: str | None) -> int:
     if type_name:
-        log.info(f"Deploying services of type '{type_name}'.", "deployment")    
+        log.info(f"Deploying services of type '{type_name}'.")    
     else:
-        log.info("Deploying all services.", "deployment")
+        log.info("Deploying all services.")
 
     services = discover_services(type_name)
     services = sort_services(services)
     
     for service in services:
-        log.info(f"Deploying service '{service.name}' in namespace '{service.namespace}'.", "deployment")
+        log.info(f"Deploying service '{service.name}' in namespace '{service.namespace}'.")
 
         if service.chart is None:
             raise ValueError(f"Service '{service.name}' has no chart defined.")
@@ -517,8 +508,7 @@ def deploy(type_name: str | None) -> int:
         context: Mapping[str, Any] = generate_service_context(service)
         context_file = Path(context["generatedDir"]) / "context.json"
 
-        if log.cfg.debug:
-            print(f"Context file path: {str(context_file)}")
+        log.info(f"Context file path: {str(context_file)}", debug=True)
 
         helm.install(
             service.name,
@@ -532,28 +522,28 @@ def deploy(type_name: str | None) -> int:
         
         wait_for_service(service)
 
-        log.success(f"Successfully deployed service '{service.name}'.", "deployment")
+        log.success(f"Successfully deployed service '{service.name}'.")
 
     if type_name:
-        log.success(f"Successfully deployed services of type '{type_name}'.", "deployment")
+        log.success(f"Successfully deployed services of type '{type_name}'.")
     else:
-        log.success("Successfully deployed all services.", "deployment")
+        log.success("Successfully deployed all services.")
 
     return 0
 
-def delete(scope: str, type_name: str | None = None, *, cleanup: bool = False) -> int:
+def delete(type_name: str | None = None, *, cleanup: bool = False) -> int:
     if type_name:
-        log.info(f"Deleting services of type '{type_name}'", "deployment")
+        log.info(f"Deleting services of type '{type_name}'")
     else:
-        log.info("Deleting all services...", "deployment")
+        log.info("Deleting all services...")
 
     for service in reversed(discover_services(type_name)):
         helm.uninstall(service.name, service.namespace, cleanup=cleanup)
 
     if type_name:
-        log.success(f"Successfully deleted services of type '{type_name}'", "deployment")
+        log.success(f"Successfully deleted services of type '{type_name}'")
     else:
-        log.success("Successfully deleted all services.", "deployment")
+        log.success("Successfully deleted all services.")
 
     return 0
     

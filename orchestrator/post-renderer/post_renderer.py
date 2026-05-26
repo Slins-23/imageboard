@@ -1,14 +1,28 @@
+import sys
 import yaml
 import json
 import os
-import sys
 from pathlib import Path
 from typing import Any, cast
+
+# ROOT_DIR = Path(__file__).resolve().parents[2]
+# sys.path.insert(0, str(ROOT_DIR))
+
+# import orchestrator.core.log as log
+# from orchestrator.core.log import Scope
+
+
+# OUTPUT_STREAM = "stderr"
+# DEBUG = os.environ.get("POST_RENDERER_DEBUG") == "1"
+
+# if DEBUG:
+    # #log.set_debug(True)
 
 def _load_context() -> dict[str, Any] | None:
     context_path = os.environ.get("POST_RENDERER_CONTEXT")
 
     if not context_path:
+        #log.info("No context file found.", debug=DEBUG, output_stream=OUTPUT_STREAM)
         return None
     
     context_path = Path(context_path)
@@ -16,20 +30,30 @@ def _load_context() -> dict[str, Any] | None:
     if not context_path.is_file():
         return None
     
+    #log.info(f"Loading context from file '{context_path}'", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
     context = context_path.read_text(encoding="utf-8")
     context = json.loads(context)
+
+    #log.success("Context loaded.", debug=DEBUG, output_stream=OUTPUT_STREAM)
     
     return context
 
 def _get_input_docs() -> list[dict[str, Any]]:
+    #log.info("Loading input documents from stdin...", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
     docs: list[dict[str, Any]] = []
 
     for doc in yaml.safe_load_all(sys.stdin.read()):
         docs.append(doc)
 
+    #log.success("Input documents loaded.", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
     return docs
 
 def _pod_spec_path(document: dict[str, Any]) -> list[str] | None:
+    #log.info("Getting pod spec path...", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
     kind = document.get("kind")
 
     if kind == "Pod":
@@ -42,6 +66,8 @@ def _pod_spec_path(document: dict[str, Any]) -> list[str] | None:
     return None
 
 def _get_pod_spec(document: dict[str, Any], path: list[str]) -> dict[str, Any] | None:
+    #log.info(f"Getting pod spec through path: '{'.'.join(path)}'", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
     doc_keymap: Any = document
 
     for key in path:
@@ -70,6 +96,8 @@ def _list_from_dict(map: dict[str, Any], key: str) -> list[Any]:
     return cast(list[Any], value)
 
 def _inject_mounts(pod_spec: dict[str, Any], mounts: list[dict[str, Any]]) -> None:
+    #log.info(f"Injecting {len(mounts)} mounts...", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
     containers: Any = pod_spec.get("containers", [])
     
     if not isinstance(containers, list) or not containers:
@@ -77,7 +105,9 @@ def _inject_mounts(pod_spec: dict[str, Any], mounts: list[dict[str, Any]]) -> No
     
     containers = cast(list[dict[str, Any]], containers)
 
-    for container in containers:    
+    for container in containers:
+        #log.info(f"Injecting mounts for container '{container.get('name')}'...", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
         if not isinstance(container, dict):
             return
         
@@ -91,7 +121,9 @@ def _inject_mounts(pod_spec: dict[str, Any], mounts: list[dict[str, Any]]) -> No
 
 
         for mount in mounts:
+            #log.info(f"Injecting mount '{mount.get('name')}'", debug=DEBUG, output_stream=OUTPUT_STREAM)
             if not mount.get("enabled"):
+                #log.warn("Mount is disabled. Skipping.", debug=DEBUG, output_stream=OUTPUT_STREAM)
                 continue
 
             volume_name = str(mount["volumeName"])
@@ -156,11 +188,15 @@ def _inject_mounts(pod_spec: dict[str, Any], mounts: list[dict[str, Any]]) -> No
             )
 
 def _inject_jaeger_mounts(spec: dict[str, Any], mounts: list[dict[str, Any]]) -> None:
+    #log.info(f"Injecting {len(mounts)} mount(s) for jaeger...", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
     volumes = _list_from_dict(spec, "volumes")
     volume_mounts = _list_from_dict(spec, "volumeMounts")
 
     for mount in mounts:
+        #log.info(f"Injecting mount '{mount.get('name')}'", debug=DEBUG, output_stream=OUTPUT_STREAM)
         if not mount.get("enabled"):
+            #log.warn("Mount is disabled. Skipping.", debug=DEBUG, output_stream=OUTPUT_STREAM)
             continue
 
         volume_name = str(mount["volumeName"])
@@ -210,6 +246,8 @@ def _inject_document(document: dict[str, Any], mounts: list[dict[str, Any]]) -> 
         _inject_mounts(pod_spec, mounts)
 
 def _deduplicate_docs(documents: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    #log.info("Deduplicating potential duplicate documents...", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
     output: list[dict[str, Any]] = []
     seen: set[tuple[str, str, str]] = set()
 
@@ -233,9 +271,12 @@ def _deduplicate_docs(documents: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return output
 
 def load_generated_documents(generated_dir: Path) -> list[dict[str, Any]]:
+    #log.info("Loading generated documents...", debug=DEBUG, output_stream=OUTPUT_STREAM)
     documents: list[dict[str, Any]] = []
 
     for path in generated_dir.glob("*.yaml"):
+        #log.info(f"Loaded document at {path}", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
         with open(path, mode="r", encoding="utf-8") as document_file:
             documents.extend(
                 document
@@ -246,29 +287,51 @@ def load_generated_documents(generated_dir: Path) -> list[dict[str, Any]]:
     return documents
 
 def main() -> int:
+    #log.info("Loading context...", debug=DEBUG, output_stream=OUTPUT_STREAM)
     context = _load_context()
 
     if context is None:
+        #log.warn("Context was 'None'.", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
         sys.stdout.write(sys.stdin.read())
         return 0
 
     generated_dir = Path(context["generatedDir"])
     mounts = context.get("mounts", [])
 
-    rendered_docs = _get_input_docs()
-    output_docs: list[dict[str, Any]] = []
+    input_docs = _get_input_docs()
+    output_docs: list[dict[str, Any]] = load_generated_documents(generated_dir)
 
-    output_docs.extend(load_generated_documents(generated_dir))
-
-    for document in rendered_docs:
+    for document in input_docs:
         _inject_document(document, mounts)
         output_docs.append(document)
 
     output_docs = _deduplicate_docs(output_docs)
 
-    yaml.safe_dump_all(output_docs, sys.stdout, sort_keys=False)
+    #log.info(f"Writing output documents to stdout (Helm uses these).", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
+    try:
+        yaml.safe_dump_all(output_docs, sys.stdout, sort_keys=False)
+    except Exception as e: # pyright: ignore[reportUnusedVariable]
+        #log.error(f"Could not write output documents to stdout.\nError: {e}", debug=DEBUG, output_stream=OUTPUT_STREAM)
+        return 1
 
     return 0
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    #log.info("Running custom post-renderer...", debug=DEBUG, output_stream=OUTPUT_STREAM)
+    result = main()
+
+    # with #log.scoped(Scope.post_renderer):
+    
+
+        # result = main()
+
+        # if result == 0:
+    #log.success("Successfully executed the post-renderer.", debug=DEBUG, output_stream=OUTPUT_STREAM)
+        # else:
+    # #log.error("Failed executing the post-renderer.", debug=DEBUG, output_stream=OUTPUT_STREAM)
+
+        # raise SystemExit(result)
+    
+    raise SystemExit(result)

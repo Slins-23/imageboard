@@ -1,6 +1,47 @@
 from datetime import datetime
-from typing import Literal
 from dataclasses import dataclass
+from enum import Enum
+import sys
+from contextvars import ContextVar
+from contextlib import contextmanager
+from typing import Literal
+
+class Severity(str, Enum):
+    INFO = "INFO"
+    WARN = "WARN"
+    ERROR = "ERROR"
+    SUCCESS = "SUCCESS"
+
+class Scope(str, Enum):
+    lifecycle = "lifecycle"
+    cluster = "cluster"
+    networking = "networking"
+    infra = "infra"
+    monitoring = "monitoring"
+    storage = "storage"
+    apps = "apps"
+    shell = "shell"
+    docker = "docker"
+    helm = "helm"
+    kubectl = "kubectl"
+    post_renderer = "post-renderer"
+    deployment = "deployment"
+
+_scope_stack: ContextVar[tuple[Scope, ...]] = ContextVar(
+    "scope_stack",
+    default=()
+)
+
+@contextmanager
+def scoped(*scopes: Scope):
+    current = _scope_stack.get()
+
+    token = _scope_stack.set(current + scopes)
+
+    try:
+        yield
+    finally:
+        _scope_stack.reset(token)
 
 @dataclass
 class Config:
@@ -18,16 +59,19 @@ def set_debug(value: bool) -> int:
 def _now() -> str:
     return datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-def _log(message: str, log_type: Literal["INFO", "WARN", "ERROR", "SUCCESS"]  | None = None, scope: str | None = None) -> None:
+def _log(message: str, severity: Severity | None = None, debug: bool = False, *, output_stream: Literal["stdout", "stderr"] = "stdout") -> None:
+    if debug and not cfg.debug:
+        return
+
     string = "\033["
 
-    if log_type == "WARN":
+    if severity == Severity.WARN:
         # Yellow
         string += "33"
-    elif log_type == "ERROR":
+    elif severity == Severity.ERROR:
         # Red
         string += "31"
-    elif log_type == "SUCCESS":
+    elif severity == Severity.SUCCESS:
         # Green
         string += "32"
     else:
@@ -38,28 +82,37 @@ def _log(message: str, log_type: Literal["INFO", "WARN", "ERROR", "SUCCESS"]  | 
 
     string += f"[{_now()}]"
 
-    if log_type and scope:
-        string += f" [{log_type}:{scope}]"
-    elif log_type:
-        string += f" [{log_type}]"
-    elif scope:
-        string += f" [{scope}]"
+    scopes = _scope_stack.get()
+
+    if severity or scopes != ():
+        string += "["
+
+        if severity and scopes != ():
+            string += f"{severity.value}:{':'.join(scope.value for scope in scopes)}"
+        elif severity:
+            string += severity.value
+        elif scopes != ():
+            string += ':'.join(scope.value for scope in scopes)
+
+        string += "]"
 
     string += f" {message}"
 
     string += "\033[0m"
 
-    print(string)
+    if severity and (severity == Severity.ERROR or severity == Severity.WARN):
+        print(string, file=sys.stderr, flush=True)
+    else:
+        print(string, file=sys.stdout if output_stream == "stdout" else sys.stderr, flush=True)
 
+def info(message: str, *, debug: bool = False, output_stream: Literal["stdout", "stderr"] = "stdout") -> None:
+    _log(message, severity=Severity.INFO, debug=debug, output_stream=output_stream)
 
-def info(message: str, scope: str | None) -> None:
-    _log(message, log_type="INFO", scope=scope)
-
-def warn(message: str, scope: str | None) -> None:
-    _log(message, log_type="WARN", scope=scope)
+def warn(message: str, *, debug: bool = False, output_stream: Literal["stdout", "stderr"] = "stdout") -> None:
+    _log(message, severity=Severity.WARN, debug=debug, output_stream=output_stream)
     
-def error(message: str, scope: str | None) -> None:
-    _log(message, log_type="ERROR", scope=scope)
+def error(message: str, *, debug: bool = False, output_stream: Literal["stdout", "stderr"] = "stdout") -> None:
+    _log(message, severity=Severity.ERROR, debug=debug, output_stream=output_stream)
     
-def success(message: str, scope: str | None) -> None:
-    _log(message, log_type="SUCCESS", scope=scope)
+def success(message: str, *, debug: bool = False, output_stream: Literal["stdout", "stderr"] = "stdout") -> None:
+    _log(message, severity=Severity.SUCCESS, debug=debug, output_stream=output_stream)

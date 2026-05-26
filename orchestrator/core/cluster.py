@@ -18,7 +18,7 @@ NAMESPACES = [
 ]
 
 def write_template() -> str:
-    log.info(f"Writing kind configuration at '{KIND_OUTPUT}' from template '{KIND_TEMPLATE}'", scope="cluster")
+    log.info(f"Writing kind configuration at '{KIND_OUTPUT}' from template '{KIND_TEMPLATE}'")
 
     with open(KIND_TEMPLATE) as template_file:
         template = Template(template_file.read())
@@ -31,7 +31,7 @@ def write_template() -> str:
     
 
 def create():
-    log.info(f"Creating kind cluster '{config.CLUSTER_NAME}'", scope="cluster")
+    log.info(f"Creating kind cluster '{config.CLUSTER_NAME}'")
 
     shell.run([
         "kind",
@@ -46,7 +46,7 @@ def create():
     return 0
 
 def delete():
-    log.info(f"Deleting kind cluster '{config.CLUSTER_NAME}'", scope="cluster")
+    log.info(f"Deleting kind cluster '{config.CLUSTER_NAME}'")
 
     shell.run([
         "kind",
@@ -59,10 +59,10 @@ def delete():
     return 0
 
 def create_namespaces() -> int:
-    log.info("Creating cluster namespaces...", scope="cluster")
+    log.info("Creating cluster namespaces...")
     for namespace in NAMESPACES:
         if log.cfg.debug:
-            log.info(f"Creating namespace '{namespace}'", scope="cluster")
+            log.info(f"Creating namespace '{namespace}'")
 
         kubectl.run(
             "create", "namespace", namespace
@@ -71,10 +71,10 @@ def create_namespaces() -> int:
     return 0
 
 def delete_namespaces():
-    log.info("Deleting cluster namespaces...", scope="cluster")
+    log.info("Deleting cluster namespaces...")
     for namespace in NAMESPACES:
         if log.cfg.debug:
-            log.info(f"Deleting namespace '{namespace}'", scope="cluster")
+            log.info(f"Deleting namespace '{namespace}'")
 
         kubectl.run(
             "delete", "namespace", namespace, allow_fail=True

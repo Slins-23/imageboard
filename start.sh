@@ -3,5 +3,4 @@ if [ ! -d "venv" ]; then
 fi
 
 source venv/bin/activate
-echo "Starting..."
-python -m orchestrator.cli --debug up
+python -m orchestrator.cli up

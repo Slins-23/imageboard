@@ -20,7 +20,7 @@ NETWORKING_DIR = PLATFORM_DIR / "networking"
 DEFAULT_NAMESPACE = os.getenv("DEFAULT_NAMESPACE", "default")
 SERVICE_DESCRIPTOR_NAME = os.getenv("SERVICE_DESCRIPTOR_NAME", "deploy.yaml")
 
-POST_RENDERER_PATH = str((ROOT_DIR / "orchestrator" / "post_renderer.py").resolve())
+POST_RENDERER_PATH = str((ROOT_DIR / "orchestrator" / "post-renderer" / "run.sh").resolve())
 
 DEFAULT_STORAGE_CAPACITY = os.getenv("DEFAULT_STORAGE_CAPACITY", "10Gi")
 DEFAULT_STORAGE_REQUEST = os.getenv("DEFAULT_STORAGE_REQUEST", "10Gi")

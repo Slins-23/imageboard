@@ -4,10 +4,11 @@ from typing import Sequence, Mapping
 import orchestrator.config as config
 import os
 import orchestrator.core.log as log
+from orchestrator.core.log import Scope
+
 
 def merge_env(env: Mapping[str, str] | None) -> dict[str, str]:
-    if log.cfg.debug:
-        log.info(f"Merging environment variables with {env}...", "shell")
+    log.info(f"Merging environment variables with {env}...", debug=True)
 
     merged_dict: dict[str, str] = dict(os.environ)
 
@@ -26,38 +27,37 @@ def run(
         text: bool = True,
         allow_fail: bool = False,
         quiet: bool = False,
-        scope: str = "shell"
 ) -> subprocess.CompletedProcess[str]:
-    command_str = " ".join(command)
+    with log.scoped(Scope.shell):
+        command_str = " ".join(command)
 
-    if not quiet and log.cfg.debug:
-        log.info(f"Running shell command: {command_str}", scope=scope)
+        if not quiet:
+            log.info(f"Running shell command: {command_str}", debug=True)
 
-    try:
-        process = subprocess.run(
-            list(command),
-            cwd=cwd or config.ROOT_DIR,
-            env=merge_env(env),
-            check=check,
-            capture_output=capture_output,
-            text=text
-            )
+        try:
+            process = subprocess.run(
+                list(command),
+                cwd=cwd or config.ROOT_DIR,
+                env=merge_env(env),
+                check=check,
+                capture_output=capture_output,
+                text=text
+                )
+            
+            return process
+        except subprocess.CalledProcessError as error:
+            stderr = (error.stderr or "").strip()
+
+            log.error(f"Command failed: '{command_str}'\n{stderr}", debug=True)
         
-        return process
-    except subprocess.CalledProcessError as error:
-        stderr = (error.stderr or "").strip()
-
-        if log.cfg.debug:
-            log.error(f"Command failed: '{command_str}'\n{stderr}", scope=scope)
-    
-        if allow_fail:
-            return subprocess.CompletedProcess(
-                args=error.args,
-                returncode=error.returncode,
-                stdout=error.stdout,
-                stderr=error.stderr
-            )
-        
-        raise
+            if allow_fail:
+                return subprocess.CompletedProcess(
+                    args=error.args,
+                    returncode=error.returncode,
+                    stdout=error.stdout,
+                    stderr=error.stderr
+                )
+            
+            raise
 
     

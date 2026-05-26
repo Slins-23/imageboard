@@ -8,6 +8,7 @@ import orchestrator.core.kubectl as kubectl
 import orchestrator.core.shell as shell
 import orchestrator.core.log as log
 
+
 NGINX_DIR = config.NETWORKING_DIR / "nginx"
 NGINX_NAME = "nginx"
 NGINX_IMAGE = "nginx:mainline-alpine3.23-perl"
@@ -19,7 +20,7 @@ def _render_nginx_conf() -> None:
     template_path = NGINX_DIR / "default.template.conf"
     output_path = NGINX_DIR / "default.conf"
 
-    log.info(f"Rendering NGINX configuration to '{output_path}' from template at '{template_path}'...", "networking")
+    log.info(f"Rendering NGINX configuration to '{output_path}' from template at '{template_path}'...")
     
     template = Template(template_path.read_text(encoding="utf-8"))
 
@@ -31,12 +32,11 @@ def _render_nginx_conf() -> None:
     output_path.write_text(output, encoding="utf-8")
 
 def start_nginx() -> int:
-    log.info("Starting NGINX...", "networking")
+    log.info("Starting NGINX...")
 
     _render_nginx_conf()
 
-    if log.cfg.debug:
-        log.info(f"Pulling NGINX docker image '{NGINX_IMAGE}'...", "networking")
+    log.info(f"Pulling NGINX docker image '{NGINX_IMAGE}'...", debug=True)
 
     shell.run([
         "docker",
@@ -44,8 +44,7 @@ def start_nginx() -> int:
         NGINX_IMAGE
     ])
 
-    if log.cfg.debug:
-        log.info("Attempting to remove NGINX container as it could be already running...", "networking")
+    log.info("Attempting to remove NGINX container as it could be already running...", debug=True)
     
     docker.rm(NGINX_NAME)
 
@@ -54,21 +53,21 @@ def start_nginx() -> int:
         NGINX_DIR / "proxy_params": Path("/etc/nginx/proxy_params")
     })
 
-    log.success("Successfully started NGINX.", "networking")
+    log.success("Successfully started NGINX.")
 
     return 0
 
 def stop_nginx() -> int:
-    log.info("Stopping NGINX...", "networking")
+    log.info("Stopping NGINX...")
 
     docker.rm(NGINX_NAME)
 
-    log.success("Stopped NGINX.", "networking")
+    log.success("Stopped NGINX.")
 
     return 0
 
 def start_istio() -> int:
-    log.info("Starting Istio...", "networking")
+    log.info("Starting Istio...")
 
     global ISTIO_PF
     
@@ -81,12 +80,11 @@ def start_istio() -> int:
         "apps"
     ]
 
-    if log.cfg.debug:
-        log.info(f"Namespaces with enabled Istio injection: {", ".join(namespaces)}", "networking")
+    log.info(f"Namespaces with enabled Istio injection: {", ".join(namespaces)}", debug=True)
 
     for namespace in namespaces:
-        if log.cfg.debug:
-            log.info(f"Injecting label 'istio-injection=enabled' on namespace '{namespace}'", "networking")
+
+        log.info(f"Injecting label 'istio-injection=enabled' on namespace '{namespace}'", debug=True)
 
         kubectl.run(
             "label",
@@ -96,8 +94,7 @@ def start_istio() -> int:
             "--overwrite"
         )
 
-    if log.cfg.debug:
-        log.info("Installing Istio dependency services...", "networking")
+    log.info("Installing Istio dependency services...", debug=True)
 
     releases = [
         ("istio-base", ISTIO_DIR / "istio-base" / "chart", False),
@@ -115,9 +112,8 @@ def start_istio() -> int:
     ingress_log_dir.mkdir(parents=True, exist_ok=True)
     ingress_log_file = (ingress_log_dir / "pf.log").open("w", encoding="utf-8")
 
-    if log.cfg.debug:
-        log.info(f"Istio ingress gateway port-forward logs file: {str(ingress_log_file)}", "networking")
-        log.info(f"Port-forwarding Istio ingress gateway from service 'istio-ingress:80' in namespace 'istio-system' to localhost on port {config.ISTIO_PORT}", "networking")
+    log.info(f"Istio ingress gateway port-forward logs file: {str(ingress_log_file)}", debug=True)
+    log.info(f"Port-forwarding Istio ingress gateway from service 'istio-ingress:80' in namespace 'istio-system' to localhost on port {config.ISTIO_PORT}")
 
     ISTIO_PF = subprocess.Popen( # pyright: ignore[reportConstantRedefinition]
         [
@@ -135,31 +131,29 @@ def start_istio() -> int:
     )
 
     if ISTIO_PF.returncode == 0:
-        log.success("Successfully started Istio.", "networking")
+        log.success("Successfully started Istio.")
         return 0
     else:
-        log.error(f"Could not start Istio.\nError: {ISTIO_PF.stderr}", "networking")
+        log.error(f"Could not start Istio.\nError: {ISTIO_PF.stderr}")
         return 1
 
 def stop_istio() -> int:
-    log.info("Stopping Istio...", "networking")
+    log.info("Stopping Istio...")
 
     global ISTIO_PF
 
 
-    if log.cfg.debug:
-        log.info("Stopping port-forward...", "networking")
+    log.info("Stopping port-forward...", debug=True)
 
     if ISTIO_PF is not None and ISTIO_PF.poll() is None:
         ISTIO_PF.terminate()
         ISTIO_PF = None # pyright: ignore[reportConstantRedefinition]
 
-    if log.cfg.debug:
-        log.info("Uninstalling dependency services...", "networking")
+    log.info("Uninstalling dependency services...", debug=True)
 
     for release in ["istio-ingress-cfg", "istio-ingress", "istiod", "istio-base"]:
         helm.uninstall(release, "istio-system", cleanup=True)
 
-    log.success("Successfully stopped Istio.", "networking")
+    log.success("Successfully stopped Istio.")
 
     return 0
