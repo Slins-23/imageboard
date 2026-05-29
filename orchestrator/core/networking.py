@@ -72,7 +72,7 @@ def start_istio() -> int:
     global ISTIO_PF
     
     namespaces = [
-        "default",
+        config.DEFAULT_NAMESPACE,
         "databases",
         "messaging",
         "registry",

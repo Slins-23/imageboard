@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Mapping
 import orchestrator.core.log as log
 from orchestrator.core.log import Scope
+import orchestrator.config as config
 
 
 def install(
@@ -91,7 +92,7 @@ def _exists(name: str, namespace: str) -> int:
 
     return result.returncode == 0
 
-def uninstall(name: str, namespace: str = "default", *, cleanup: bool = False) -> int:
+def uninstall(name: str, namespace: str = config.DEFAULT_NAMESPACE, *, cleanup: bool = False) -> int:
     with log.scoped(Scope.helm):
         log.info(f"Uninstalling service '{name}' in namespace '{namespace}'...")
 

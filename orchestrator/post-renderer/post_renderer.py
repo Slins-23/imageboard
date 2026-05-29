@@ -299,8 +299,9 @@ def main() -> int:
     generated_dir = Path(context["generatedDir"])
     mounts = context.get("mounts", [])
 
+    output_docs: list[dict[str, Any]] = load_generated_documents(generated_dir) # PVs, PVCs, Jobs, etc.
+
     input_docs = _get_input_docs()
-    output_docs: list[dict[str, Any]] = load_generated_documents(generated_dir)
 
     for document in input_docs:
         _inject_document(document, mounts)

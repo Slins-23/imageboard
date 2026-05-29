@@ -2,6 +2,7 @@ import orchestrator.core.shell as shell
 from pathlib import Path
 import orchestrator.core.log as log
 from orchestrator.core.log import Scope
+import orchestrator.config as config
 
 
 def run(name: str, image: str, network: str = "host", mounts: dict[Path, Path] | None = None) -> int:
@@ -71,7 +72,7 @@ def restart(name: str) -> int:
 
     return 0
 
-def exec(sh_command: str, type: str, resource: str | None = None, namespace: str = "default"):
+def exec(sh_command: str, type: str, resource: str | None = None, namespace: str = config.DEFAULT_NAMESPACE):
     with log.scoped(Scope.docker):
         cmd = [
             "docker",

@@ -53,7 +53,7 @@ def get_target_database(target: str) -> tuple[Service, Mapping[str, str]]:
     target_svc: Service = ALL_SERVICES[target]
 
     if target_svc.file is None:
-        raise ValueError(f"Target service '{target}' does not have a 'values.yaml' file.")
+        raise ValueError(f"Target service '{target}' does not have an attached values file.")
     
     target_values = utils.read_yaml(target_svc.file)
 
@@ -487,7 +487,7 @@ def fix_permissions_and_folders(service: Service) -> int:
     
     return 0
 
-# Type = monitoring | apps | frontend | backend | etc...
+# Type (not namespace) = monitoring | apps | infra | storage | etc...
 def deploy(type_name: str | None) -> int:
     if type_name:
         log.info(f"Deploying services of type '{type_name}'.")    

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from orchestrator.models.mount import Mount
 from typing import Mapping, Any
+import orchestrator.config as config
 
 @dataclass(frozen=True)
 class Service:
@@ -10,7 +11,7 @@ class Service:
     enabled: bool = False
     chart: Path | None = None
     file: Path | None = None
-    namespace: str = "default"
+    namespace: str = config.DEFAULT_NAMESPACE
     type: str = "apps"
     mounts: list[Mount] | None = None
     migrations: Mapping[str, Any] | None = None
