@@ -26,13 +26,11 @@ def run(
         capture_output: bool = True,
         text: bool = True,
         allow_fail: bool = False,
-        quiet: bool = False,
 ) -> subprocess.CompletedProcess[str]:
     with log.scoped(Scope.shell):
         command_str = " ".join(command)
 
-        if not quiet:
-            log.info(f"Running shell command: {command_str}", debug=True)
+        log.info(f"Running shell command: {command_str}", debug=True)
 
         try:
             process = subprocess.run(

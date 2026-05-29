@@ -8,6 +8,7 @@ FRONTEND_DIR = ROOT_DIR / "frontend"
 PLATFORM_DIR = ROOT_DIR / "platform"
 DEPLOYMENT_DIR = PLATFORM_DIR / "deployment"
 KIND_DIR = PLATFORM_DIR / "cluster/kind"
+CONTRACTS_DIR = ROOT_DIR / "contracts"
 
 load_dotenv(ROOT_DIR / ".env")
 

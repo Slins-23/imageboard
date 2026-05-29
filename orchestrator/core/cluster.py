@@ -33,6 +33,8 @@ def write_template() -> str:
 def create():
     log.info(f"Creating kind cluster '{config.CLUSTER_NAME}'")
 
+    write_template()
+
     shell.run([
         "kind",
         "create",

@@ -30,15 +30,6 @@
             "required": true,
             "name": "column",
             "in": "path"
-          },
-          {
-            "schema": {
-              "type": "string",
-              "maxLength": 254
-            },
-            "required": true,
-            "name": "value",
-            "in": "path"
           }
         ],
         "responses": {

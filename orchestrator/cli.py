@@ -14,9 +14,9 @@ def main(
 ):
     if debug:
         log.set_debug(True)
-        os.environ.update({
-            "POST_RENDERER_DEBUG": "1"
-        })
+        # os.environ.update({
+            # "POST_RENDERER_DEBUG": "1"
+        # })
 
 @cli.command()
 def up():

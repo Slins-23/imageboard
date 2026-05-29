@@ -291,7 +291,7 @@ def main() -> int:
     context = _load_context()
 
     if context is None:
-        #log.warn("Context was 'None'.", debug=DEBUG, output_stream=OUTPUT_STREAM)
+        # log.warn("Context was 'None'.", debug=True, output_stream=OUTPUT_STREAM)
 
         sys.stdout.write(sys.stdin.read())
         return 0

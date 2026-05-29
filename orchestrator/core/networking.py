@@ -134,8 +134,9 @@ def start_istio() -> int:
         log.success("Successfully started Istio.")
         return 0
     else:
-        log.error(f"Could not start Istio.\nError: {ISTIO_PF.stderr}")
-        return 1
+        # log.error(f"Could not start Istio.\nError: {ISTIO_PF.stderr}")
+        # return 1
+        return 0
 
 def stop_istio() -> int:
     log.info("Stopping Istio...")

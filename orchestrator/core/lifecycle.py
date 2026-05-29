@@ -7,6 +7,8 @@ from orchestrator.tasks import cluster, networking, apps, infra, monitoring, sto
 
 
 def own_directories() -> int:
+    log.info("Owning project root directory...")
+    
     shell.run([
         "sudo",
         "chown",
@@ -20,6 +22,8 @@ def own_directories() -> int:
     return 0
 
 def install_npm() -> int:
+    log.info("Installing root and workspaces npm packages...")
+
     shell.run([
         "npm",
         "install"
@@ -27,17 +31,34 @@ def install_npm() -> int:
 
     return 0
 
+def generate_openapi() -> int:
+    log.info(f"Generating OpenAPI schema from Zod schemas at '{config.CONTRACTS_DIR}'...")
+
+    result = shell.run([
+        "npm",
+        "run",
+        "generate",
+        "--prefix",
+        str(config.CONTRACTS_DIR.resolve())
+    ])
+
+    if result.returncode == 0:
+        log.success(f"Successfully generated OpenAPI schema at '{config.CONTRACTS_DIR / "generated" / "openapi.json"}'.")
+    else:
+        log.error(f"Could not generate OpenAPI schema from Zod schemas at '{config.CONTRACTS_DIR}'")
+        return 1
+
+    return 0
+
 def up() -> int:
     log.info("Starting...")
 
     log.info("Removing previous resources...")
+    
     down()
-
-    log.info("Owning project root directory...")
     own_directories()
-
-    log.info("Installing (local) npm packages...")
     install_npm()
+    generate_openapi()
 
     deployment.initialize()
     cluster.up()

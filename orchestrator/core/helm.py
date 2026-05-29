@@ -47,7 +47,7 @@ def install(
             cmd.extend(["-f", str(values_file)])
 
         env = dict(env or {})
-        env["POST_RENDERER_DEBUG"] = "1"
+        # env["POST_RENDERER_DEBUG"] = "1"
 
         if post_renderer is not None:
 
@@ -70,7 +70,7 @@ def install(
                 env["POST_RENDERER_CONTEXT"] = str(post_renderer_context)
 
 
-        result = shell.run(cmd, env=env, capture_output=False)
+        result = shell.run(cmd, env=env, capture_output=True)
 
         log.info(f"{result.stdout}", debug=True)
 
@@ -87,7 +87,6 @@ def _exists(name: str, namespace: str) -> int:
         namespace
     ],
         allow_fail=True,
-        quiet=True
     )
 
     return result.returncode == 0
