@@ -170,7 +170,7 @@ def generate_mounts_and_docs(
         target_service, db_settings = get_target_database(target)
 
         migration_path = paths.resolve_relative(
-            raw=str(migrations.get("path", "./migrations")),
+            raw=str(migrations.get("hostPath", "./migrations")),
             service_dir=service.path.parent,
             default_leaf="migrations",
         )

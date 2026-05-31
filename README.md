@@ -1,10 +1,14 @@
-## Imageboard (WIP)
+# Imageboard (WIP)
 
-<h3>This is a work in progress.</h3>
+<h3>A full-stack imageboard application.</h3>
+
+This is a work in progress.
 
 # Table of contents
 
 - [Introduction](#introduction)
+- [Project structure](#project-structure)
+- [Tech stack](#tech-stack)
 - [Prerequisites](#prerequisites)
 - [Usage](#usage)
 - [User-facing endpoints](#user-facing-endpoints)
@@ -16,17 +20,18 @@
   - [Service descriptor](#service-descriptor)
   - [Context](#context)
 - [Notes](#notes)
-  - [Networking model](#networking-model)
   - [Namespaces](#namespaces)
+  - [Networking model](#networking-model)
+  - [Local storage and permissions](#local-storage-and-permissions)
 - [Future plans](#future-plans)
 
 # Introduction
 
-Everything has been designed in Figma (subject to adjustments) since mid 2025, including the backend, frontend, and system design.
+The goal is to build a large-scale global imageboard website, learn and integrate as many technologies at once as possible, all while attempting to replicate a production/real-world environment as close as possible locally.
 
-The goal was to build a large-scale global imageboard website, learn and integrate as many technologies at once as possible, all while attempting to replicate a production/real-world environment as close as possible locally.
+Everything has been mostly designed in Figma (subject to adjustments) since mid 2025, including the backend, frontend, and system design.
 
-The reusable component library (and therefore the frontend) is mostly (~90%) finished. The frontend is not 100% done because I have made the component library using Storybook, all that's left is piecing together the components in the website.
+The reusable component library (and therefore most of the frontend) is mostly finished. As I have made the component library using Storybook, all that's left is wiring together the components into pages for the website and connecting to the backend.
 
 I am currently integrating the backend.
 
@@ -34,114 +39,192 @@ This is what the backend consists of thus far:
 
 \- Docker and Kubernetes for containerization and service orchestration
 
-\- A custom Python orchestrator for the entire project
+\- Kind for creating and running the Kubernetes cluster locally
+
+\- Helm charts for templating, sensible defaults and deployment
+
+\- A custom Python orchestrator for controlling the project
 
 \- NGINX as the external reverse proxy
 
 \- Istio as the cluster ingress, internal API gateway and service mesh
 
-\- Helm charts for templating, sensible defaults and deployment
+\- Zod contracts shared between services
+
+\- OpenAPI schema generation from Zod schemas
+
+\- Swagger UI using the generated OpenAPI schema for API documentation
 
 \- Prometheus for metrics aggregation
 
-\- Jaeger for tracing requests
-
 \- Grafana for visualization
 
-Eventually unit and end-to-end tests will be integrated as well as CI/CD tools (Jest/Vite, Cypress/Playwright, Jenkins, Argo, GitHub Actions, etc.).
+\- Jaeger for tracing requests
 
-I will soon integrate Kafka, Logstash, Elasticsearch, Cassandra, Sentry and Redis, then broaden the coverage of the Rest APIs for the data-access layer (DAL) and backend for frontend (BFF) services.
+\- PostgreSQL databases
 
-Some things I had planned (with production in mind) are not feasible, practical, nor reasonable locally, such as replicated pods/containers, sharding, fail-over, load balancing, worldwide server distribution, cross-region cluster synchronization, cold storage backups, CDNs, etc.
-<br>Either because my machine can't handle everything or because its implementation/maintenance slows down development drastically for little to no benefit or even to detriment.
+Some things I had planned with production in mind are not feasible, practical, or reasonable locally, such as replicated pods/containers, sharding, failover, load balancing, worldwide server distribution, cross-region cluster synchronization, cold storage backups, CDNs, etc.
+<br>This is either because my machine can't handle everything or because the implementation/maintenance slows development down drastically for little to no benefit, or even to detriment.
 <br>In fact, my computer barely handles it right now, as it reaches 10-20GB+ RAM while idling under WSL2, which made me give up emulating many nodes with Kind, among other things.
+
+Therefore, in this project I tried to emulate a large production environment as close as possible without making extreme or unreasonable compromises.
+
+The general idea is:
+
+1. The frontend is an application made alongside a reusable component library, with TypeScript, Next.js, and Storybook.
+2. Public API calls go through BFF (Backend for Frontend) services.
+3. Shared Zod contracts live under `contracts` and are used to validate requests and generate OpenAPI documentation.
+4. BFF services communicate with internal data-access layer services.
+5. Data-access layer services communicate with databases and other internal infrastructure.
+6. The whole environment is deployed locally through Kubernetes, Helm, Istio, NGINX, and the custom orchestrator.
+
+I tried to emulate a real production request flow as close as possible:
+
+`Browser -> NGINX -> Istio ingress gateway -> Kubernetes services -> BFF/DAL/database`
+
+This makes the local setup overly complex compared to a normal development or even production environment, but that also means the project deals with many of the real-world challenges a real system would have and more: external routing, internal service communication, service discovery, generated API documentation, shared contracts, persistent storage, observability, deployment ordering, orchestration, permissions across host/container boundaries, etc.
+
+# Project structure
+
+The most relevant folders are:
+
+| Path                          | Description                                                                                             |
+| :---------------------------- | :------------------------------------------------------------------------------------------------------ |
+| frontend                      | Frontend service descriptor and values                                                                  |
+| frontend/src                  | Frontend source code                                                                                    |
+| backend                       | Backend services                                                                                        |
+| backend/bff                   | Backend for Frontend services                                                                           |
+| backend/dal                   | Data-access layer services                                                                              |
+| contracts                     | Shared Zod contracts and generated OpenAPI schema                                                       |
+| orchestrator                  | Project's custom Python orchestrator                                                                    |
+| orchestrator/post-renderer    | Helm [post renderer](#post-renderer) plugin for the orchestrator                                        |
+| platform                      | Platform services, charts, templates, generated deployment files                                        |
+| platform/deployment/charts    | Shared base Helm charts used by multiple services                                                       |
+| platform/deployment/templates | Base templates for YAML manifests used by the orchestrator for generating PVs, PVCs, and migration jobs |
+| platform/deployment/generated | Generated deployment files for each service                                                             |
+| install.sh                    | Helper shell script for installing the [orchestrator](#orchestrator)                                    |
+
+# Tech stack
+
+| Type          | Technology                         | Usage                                                                        |
+| :------------ | :--------------------------------- | :--------------------------------------------------------------------------- |
+| Frontend      | TypeScript, Vite, Node.js, Next.js | Frontend application                                                         |
+| Frontend      | Storybook                          | Component library development and testing                                    |
+| Backend       | TypeScript, Node.js, Express.js    | BFF and DAL service runtime                                                  |
+| Database      | PostgreSQL                         | Used for databases such as `users-auth` which is used in user authentication |
+| Contracts     | TypeScript, Zod                    | Shared validation schemas for all services                                   |
+| Contracts     | OpenAPI                            | Schema generated from Zod                                                    |
+| Docs          | Swagger UI                         | Browser UI for the generated OpenAPI schema                                  |
+| Monitoring    | Prometheus                         | Metrics aggregation                                                          |
+| Monitoring    | Grafana                            | Metrics visualization                                                        |
+| Monitoring    | Jaeger                             | Distributed tracing                                                          |
+| Networking    | Istio                              | Cluster ingress, internal API gateway and service mesh                       |
+| Networking    | NGINX                              | External reverse proxy/load balancer                                         |
+| Cluster       | Kubernetes, Kind                   | Local Kubernetes cluster                                                     |
+| Containers    | Docker                             | Containers and NGINX reverse proxy                                           |
+| Deployment    | Helm                               | Managing releases and chart templating                                       |
+| Orchestration | Python, Typer                      | Custom orchestration CLI                                                     |
 
 # Prerequisites
 
-### Tested on Ubuntu 24.04 under WSL2 in a Windows 11 host
+### Tested on Ubuntu 24.04 under WSL2 on a Windows 11 host
 
-Python: <b><i>v3.12.3</i></b>
-
-Docker: <b><i>v29.4.0</i></b>
-
-Kubernetes client: <b><i>v1.35</i></b>
-
-Kind: <b><i>v0.31.0</i></b>
-
-Helm: <b><i>v4.1.4</i></b>
+| Dependency        | Version               |
+| :---------------- | :-------------------- |
+| Python            | <b><i>v3.12.3</i></b> |
+| Docker            | <b><i>v29.4.0</i></b> |
+| Kubernetes client | <b><i>v1.35</i></b>   |
+| Kind              | <b><i>v0.31.0</i></b> |
+| Helm              | <b><i>v4.1.4</i></b>  |
 
 <i>(Optional for creating database migrations)</i><br>
 golang-migrate: <b><i>v4.19.1</i></b>
 
 # Usage
 
-Run `start.sh`.
+Run `install.sh` once, then call the [orchestrator](#orchestrator) through the `orchestrator` command.
 
-Root access is required for mounting host-owned directories/files and enabling read/write from the WSL2 host on container owned directories/files.
-<br>See `own_directories` in `orchestrator/core/lifecycle.py` and `fix_permissions_and_folders` in `orchestrator/core/deployment.py`.
+```bash
+./install.sh
+orchestrator up
+```
 
-This is because the request path flows as Host (WSL2) -> Kind -> Nodes (Kubernetes) -> Pods (Kubernetes) -> Container (Docker), where the folders are sometimes created by the user or the container and neither has read/write access over the other. Some containers also expect specific user and group ids.
+See [orchestrator](#orchestrator) for information on the available commands and options.
 
-This is necessary due to the unconventional and relatively complex setup where I use a hacky combination of attempting to emulate production within the same development environment, while also using and handling WSL2, Kind, local storage file mounts, persistence, permission requirements within containers (which also often reset permissions through init containers or require explicit users/permissions), etc.
-
-In this setup permissions are shared bidirectionally in such a way that the system is practically write agnostic, which means hot-reloading works in any server that expects changes (e.g. BFF, DAL, Frontend, Storybook, etc.) whether the container itself modifies the files or I as the user modify the files from the host system. The same goes for shared files such as the Zod schemas under `contracts`.
-
-Ideally, in a production environment you would instead use the service's VM host for persistence or a network volume.
-<br>It would be preferred to build docker images for each service, using a local development environment and a CI layer for building the production/staging container image which should already include the necessary files, without the need for all of the cognitive, theoretical and practical burden that doing all of this work which synchronizing these mutually exclusive environments takes.
+There is no need to reinstall when changes are made to the orchestrator, they are automatically accounted for.
 
 # User-facing endpoints
 
-- Next.js dev server/NGINX reverse proxy: `localhost:8080`
+<b><i>Everything below assumes default settings</i></b>
 
-- Storybook: `storybook.localhost:8080`
+| Service                                           | URL                       |
+| :------------------------------------------------ | :------------------------ |
+| Frontend Next.js dev server / NGINX reverse proxy | localhost:8080            |
+| Storybook                                         | storybook.localhost:8080  |
+| Public API                                        | localhost:8080/api        |
+| Swagger UI                                        | swagger.localhost:8080    |
+| Prometheus                                        | prometheus.localhost:8080 |
+| Grafana                                           | grafana.localhost:8080    |
+| Jaeger                                            | jaeger.localhost:8080     |
+| Istio ingress/API gateway                         | localhost:5000            |
 
-- <b>Public</b> API: `localhost:8080/api`
-  - Endpoints are implemented as Rest APIs in `backend/bff/`, and they are described through:
-    - Zod schemas at `contracts`
-    - OpenAPI schema generated from Zod schemas at `contracts/generated/openapi.json`
-    - Swagger UI as a frontend for the OpenAPI schema
-  - This is exposed through a BFF (Backend for frontend) which intermediates communication with the internal API services (e.g. users-auth-dal, images-dal, etc.)
+<br>Grafana credentials:
 
-- Swagger UI: `swagger.localhost:8080`
-  - Uses OpenAPI schema at `contracts/generated/openapi.json` generated from Zod schemas for the API
+| Key      | Value |
+| :------- | :---- |
+| User     | admin |
+| Password | 12345 |
 
-- Prometheus: `prometheus.localhost:8080`
-  - Data persisted in its platform folder `platform/monitoring/prometheus/data`
+<br>The APIs are described in (besides implementation in services):
 
-- Grafana: `grafana.localhost:8080`
-  - Data persisted in its platform folder `platform/monitoring/grafana/data`
-  - User: `admin`
-  - Password: `12345`
+- Zod schemas at `contracts`
+- OpenAPI schema generated at `contracts/generated/openapi.json`
+- Swagger UI as a frontend for the OpenAPI schema
 
-- Jaeger: `jaeger.localhost:8080`
-  - Data persisted in its platform folder `platform/monitoring/jaeger/instance/data`
+Persistent data location can be modified in each [service's descriptor](#service-descriptor). I have opted for colocating it with the service definition.
 
-- Istio API gateway: `localhost:5000`
+Persistent data location for monitoring services:
+
+- Prometheus: `platform/monitoring/prometheus/data`
+- Grafana: `platform/monitoring/grafana/data`
+- Jaeger: `platform/monitoring/jaeger/instance/data`
+
+<br>The public API is exposed as a REST API through BFF (backend for frontend) services (e.g. `bff-users`), which acts as an intermediate layer between public API calls and internal API calls such as the DAL (data-access layer) services (e.g. `users-auth-dal`).
 
 # Orchestrator
 
-The orchestrator lives under `orchestrator`, it is a custom Python module that controls the lifecycle of the application, logging, deployment, and handling of file/folder permissions.<br>
-It is controllable through a CLI, which exposes the following arguments:<br>
+The orchestrator lives under `orchestrator`, it is a custom Python module that controls the lifecycle of the application, logging, deployment, and file/folder permissions.<br>
 
-`up`: Starts everything<br>
+It is controllable through the CLI, which exposes the following commands:<br>
 
-`down`: Deletes everything (except persistent data)<br>
+`orchestrator up`: Starts the application.<br>
 
-`restart`: Restarts everything (calls `down` then `up`)<br>
+`orchestrator down`: Deletes the application (except persistent data).<br>
 
-`--debug`: If included, more specific verbose log messages are logged to the terminal.<br>
+`orchestrator restart`: Restarts the application (calls `down` then `up`).<br>
 
-This module is called through the following helper shell scripts:
+`orchestrator --help` or `orchestrator`: Shows available commands and options.<br>
 
-`install.sh`: Creates a Python virtual environment for executing the orchestrator, installs the dependencies from `requirements.txt`, installs the [post renderer](#post-renderer) as a Helm plugin and enables execute permissions for `start.sh`, `stop.sh` and `restart.sh`.<br>
+`--debug`: Enable debug logs (more verbose). Position/order does not matter.<br>
 
-`start.sh`: Calls the orchestrator with the argument `up`.<br>
+It is installed from running `install.sh`. Source file changes are reflected automatically, so there's no need to reinstall.
 
-`stop.sh`: Calls the orchestrator with the argument `down`.<br>
+<br>`install.sh`:
 
-`restart.sh`: Calls the orchestrator with the argument `restart`.
+1. Installs the [post renderer](#post-renderer) as a Helm plugin
+2. Enables execute permission for `orchestrator/post-renderer/run.sh`
+3. Creates the Python virtual environment for executing the orchestrator
+4. Installs the orchestrator dependencies from `requirements.txt`
+5. Installs the orchestrator in editable mode within the virtual environment
+6. Symlinks that executable from the virtual environment to `$HOME/.local/bin/orchestrator`, where `$HOME` is the path to the user's home directory
+7. Adds `$HOME/.local/bin` to the user's `PATH` environment variable if not already there, so that the `orchestrator` executable is globally accessible.
+   - Assuming `bash` and `.bashrc` are used for the user's shell, otherwise you can copy and paste the `export` command logged to the terminal in the terminal itself or your shell's configuration file.
 
-It loads its configuration from `orchestrator/config.py`, where some of it is hardcoded and others are loaded from the `.env`, or set to a default value if not given.
+<br>
+
+It lives under the virtual environment `venv` within the project root, which is symlinked to `$HOME/.local/bin`, where `$HOME` is the path to the user's home folder, then it is also added to the user's `PATH` if not already included, so that it can be called anywhere through `orchestrator`.
+
+It loads its configuration from `orchestrator/config.py`, where some values are hardcoded and others are loaded from the `.env`, or set to a default value if not given.
 
 ## Environment variables
 
@@ -158,73 +241,87 @@ If not specified, they are set to the following default values in `orchestrator/
 | DEFAULT_STORAGE_CAPACITY | 10Gi        |
 | DEFAULT_STORAGE_REQUEST  | 10Gi        |
 
-<br>`POST_RENDERER_CONTEXT` is also used internally for sharing the filepath of the [context](#context) file for the current service from the deployment pipeline with the [post renderer](#post-renderer), but it is not meant to be manually configured in `.env`.<br>
+<br>`POST_RENDERER_CONTEXT` is also used internally for sharing the file path of the [context](#context) file with the current service in the deployment pipeline with the [post renderer](#post-renderer). It is not meant to be manually configured in `.env`.<br>
 The orchestrator sets it for each service before calling Helm, so the [post renderer](#post-renderer) knows which generated [context.json](#context) to load.
 
 ## Lifecycle
 
-At a high-level, this is what the orchestrator does:
+At a high-level, this is what calling `orchestrator up` does:
 
-0. Removes resources from potentially running app
-1. Takes ownership of the app root
-2. Installs node modules for the project and its workspaces (needed for development syntax validation from Zod contracts)
-3. Generates an OpenAPI spec file from the Zod schemas at `contracts` to `contracts/generated/openapi.json`
-4. Creates `Service` (`orchestrator/models/service.py`) and `Mount` (`orchestrator/models/mount.py`) objects from [deploy.yaml](#service-descriptor) files (this is a custom descriptor I created which will be better explained below) within any directory (except if it includes `generated` or `node_modules` in its path).
-5. Writes a Kind config file from a template to mount the project files onto the cluster nodes (mounted at `/mnt` in each node)
-6. Creates the Kind cluster
-7. Creates the cluster namespaces
-8. Sets up networking
-   - Writes NGINX file `default.conf` from template and environment variables
-   - Starts NGINX at given port (default `8080`) through a regular docker container
-   - Deploys all Istio services
-   - Starts Istio ingress at given port (default `5000`)
+1. Removes resources from potentially running app.
+2. Takes ownership of the app root.
+3. Installs root and workspaces npm packages.
+   - Needed for development environment syntax validation from Zod contracts.
+4. Generates an OpenAPI spec file from the Zod schemas at `contracts` to `contracts/generated/openapi.json`.
+5. Discovers enabled services from `deploy.yaml` files.
+6. Creates `Service` (`orchestrator/models/service.py`) and `Mount` (`orchestrator/models/mount.py`) objects from parsing [deploy.yaml](#service-descriptor).
+7. Writes a Kind config file from a template to mount the project files onto the cluster nodes at `/mnt`.
+8. Creates the Kind cluster.
+9. Creates the cluster namespaces
+10. Sets up networking
+    - Writes NGINX `default.conf` from template and environment variables.
+    - Starts NGINX at the given port (default `8080`) through a regular docker container.
+    - Deploys all Istio services.
+    - Starts Istio ingress at given port (default `5000`).
+11. Deploys infrastructure services with the `infra` type.
+12. Deploys storage services with the `storage` type.
+13. Deploys monitoring services with the `monitoring` type.
+14. Deploys application services with the `apps` type.
+15. Logs success (or error) message to the terminal including the address of relevant frontend/service services.
 
-9. Deploys the infrastructure services with the `infra` type.
-10. Deploys the storage services with the `storage` type.
-11. Deploys the monitoring services with the `monitoring` type.
-12. Deploys the apps services with the `apps` type.
-13. If everything went as expected, then logs a success message to the terminal including the address of relevant frontend services.
-
-Some of it is logged by default, more in-depth logs can be seen by including `--debug` in the call to `orchestrator.cli` within the shell scripts.
+Some of this is logged by default. More in-depth logs can be seen by including the `--debug` option in the call to `orchestrator`.
 
 ## Deployment
 
 <b>All dynamically generated service deployment files, such as YAML manifests for persistent volumes, persistent volume claims, migration jobs as well as [context.json](#context), are stored in `platform/deployment/generated/${SERVICE_NAME}`, where `SERVICE_NAME` is the name of the respective service.</b>
 
-At a high-level, this is how deployment works (mostly implemented at `orchestrator/core/deployment.py`):
+At a high-level, this is how service deployment works (mostly implemented at `orchestrator/core/deployment.py`):
 
 1. Discovers enabled services and their configuration by parsing [service descriptors](#service-descriptor), which are named [deploy.yaml](#service-descriptor) by default.
    - The expected [service descriptor](#service-descriptor) filename can be modified through the `SERVICE_DESCRIPTOR_NAME` environment variable in `.env`.
    - Services are stored internally as `Service` objects, defined in `orchestrator/models/service.py`.
    - Mounts are stored internally as `Mount` objects, defined in `orchestrator/models/mount.py`.
 
-2. Topologically sorts all services as a dependency graph using depth-first search, in order to first install services which others depend on and also avoid circular dependencies.
+2. Topologically sorts all services as a dependency graph using depth-first search, installing dependencies first and preventing circular dependencies.
 
-3. Fixes ownership and permissions for mount folders/files, as some services need the host, Kind nodes, Kubernetes pods and Docker containers to all be able to read/write shared paths.
+3. Fixes ownership and permissions for mount folders/files.
+   - Some services need the host, Kind nodes, Kubernetes pods, and Docker containers to all be able to read/write shared paths.
 
-4. Dynamically generates PVs (Persistent Volume), PVCs (Persistent Volume Claim) and PostgreSQL migration jobs (Job) where used, from the base templates at `platform/deployment/templates`, for each respective service.
+4. Dynamically generates Kubernetes manifests where needed.
+   - The base templates are at `platform/deployment/templates`.
    - Persistent mounts generate a PV/PVC pair.
    - Source mounts use a direct `hostPath`.
-   - Migration jobs are generated when `migrations.enabled` is set in the [service descriptor](#service-descriptor).
+   - PostgreSQL migration jobs are generated when `migrations.enabled` is set in the [service descriptor](#service-descriptor).
 
-5. Generates the [service context](#context) within the same generated folder. It includes metadata about the service which will be used by the [post renderer](#post-renderer) and is described in more detail below in [context](#context).
+5. Generates the [service context](#context) within the same generated folder.
+   - It includes metadata about the service, such as generated documents and mounts.
+   - It will be used by the [post renderer](#post-renderer).
 
 6. Calls Helm to install the service.
    - If the [service descriptor](#service-descriptor) has a `file` field, it is passed to Helm as a values override with `-f`.
    - If the [service descriptor](#service-descriptor) has `wait: true`, Helm is called with `--wait`.
    - The generated [context.json](#context) path is passed to the [post renderer](#post-renderer) through `POST_RENDERER_CONTEXT`.
 
-7. The [post renderer](#post-renderer) intercepts the Helm installation: it ingests the unmodified documents which Helm sends to `stdin`, manipulates the manifests to inject our generated data, then outputs them to `stdout`.
+7. The [post renderer](#post-renderer) intercepts the Helm installation: it ingests the unmodified manifests which Helm sends to `stdin`, manipulates them to inject our generated data, then writes them to `stdout`.
 
 8. Helm then uses the manipulated manifests from `stdout` to perform the final deployment.
 
-9. Waits for cluster resources if given in `waitFor` (namely CRD, deployment, endpoint and/or webhook).
+9. Waits for cluster resources if given in `waitFor`.
+   - Supports waiting for CRD, deployment, endpoint and/or webhook.
 
 10. Logs success or error.
 
 ## Post Renderer
 
 The [post renderer](#post-renderer) lives under `orchestrator/post-renderer` and is installed as a Helm plugin through `install.sh`.
+
+The Helm post renderer here is necessary to dynamically modify YAML manifests before they are installed, as necessary.<br>
+This is useful for dynamically creating entire new manifests from existing templates at `platform/deployment/templates` such as migration jobs, persistent volumes and persistent volume claims, as well as modifying existing manifests, such as programmatically mounting the generated persistent volumes and persistent volume claims onto container images.<br>
+Everything can be arbitrarily described in each service's [service descriptor](#service-descriptor) file ([deploy.yaml](#service-descriptor)).
+
+The post renderer works by receiving the manifests as they are defined through `stdin`, then returning the final modified manifests through `stdout`.
+
+Its flow is:
 
 1. Loads [context.json](#context) as a dictionary using the file path set through the `POST_RENDERER_CONTEXT` environment variable.
    - If no context is found, it writes Helm's original `stdin` back to `stdout` without changing it.
@@ -245,29 +342,31 @@ The [post renderer](#post-renderer) lives under `orchestrator/post-renderer` and
 
 8. The final documents are written to `stdout`, where they are captured by Helm and subsequently installed.
 
-This is why the [post renderer](#post-renderer) currently disables regular logging: writing logs to `stdout` malforms the manifests expected by Helm. I tried writing them to `stderr`, but it didn't work either, so for now I decided to comment out the logs.
+This is why the [post renderer](#post-renderer) currently has logging disabled: writing logs to `stdout` malforms the manifests expected by Helm. I tried writing them to `stderr`, but it didn't work either, so for now I decided to comment out the logs in `orchestrator/post-renderer/post_renderer.py`.
 
 ## Service descriptor
 
-The filename of a service descriptor is expected to be `deploy.yaml` by default, which can be changed through the environment variable `SERVICE_DESCRIPTOR_NAME`.
+The filename of a service descriptor is expected to be `deploy.yaml` by default. It can be changed through the environment variable `SERVICE_DESCRIPTOR_NAME`.
 
 The descriptor is a small custom configuration layer. Helm still owns templating, values and installation, but `deploy.yaml` tells the orchestrator where the chart is, which service group it belongs to, which mounts need to be injected, which service dependencies must be installed first, and which extra resources must be generated before Helm finishes the deployment.
 
 The most relevant fields are:
 
-- `name`: Service name. This is also used for the Helm release name and for the generated folder under `platform/deployment/generated`.
-- `enabled`: If `false`, the service is ignored.
-- `type`: Deployment group, such as `infra`, `storage`, `monitoring`, or `apps`.
-- `namespace`: Kubernetes namespace. Defaults to `DEFAULT_NAMESPACE`.
-- `chart`: Helm chart path.
-- `file`: Optional values file passed to Helm with `-f`.
-- `dependsOn`: Other service names that must be deployed first.
-- `mounts`: Source or persistent mounts that the [post renderer](#post-renderer) injects into the rendered manifests.
-- `migrations`: Optional database migration job configuration.
-- `wait`: Whether Helm should wait for the release.
-- `waitFor`: Additional cluster resources the orchestrator should wait for after Helm finishes.
+| Field      | Description                                                                                                                   |
+| :--------- | :---------------------------------------------------------------------------------------------------------------------------- |
+| name       | Service name. This is also used for the Helm release name and for the generated folder under `platform/deployment/generated`. |
+| enabled    | If `false`, the service is ignored.                                                                                           |
+| type       | Deployment group, such as `infra`, `storage`, `monitoring`, or `apps`.                                                        |
+| namespace  | Kubernetes namespace. Defaults to `DEFAULT_NAMESPACE`.                                                                        |
+| chart      | Helm chart path.                                                                                                              |
+| file       | Optional values file passed to Helm with `-f`.                                                                                |
+| dependsOn  | Other service names that must be deployed first.                                                                              |
+| mounts     | Source or persistent mounts that the [post renderer](#post-renderer) injects into the rendered manifests.                     |
+| migrations | Optional database migration job configuration.                                                                                |
+| wait       | Whether Helm should wait for the release.                                                                                     |
+| waitFor    | Additional cluster resources the orchestrator should wait for after Helm finishes.                                            |
 
-<br>These are the accepted path formats for `chart` and `file`:
+<br>The accepted path formats for `chart` and `file` are:
 
 - `./chart` or `./values.yaml` resolves relative to the folder where the descriptor lives.
 - `platform/deployment/charts/node-app` resolves relative to the project root.
@@ -383,13 +482,15 @@ It is generated per service at:
 
 It contains:
 
-- `serviceName`: Name of the service being deployed.
-- `serviceType`: Service group/type, such as `infra`, `storage`, `monitoring`, or `apps`.
-- `generatedDir`: Absolute path to the generated folder for that service.
-- `documents`: Generated manifests related to the service, such as PVs, PVCs and migration Jobs.
-- `mounts`: Mount metadata used by the [post renderer](#post-renderer).
+| Key          | Description                                                                       |
+| :----------- | :-------------------------------------------------------------------------------- |
+| serviceName  | Name of the service being deployed.                                               |
+| serviceType  | Service group/type, such as `infra`, `storage`, `monitoring`, or `apps`.          |
+| generatedDir | Absolute path to the generated folder for that service.                           |
+| documents    | Generated manifests related to the service, such as PVs, PVCs and migration Jobs. |
+| mounts       | Mount metadata used by the [post renderer](#post-renderer).                       |
 
-Each mount includes the original host path, the Kind path under `/mnt`, the container path, whether it is read-only, the generated volume name, and the Kubernetes volume source to inject.
+<br>Each mount includes the original host path, the Kind path under `/mnt`, the container path, whether it is read-only, the generated volume name, and the Kubernetes volume source to inject.
 
 For example:
 
@@ -479,89 +580,111 @@ Example for `users-auth-dal`:
 
 Some relevant data can be modified through the `.env` file, such as the ports for the Next.js dev server/NGINX reverse proxy, Istio ingress, etc.
 
+## Namespaces
+
+| Namespace    | Description                                                                                      |
+| :----------- | :----------------------------------------------------------------------------------------------- |
+| cert-manager | Where cert-manager lives.                                                                        |
+| istio-system | Where all Istio deployments go, including the ingress.                                           |
+| registry     | Reserved for the future central registry API services, such as NPM packages, Docker images, etc. |
+| messaging    | Reserved for the future messaging services such as Kafka, RabbitMQ, etc.                         |
+| monitoring   | Where all monitoring services live, such as Prometheus, Grafana, Jaeger, etc.                    |
+| databases    | Where all database services live, such as PostgreSQL, Redis, Cassandra, etc.                     |
+| apps         | Where application services live, such as the frontend, Swagger UI, BFF, DAL, etc.                |
+
 ## Networking model
 
-Connection is meant to mirror a real-world pathway. Thus, I have separated it in two layers:
+Connection is meant to mirror a real-world pathway. Thus, I separated it in two layers:
 
-1. External: What the end user sees - public facing extra-cluster edge server.
-   - This is the first barrier of entry, where a public facing NGINX server runs, behaving as a load balancer/reverse proxy.
-   - As such, my approach was to run it directly in the host machine through a docker container - extra-cluster.
+1. External: What the end user sees - public-facing extra-cluster edge server.
+   - This is the first barrier of entry, where a public-facing NGINX server runs, behaving as a load balancer/reverse proxy.
+   - My approach was to run it directly on the host machine through a docker container - extra-cluster.
    - However, this is not where the request stops, as NGINX proxies it to the Istio ingress in the cluster (which is why Istio is also exposed through port-forwarding)
 
 2. Internal: What the user doesn't see - the cluster itself and internal services.
    - This is where the request from NGINX arrives in the cluster, at the cluster edge through Istio as an API gateway.
-   - Istio also acts as a service mesh, so it is also responsible for (through Envoy sidecars) handling inter-service communication.
+   - Istio also acts as a service mesh, so it is also responsible for (through Envoy sidecars) handling inter-service communication where sidecar injection is enabled.
 
 This distinction is important as although you can access these services externally due to proxy routing and redirection at the aforementioned addresses and ports, this is not where or how service inter-communication and direct calls to services happen (only indirectly).
 
-Internally, services have their own names and ports, likely distinct from those exposed to the users, and like in a real-world scenario, as a user which has access to these public facing services/interfaces, you cannot directly query them without being part of the cluster (which the services themselves are, but NGINX isn't, and neither are you, unless you enter the pods/containers and/or execute commands from within).
+Internally, services have their own names and ports, likely distinct from those exposed to the users, and like in a real-world scenario, as a user who has access to these public-facing services/interfaces, you cannot directly query them without being part of the cluster (which the services themselves are, but NGINX isn't, and neither are you, unless you enter the pods/containers and/or execute commands from within).
 
-All that to say: The service names and ports are (most of the time) different intra-cluster from those I've listed, and are not directly accessible.
+All that to say: the service names and ports are usually different intra-cluster from those I've listed, and are not directly accessible.
 
-You can only access them directly through `kubectl run` or `kubectl exec`, through proxying `platform/networking/istio/istio-ingress-cfg/chart/templates/routing_table.yaml`, or by querying from another service within the cluster itself, through `app-svc:svc-port` (if on the same namespace) or `app-svc.namespace.svc.cluster.local` from any namespace.
+You can only access them directly through `kubectl run` or `kubectl exec`, through proxying `platform/networking/istio/istio-ingress-cfg/chart/templates/routing_table.yaml`, or by querying from another service within the cluster itself, through `app-svc:svc-port` if on the same namespace, or `app-svc.namespace.svc.cluster.local` from any namespace.
 
-## Namespaces
+## Local storage and permissions
 
-| Namespace    | Description                                                                   |
-| :----------- | :---------------------------------------------------------------------------- |
-| cert-manager | Where cert-manager lives.                                                     |
-| istio-system | Where all Istio deployments go, including the ingress.                        |
-| monitoring   | Where all monitoring services live, such as Prometheus, Grafana, Jaeger, etc. |
-| databases    | Where all database services live, such as PostgreSQL, Redis, Cassandra, etc.  |
-| apps         | Where applications live, such as the frontend, Swagger UI, BFF, DAL, etc.     |
+Root access is necessary as the request/file path flows through multiple mutually exclusive environments:
+
+`Host (WSL2) -> Kind -> Nodes (Kubernetes) -> Pods (Kubernetes) -> Containers (Docker)`
+
+Folders are sometimes created by the user or the container and neither side usually has read/write access over the other. Some containers also expect specific user and group ids.
+
+This is necessary due to the unconventional and relatively complex setup where I use a hacky combination of attempting to emulate production within the same development environment, while also using and handling WSL2, Kind, local storage file mounts, persistence, permission requirements within containers (which also often reset permissions through init containers or require explicit users/permissions), etc.
+
+In this setup, permissions are shared bidirectionally in such a way that the system is practically write-agnostic.<br>
+This means for example, that hot-reloading works in servers that expect changes such as BFF, DAL, Frontend, Storybook, etc. whether the container itself modifies the files or I do from the host system. The same goes for shared files such as the Zod schemas under `contracts`.
+
+Ideally, in a production environment you would instead use the service's VM host for persistence or a network volume.
+<br>It would also be preferred to build Docker images for each service, through a local development environment and a CI layer, where the production/staging image should already include the necessary files, avoiding the need for all of the cognitive, theoretical, and practical burden of synchronizing these mutually exclusive environments.
 
 # Future plans
 
-- Migrate internal APIs to gRPC (e.g. DAL). Only use Rest APIs for public facing services (e.g. BFF).
+- Finish wiring the frontend pages together from the existing reusable component library.
 
-- Central registry API for push/pulling data shared by services such as custom Docker images, NPM packges, AI model versioning, etc.
+- Broaden the coverage of the REST APIs for the future DAL and BFF services.
 
-- Turn `contracts` into a standalone NPM package registered in our central API registry.
+- Migrate internal APIs to gRPC where applicable, such as DAL services. Use REST APIs only for public-facing services such as BFF services.
 
-- Give more descriptive error messages in data-access layer API responses from Zod validation (restrict some of this in the BFF to avoid unnecessarily leaking internals). E.g.: "Password too short", "Username too long", etc.
+- Integrate Kafka, Logstash, Elasticsearch, Cassandra, Sentry, and Redis.
 
-- Create job(s) for periodically dumping databases (e.g. `pg_dump` users_auth from users-auth-postgres).
+- Create a registry API for push/pulling data shared by services, such as custom Docker images, NPM packages, AI model versioning, etc.
 
-- Unit and end-to-end testing using Jest/Vite and Cypress/Playwright.
+- Turn `contracts` into a standalone NPM package registered in a central registry API.
 
-- Create database/API tests (e.g. is it responding? are the responses formatted correctly? are return codes correct?)
+- Give more descriptive error messages in data-access layer API responses from Zod validation, while avoiding leaking internal information to the BFF. E.g.: "Password too short", "Username too long", etc.
 
-- Integrate Sentry for error tracking.
+- Create job(s) for periodically dumping databases (e.g. `pg_dump` `users_auth` from `users-auth-postgres`).
 
-- Make a setup installation pipeline which installs all project dependencies, including binaries such as Helm, Kubernetes, etc.
+- Add unit and end-to-end tests using Jest/Vite and Cypress/Playwright.
 
-- Pre-commit hooks for formatting, linting, etc.
+- Create database/API tests, such as checking whether services are responding, returning correctly formatted responses, and using correct status codes.
 
-- CI/CD tools such as Jenkins, Argo, Terraform, etc.
+- Create a setup installation pipeline which installs all project dependencies, including binaries such as Helm, Kubernetes, etc.
+
+- Integrate CI/CD tools such as GitHub Actions, Jenkins, Argo, Terraform, etc.
+
+- Add pre-commit hooks for formatting, linting, validation, etc.
 
 - Enable strict mTLS within the cluster by default, while leaving certain services as permissive (e.g. Kafka, RabbitMQ, etc.).
 
 - Enable application-level TLS for all services or only services with permissive mTLS.
 
-- Replace Grafana's built-in MySQL database with a dedicated PostgreSQL service.
+- Replace Grafana's built-in SQLite database with a dedicated PostgreSQL service.
 
 - Add/update credentials for sensitive services such as Prometheus, Jaeger, etc.
 
-- Set resource limits for services (e.g. CPU usage, memory usage, storage usage, etc.)
+- Set resource limits for services such as CPU usage, memory usage, storage usage, etc.
 
 - Add service accounts and role-based access control for services and authentication.
 
 - Create and run stress tests emulating real users and behavior, including end-to-end testing and an edge-case fuzzing pipeline.
 
-- Create an ideal replication, high-availability, fail-over safe, globally synchronized setup for Production (unfeasible and counter-productive locally) including multi-region synchronization, eventual consistency, primary local and global writes, etc.
+- Create an ideal replication, high-availability, failover safe, globally synchronized setup for Production (unfeasible and counter-productive locally) including multi-region synchronization, eventual consistency, primary local and global writes, etc.
 
-- Introduce database orchestration services for high-availability, replication, etc. such as PgBouncer, Zookeper, Patroni, CloudnativePG, etc.
+- Introduce database orchestration services for high-availability and replication such as PgBouncer, ZooKeeper, Patroni, CloudnativePG, etc.
 
-- Also introduce similar services that orchestrate other services such as Thanos for distributed Prometheus, etc.
+- Introduce similar services that orchestrate other services such as Thanos for distributed Prometheus, etc.
 
-- In production, introduce a CI/CD pipeline for building custom docker images from our development environment instead of using Kind and sharing local files bidirectionally. Those images would then be push/pulled to/from our central registry API.
+- In production, introduce a CI/CD pipeline for building custom Docker images from our development environment instead of using Kind and sharing local files bidirectionally. Those images would then be pushed/pulled to/from our central registry API.
 
 - Introduce rate limiting for each relevant service at each service layer.
 
-- Find a way to make logs functional within the post renderer (`orchestrator/post-renderer/post_renderer.py`), as by definition it conflicts with our logger (`orchestrator/core/log.py`) since the post renderer directly manipulates data in stdin/stdout/stderr.
+- Find a way to make logs functional within the post renderer (`orchestrator/post-renderer/post_renderer.py`), as by definition it conflicts with the logger (`orchestrator/core/log.py`) since the post renderer directly manipulates data in `stdin`, `stdout`, and `stderr`.
 
 - Improve error handling, validation, and increase coverage within the `orchestrator`.
 
-- Introduce domain aggregator service for aggregating database calls in between BFF and DAL if they are often coupled (e.g. users, posts, images, etc.). This is so that we can retrieve multiple related data with a single query. Maybe GraphQL might be good for this.
+- Introduce a domain aggregator service for aggregating database calls between BFF and DAL if they are often coupled, such as users, posts, images, etc. This is so that we can retrieve multiple related data with a single query. GraphQL might be a good fit for this.
 
-- Update Figma designs to reflect changes I made since.
+- Update Figma designs to reflect changes I made since the first design.

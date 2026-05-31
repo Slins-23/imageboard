@@ -32,6 +32,8 @@
 
 data
 
+*.egg-info
+
 !platform/monitoring/grafana/data/grafana.db
 
 package-lock.json
