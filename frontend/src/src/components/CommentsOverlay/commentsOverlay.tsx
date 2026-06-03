@@ -272,13 +272,14 @@ export default function CommentsOverlay({
     children,
 }: CommentsOverlayArgs) {
     const mockUserID = "1337"; // To mirror behavior of allowing user to delete their own comment and disallow liking it
-    const mockPostComments = 36; // Counter for how many comments there are in the post
 
     const [internalComments, setInternalComments] = useControllableState({
         defaultValue: defaultComments,
         value: comments,
         onChange: onCommentsChange,
     });
+
+    const totalComments = internalComments ? internalComments.length : 36; // Counter for how many comments there are in the post
 
     const [commentText, setCommentText] = useState<string>("");
 
@@ -448,7 +449,7 @@ export default function CommentsOverlay({
             </div>
             <span style={{ fontSize: "var(--font-size-xl)" }}>
                 <span style={{ color: "var(--tertiary)" }}>
-                    {mockPostComments}
+                    {totalComments}
                 </span>{" "}
                 comments
             </span>

@@ -406,7 +406,7 @@ def sort_services(services: list[Service]) -> list[Service]:
 
 def initialize() -> int:
     with log.scoped(Scope.deployment):
-        log.info("Discovering all services (deploy.yaml)...")
+        log.info(f"Discovering all services ('{config.SERVICE_DESCRIPTOR_NAME}')...")
         global ALL_SERVICES
         discover_services()
 

@@ -41,6 +41,7 @@ export const Uncontrolled: StoryObj<typeof meta> = {
             backgroundBlurOpacity,
             backgroundBlurRadius,
             backgroundColor,
+            fadeDuration,
         } = args;
 
         const rootProps = {
@@ -48,6 +49,7 @@ export const Uncontrolled: StoryObj<typeof meta> = {
             defaultIsOpen,
             isDismissible,
             defaultIsDismissible,
+            fadeDuration,
 
             onOpen,
             onClose,
@@ -110,6 +112,7 @@ export const Controlled: StoryObj<typeof meta> = {
             isOpen,
             defaultIsOpen,
             defaultIsDismissible,
+            fadeDuration,
 
             onClose,
             onOpen,
@@ -124,6 +127,7 @@ export const Controlled: StoryObj<typeof meta> = {
             defaultIsOpen,
             isDismissible,
             defaultIsDismissible,
+            fadeDuration,
 
             onOpen,
             onClose,
