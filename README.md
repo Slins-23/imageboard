@@ -1,3 +1,7 @@
+
+
+
+
 # Imageboard
 
 A full-stack large-scale imageboard platform and application, mirroring production locally as close as possible.
@@ -25,11 +29,12 @@ The backend implementation has been my focus lately.
 - [Showcase](#showcase)
   - [Orchestrator](#orchestrator)
     - [Installation and startup](#installation-and-startup)
-  - [Frontend design reference](#frontend-design-reference)
   - [Services](#services)
-    - [Reusable component library](#reusable-component-library)
-    - [Frontend implementation](#frontend-implementation)
-    - [API](#api)
+    - [Frontend](#frontend)
+      - [Design reference](#design-reference)
+      - [Reusable component library](#reusable-component-library)
+      - [Application](#application)
+    - [Public API](#public-api)
     - [Monitoring](#monitoring)
   - [System/backend design reference](#systembackend-design-reference)
 - [Introduction](#introduction)
@@ -60,24 +65,29 @@ The backend implementation has been my focus lately.
 
 # Showcase
 
-> Note: All videos are sped up, compressed, and edited to stay under GitHub's 10MB upload limit. Full-quality references are available in the Figma links, the screenshots below, and by running the application locally.
+> Note: All videos are heavily compressed, sped up, and edited to stay under GitHub's 10MB upload limit.
+> <br>Full-quality references are available in the Figma links, the screenshots below, or you can run the application locally.
 
 ## Orchestrator
 
 ### Installation and startup
 
-Video
+[orchestrator](https://github.com/user-attachments/assets/81062016-2c8b-4b9d-ace9-ce3c77e34bd5)
 
-### Frontend design reference
+## Services
 
-> This was made almost 1 year ago, as a design reference.
+### Frontend
+
+#### Design reference
+
+> This was made as an early design reference.
 > <br>The frontend design is mostly up to date with the current implementation, and contains the entire planned frontend.
 
 URL: https://www.figma.com/design/0T3UGwiZtPdJiPpDhgFCmf/Homepage?node-id=22-2&t=b0YfpkwNYqBQAepM-1
 
-## Services
+[figma_frontend](https://github.com/user-attachments/assets/a1016428-0b0a-43ae-bda1-9f899c71da12)
 
-### Reusable component library (Storybook)
+#### Reusable component library
 
 > All "errors" are intentional and expected behavior for testing scenarios.
 
@@ -85,30 +95,32 @@ URL: https://www.figma.com/design/0T3UGwiZtPdJiPpDhgFCmf/Homepage?node-id=22-2&t
 
 <br>
 
-![Storybook component library screenshot](Screenshots/storybook.jpg)
+<img width="2558" height="1242" alt="storybook" src="https://github.com/user-attachments/assets/a8d001ba-96f0-481c-b76d-dc5997152b28" />
 
-Video
+<br>
 
-### Frontend
+[storybook](https://github.com/user-attachments/assets/3bbba5eb-ee97-40f0-862f-e3089cf44c8b)
 
-Video
+#### Application
 
-### API
+[frontend](https://github.com/user-attachments/assets/79c3c508-c6af-4e93-9b13-26724f2a4125)
 
-Video
+### Public API
+
+[public_api](https://github.com/user-attachments/assets/cfdf9fe4-5540-4dee-be78-a341a8737faf)
 
 ### Monitoring
 
-Video
+[monitoring](https://github.com/user-attachments/assets/cef6212b-3a6e-4008-9f99-a12f240f5e27)
 
-### System/backend design reference
+## System/backend design reference
 
 > This was made almost 1 year ago, as a design reference.
 > <br>The backend/system design differs in some areas from the current implementation, such as missing certain services I later implemented, the orchestrator itself, not yet implemented databases, and changes to parts of the request flow.
 
 URL: https://www.figma.com/design/0T3UGwiZtPdJiPpDhgFCmf/Homepage?node-id=2-37&t=2CoUf9Zsl0qgkKSw-1
 
-Video
+[figma_backend](https://github.com/user-attachments/assets/0c1cf626-5c35-49d0-a67e-8b9c7545f173)
 
 # Introduction
 
@@ -131,11 +143,11 @@ My goal is for the application to be interactive and engaging, simple, intuitive
 
 The following reference designs illustrate the idea behind the significance of customization and filtering features.
 
-<img src="Screenshots/filter_c.jpg" width="auto" height="auto"/>
-
-<img src="Screenshots/filter_b.jpg" width="150px" height="auto"/>
-
-<img src="Screenshots/filter_a.jpg" width="400px" height="auto"/>
+<img width="2277" height="231" alt="filter_c" src="https://github.com/user-attachments/assets/787292bc-86f1-480d-8645-5e94d0ec83fe" />
+<br>
+<img width="150px" height="auto" alt="filter_b" src="https://github.com/user-attachments/assets/fd7e5475-f415-4b57-90e5-13a347f1abcc" />
+<br>
+<img width="600px" height="auto" alt="filter_a" src="https://github.com/user-attachments/assets/481e2081-efa1-4aaf-b326-c5414f45fd34" />
 
 <br>
 It was developed desktop-first, but with mobile in mind as well, having a notification system in the plans (which will eventually include mobile push notifications), including a feed-like swipe mode, clearly visible and separated icons to avoid tapping the same one on accident (as taps on a phone are less precise than a mouse pointer), etc.
