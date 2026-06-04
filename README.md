@@ -1,12 +1,8 @@
-
-
-
-
 # Imageboard
 
 A full-stack large-scale imageboard platform and application, mirroring production locally as close as possible.
 
-The tech stack so far: A custom Python orchestrator, TypeScript, Next.js, Storybook, Node/Express services, shared Zod contracts, generated OpenAPI docs, PostgreSQL, Kubernetes, Kind, Helm, Istio, NGINX, Prometheus, Grafana, Jaeger.
+The tech stack so far: A custom Python orchestrator, TypeScript, Next.js, Storybook, Node/Express services, shared Zod contracts, generated OpenAPI docs and Swagger UI, PostgreSQL, Kubernetes, Kind, Helm, Istio, NGINX, Prometheus, Grafana, Jaeger.
 
 I plan to soon integrate Redis, Kafka, Cassandra, Elasticsearch, Logstash, and Sentry, then eventually CI/CD tools alongside testing.
 
@@ -66,7 +62,7 @@ The backend implementation has been my focus lately.
 # Showcase
 
 > Note: All videos are heavily compressed, sped up, and edited to stay under GitHub's 10MB upload limit.
-> <br>Full-quality references are available in the Figma links, the screenshots below, or you can run the application locally.
+> <br>Full-quality references are available in the Figma links and the screenshots below, or you can run the application locally.
 
 ## Orchestrator
 
@@ -115,7 +111,7 @@ URL: https://www.figma.com/design/0T3UGwiZtPdJiPpDhgFCmf/Homepage?node-id=22-2&t
 
 ## System/backend design reference
 
-> This was made almost 1 year ago, as a design reference.
+> This was made as an early design reference.
 > <br>The backend/system design differs in some areas from the current implementation, such as missing certain services I later implemented, the orchestrator itself, not yet implemented databases, and changes to parts of the request flow.
 
 URL: https://www.figma.com/design/0T3UGwiZtPdJiPpDhgFCmf/Homepage?node-id=2-37&t=2CoUf9Zsl0qgkKSw-1
@@ -136,10 +132,9 @@ These links are references mostly made 1 year ago. The frontend implementation i
 
 The reusable component library (and therefore most of the frontend) is mostly finished. As I have made it using Storybook, all that's left is wiring together the components into pages for the website and connecting to the backend.
 
-The frontend's focus is mainly on the images.
-
 My goal is for the application to be interactive and engaging, simple, intuitive, and lightweight, which is what the average user wants, while also being customizable for those who want a more personalized experience.
-<br>As the average user doesn't bother with too much customization, I decided to hide most of them by default in the homepage, where the user can open them by checking the "Display tags, filters, and preferences" box.
+
+As the average user doesn't bother with too much customization, I decided to hide most of them by default in the homepage, where the user can open them by checking the "Display tags, filters, and preferences" box.
 
 The following reference designs illustrate the idea behind the significance of customization and filtering features.
 
@@ -150,10 +145,12 @@ The following reference designs illustrate the idea behind the significance of c
 <img width="600px" height="auto" alt="filter_a" src="https://github.com/user-attachments/assets/481e2081-efa1-4aaf-b326-c5414f45fd34" />
 
 <br>
-It was developed desktop-first, but with mobile in mind as well, having a notification system in the plans (which will eventually include mobile push notifications), including a feed-like swipe mode, clearly visible and separated icons to avoid tapping the same one on accident (as taps on a phone are less precise than a mouse pointer), etc.
+<br>
+The application was developed desktop-first but with mobile in mind as well, having a notification system in the plans (which will eventually include mobile push notifications), including a feed-like swipe mode, clearly visible and separated icons to avoid tapping the wrong one on accident (as taps on a phone are less precise than a mouse pointer), etc.
 
-<br>A core area of the application will be eventually auto-tagging images on upload using AI models, then also creating a recommendation algorithm based on how much a user engages with posts that have certain tags.
+<br>A core area of the application will be auto-tagging images on upload using AI models, then also creating a recommendation algorithm based on how much a user engages with posts that have certain tags.
 <br>Another interesting feature will be grouping/searching images by color palette.
+
 <br>On a related note, the user is also be able to, in real-time, arbitrarily pick theme colors for the application through a custom theme picker at the bottom right corner, as I purposefully used 4 color variants throughout the entire application (namely `--primary`, `--secondary`, `--tertiary`, and `--accent`).
 <br>I also plan to create an advanced filter for searching/filtering through images that is highly customizable and allows very specific searching and sorting from metadata.
 
@@ -204,7 +201,7 @@ The general idea is:
 
 I tried to emulate a real production request flow as close as possible:
 
-`Client browser -> NGINX -> Istio ingress gateway -> Kubernetes services -> BFF/DAL/database`
+`Client browser -> NGINX -> Kubernetes cluster/Istio ingress gateway -> Services`
 
 This makes the local setup overly complex compared to a normal development or even production environment, but that also means the project deals with many of the real-world challenges a real system would have and more: external routing, internal service communication, service discovery, generated API documentation, shared contracts, persistent storage, observability, deployment ordering, orchestration, permissions
 across host/container boundaries, etc.
@@ -215,9 +212,11 @@ across host/container boundaries, etc.
 
 ## Tech stack
 
+> This is what is currently implemented. More will be added over time as planned.
+
 | Type          | Technology                         | Usage                                                                        |
 | :------------ | :--------------------------------- | :--------------------------------------------------------------------------- |
-| Frontend      | TypeScript, Jest, Node.js, Next.js | Frontend application                                                         |
+| Frontend      | TypeScript, Next.js, Node.js, Jest | Frontend application                                                         |
 | Frontend      | Storybook                          | Component library development and testing                                    |
 | Frontend      | CSS Modules                        | Used everywhere besides global styling                                       |
 | Backend       | TypeScript, Node.js, Express.js    | BFF and DAL service runtime                                                  |
@@ -281,7 +280,7 @@ It was developed desktop-first, but with mobile in mind as well, having a notifi
 I decided to implement the frontend component-first instead of hardcoding every page at once.
 
 The reusable component library lives under `frontend/src/src/components` and was developed with TypeScript and Next.js, using Storybook so they can be tested in isolation before being integrated into the final Next.js pages.
-<br>This includes buttons, icon buttons, text inputs, text areas, checkboxes, radio groups, toggles, dropdowns, modals, login/signup dialogs, album selection, comments overlay, post tags, create post states, linked accounts, notification counters, user placeholders, and other reusable UI pieces.
+<br>This includes buttons, icon buttons, text inputs, text areas, checkboxes, radio groups, toggles, dropdowns, modals, login/signup dialogs, album selection, comments overlay, post tags, create post states, linked accounts, notification counters, user placeholders, and other reusable UI components.
 
 Most components are flexible, composable, and easily extensible, while also allowing for controlled and uncontrolled behavior.
 
@@ -296,11 +295,11 @@ The `ThemePicker` and `CommentsOverlay` components are a work in progress.
 
 ## Database domains
 
+> These databases and their schemas were planned before I had ever worked with any of these databases, let alone started implementing anything, so expect the field types of some of them to be pseudocode placeholders.
+
 System/backend Figma design reference: https://www.figma.com/design/0T3UGwiZtPdJiPpDhgFCmf/Homepage?node-id=2-37&t=2CoUf9Zsl0qgkKSw-1
 
 You can see all database schemas, as well as potential solutions/approaches to some of the bottlenecks and/or problems I could foresee with the design (especially at scale) on the system/backend Figma design above, or on its showcase video.
-
-> These databases and their schemas were planned before I had ever worked with any of these databases, let alone started implementing anything, so expect the field types of some of them to be pseudocode placeholders.
 
 These are the planned database domains (not the same as schemas, this is essentially a "grouping" by behavior):
 
@@ -314,11 +313,11 @@ These are the planned database domains (not the same as schemas, this is essenti
 | Albums               | User-created collections of posts/images.                                                                                                     |
 | Tags/interests       | Image tags, user interests, and recommendation weights.                                                                                       |
 | Preferences/settings | User settings and personalization such as notification preferences, feed layout, UI language, post/profile visibility, profile settings, etc. |
-| Central registry     | Exposes data as the shared global source of truth shared, such as the metadata regarding AI models, countries, languages, etc.                |
+| Central registry     | Exposes data as the shared global source of truth, such as the metadata regarding AI models, countries, languages, etc.                       |
 
 <br>The planned AI tagging flow would tag images on upload.
-<br>Those tags would later be used in the recommendation system, where whenever a user engages with posts containing a given tag, that user's interest in the tag increases.
-<br>The recommendation engine would then weight that proportionally for the feed and the `Recommended` filter.
+<br>Those tags would then later be used in the recommendation system, where whenever a user engages with posts containing a given tag, that user's interest in the tag increases.
+<br>The recommendation engine would then weight that proportionally for the feed.
 
 There is also a planned optional color-palette search/grouping feature.
 <br>The idea is that images can be searched and/or grouped by color palette, where if only grouping (not searching), the ones that match the color palette the most are re-ordered to the top-left of the imageboard.
@@ -330,11 +329,11 @@ The project uses shared Zod contracts which are defined under `contracts` and us
 
 The idea is for the API shape to be described once through Zod schemas, then used where possible such as the BFF services, DAL services, generating OpenAPI documentation, and also eventually the frontend.
 
+The project also generates an OpenAPI schema at `contracts/generated/openapi.json` everytime it starts through the `orchestrator up` command, which is what Swagger UI uses.
+
 This is relevant because otherwise the frontend, backend, and API documentation would easily drift apart as there would be no single source of truth, while also resulting in a lot of redundant code duplication, making it much harder to maintain, scale, validate, etc.
 
 The frontend currently has some legacy local types under `frontend/src/src/types`, but I will eventually migrate them to use Zod contracts instead for any API related work (unless they are used for mock UI testing/prototyping).
-
-The project also generates an OpenAPI schema at `contracts/generated/openapi.json` everytime it starts through the `orchestrator up` command, which is what Swagger UI uses.
 
 ## Networking model
 
@@ -443,6 +442,8 @@ Persistent data location for monitoring services:
 
 The orchestrator lives under `orchestrator`, it is a custom Python module that controls the lifecycle of the application, logging, deployment, and file/folder permissions.<br>
 
+It is installed from running `install.sh`. Source file changes are reflected automatically, so there's no need to reinstall.
+
 It is controllable through the CLI, which exposes the following commands:<br>
 
 `orchestrator up`: Starts the application.<br>
@@ -455,8 +456,6 @@ It is controllable through the CLI, which exposes the following commands:<br>
 
 `--debug`: Enable debug logs (more verbose). Position/order does not matter.<br>
 
-It is installed from running `install.sh`. Source file changes are reflected automatically, so there's no need to reinstall.
-
 <br>`install.sh`:
 
 1. Installs the [post renderer](#post-renderer) as a Helm plugin
@@ -466,13 +465,13 @@ It is installed from running `install.sh`. Source file changes are reflected aut
 5. Installs the orchestrator in editable mode within the virtual environment
 6. Symlinks that executable from the virtual environment to `$HOME/.local/bin/orchestrator`, where `$HOME` is the path to the user's home directory
 7. Adds `$HOME/.local/bin` to the user's `PATH` environment variable if not already there, so that the `orchestrator` executable is globally accessible.
-   - Assuming `bash` and `.bashrc` are used for the user's shell, otherwise you can copy and paste the `export` command logged to the terminal in the terminal itself or your shell's configuration file.
+   - Assumes `bash` and `.bashrc` are used for the user's shell, otherwise you can copy and paste the `export` command logged to the terminal in the terminal itself or your shell's configuration file.
 
 <br>
 
-It lives under the virtual environment `venv` within the project root, which is symlinked to `$HOME/.local/bin`, where `$HOME` is the path to the user's home folder, then it is also added to the user's `PATH` if not already included, so that it can be called anywhere through `orchestrator`.
+The orchestrator lives under the virtual environment `venv` within the project root, which is symlinked to `$HOME/.local/bin`, where `$HOME` is the path to the user's home folder, then it is also added to the user's `PATH` if not already included, so that it can be called anywhere through `orchestrator`.
 
-It loads its configuration from `orchestrator/config.py`, where some values are hardcoded and others are loaded from the `.env`, or set to a default value if not given.
+It loads its configuration from `orchestrator/config.py`, where some values are hardcoded and others are loaded from the `.env` file, or set to a default value if not given.
 
 ## Environment variables
 
@@ -489,14 +488,14 @@ If not specified, they are set to the following default values in `orchestrator/
 | DEFAULT_STORAGE_CAPACITY | 10Gi        |
 | DEFAULT_STORAGE_REQUEST  | 10Gi        |
 
-<br>`POST_RENDERER_CONTEXT` is also used internally for sharing the file path of the [context](#context) file with the current service in the deployment pipeline with the [post renderer](#post-renderer). It is not meant to be manually configured in `.env`.<br>
+<br>`POST_RENDERER_CONTEXT` is also used internally for sharing the file path of the [context file](#context) for the current service in the deployment pipeline with the [post renderer](#post-renderer). It is not meant to be manually configured in `.env`.<br>
 The orchestrator sets it for each service before calling Helm, so the [post renderer](#post-renderer) knows which generated [context.json](#context) to load.
 
 ## Lifecycle
 
 At a high-level, this is what calling `orchestrator up` does:
 
-1. Removes resources from potentially running app.
+1. Removes resources from the potentially running app.
 2. Takes ownership of the app root.
 3. Installs root and workspaces npm packages.
    - Needed for development environment syntax validation from Zod contracts.
@@ -546,15 +545,15 @@ At a high-level, this is how service deployment works (mostly implemented at `or
    - It will be used by the [post renderer](#post-renderer).
 
 6. Calls Helm to install the service.
-   - If the [service descriptor](#service-descriptor) has a `file` field, it is passed to Helm as a values override with `-f`.
+   - If the [service descriptor](#service-descriptor) has a `file` field, it is passed to Helm as a `values.yaml` override with `-f`.
    - If the [service descriptor](#service-descriptor) has `wait: true`, Helm is called with `--wait`.
-   - The generated [context.json](#context) path is passed to the [post renderer](#post-renderer) through `POST_RENDERER_CONTEXT`.
+   - The generated [context.json](#context) path is passed to the [post renderer](#post-renderer) through the `POST_RENDERER_CONTEXT` environment variable.
 
-7. The [post renderer](#post-renderer) intercepts the Helm installation: it ingests the unmodified manifests which Helm sends to `stdin`, manipulates them to inject our generated data, then writes them to `stdout`.
+7. The [post renderer](#post-renderer) intercepts the Helm installation: it ingests the unmodified manifests which Helm sends to `stdin`, manipulates them to inject the generated data, then writes them to `stdout`.
 
 8. Helm then uses the manipulated manifests from `stdout` to perform the final deployment.
 
-9. Waits for cluster resources if given in `waitFor`.
+9. The [orchestrator](#orchestrator-1) waits for cluster resources if given in `waitFor`.
    - Supports waiting for CRD, deployment, endpoint and/or webhook.
 
 10. Logs success or error.
@@ -563,7 +562,9 @@ At a high-level, this is how service deployment works (mostly implemented at `or
 
 The filename of a service descriptor is expected to be `deploy.yaml` by default. It can be changed through the environment variable `SERVICE_DESCRIPTOR_NAME`.
 
-The descriptor is a small custom configuration layer. Helm still owns templating, values and installation, but `deploy.yaml` tells the orchestrator where the chart is, which service group it belongs to, which mounts need to be injected, which service dependencies must be installed first, and which extra resources must be generated before Helm finishes the deployment.
+The descriptor is a small custom configuration layer mainly used by the [orchestrator](#orchestrator-1) to understand the service needs.
+
+Helm still owns templating, values and installation, but `deploy.yaml` tells the orchestrator where the chart is, which service group it belongs to, which mounts need to be injected, which service dependencies must be installed first, and which extra resources must be generated before Helm finishes the deployment.
 
 The most relevant fields are:
 
@@ -684,7 +685,8 @@ service:
 
 <br>
 
-Migrations are currently PostgreSQL only.
+> Migrations are currently PostgreSQL only.
+
 <br>When enabled, the orchestrator finds the target database service, reads its values file, generates a Helm hook Job using `platform/deployment/templates/migration.template.yaml`, waits for PostgreSQL to accept connections, then runs `migrate/migrate` (golang-migrate) against the target database.
 
 ## Context
@@ -710,7 +712,7 @@ It contains:
 For example:
 
 - A `source` mount becomes a `hostPath` volume.
-- A `persistent` mount becomes a `persistentVolumeClaim` volume, while the PV/PVC manifests themselves are generated into the same service folder.
+- A `persistent` mount becomes a `persistentVolumeClaim` volume, while the PV/PVC manifests themselves are generated into the same service `generated` folder.
 
 <br>Example `context.json` generated for `users-auth-postgres`:
 
@@ -799,7 +801,7 @@ The Helm post renderer here is necessary to dynamically modify YAML manifests be
 This is useful for dynamically creating entire new manifests from existing templates at `platform/deployment/templates` such as migration jobs, persistent volumes and persistent volume claims, as well as modifying existing manifests, such as programmatically mounting the generated persistent volumes and persistent volume claims onto container images.<br>
 Everything can be arbitrarily described in each service's [service descriptor](#service-descriptor) file ([deploy.yaml](#service-descriptor)).
 
-The post renderer works by receiving the manifests as they are defined through `stdin`, then returning the final modified manifests through `stdout`.
+The post renderer works by receiving the manifests as they are defined through `stdin` from Helm, then returning the final modified manifests through `stdout`.
 
 Its flow is:
 
@@ -818,7 +820,7 @@ Its flow is:
 
 6. Each manipulated document is added to the output document list.
 
-7. The output document list is deduplicated by Kubernetes kind, metadata name and namespace.
+7. The output document list is deduplicated, based on an id using Kubernetes kind, metadata name and namespace.
 
 8. The final documents are written to `stdout`, where they are captured by Helm and subsequently installed.
 
@@ -828,11 +830,11 @@ This is why the [post renderer](#post-renderer) currently has logging disabled: 
 
 ### Frontend
 
-- Finish theme picker component, make it draggable, implement save, cancel and reset state behavior.
+- Finish `ThemePicker` component, make it draggable, implement save, cancel and reset state behavior.
 - Finish `CommentsOverlay` component.
 - Make all font size variables relative to the medium font size variable in `globals.css`, so that scaling the medium font size automatically scales all variants (independent of the operating system and browser's settings).
-- Add a font size selector component as well for the entire application.
-- Create a sidebar comments component for full-screen posts (same as `CommentsOverlay` but opens/closes from the side).
+- Add a font size selector component for the entire application.
+- Create a sidebar comments component for full-screen posts (similar to `CommentsOverlay` but opens/closes from the side).
 - Finish wiring the pages together from the existing component library.
 - Improve cross-browser consistency (mostly developed and tested on Firefox)
 - Review which pages/components truly need `"use client"`.
@@ -844,7 +846,7 @@ This is why the [post renderer](#post-renderer) currently has logging disabled: 
 ### Backend and contracts
 
 - Implement AI image tagging on upload.
-- Implement recommendation/interest tracking based on user engagement with posts that contain specific tags.
+- Implement recommendation/interest tracking system based on user engagement with posts that contain specific tags.
 - Implement color coding/search/grouping algorithm for images matching a given color palette, optionally mixing color similarity weights with recommendation weights.
 - Migrate internal APIs to gRPC where applicable, such as DAL services. Use REST APIs only for public-facing services such as BFF services.
 - Give more descriptive validation error messages in data-access layer API responses such as "Password too short", "Username too long", etc. from Zod validation, while avoiding leaking this internal information from the BFF to the public users in certain scenarios.
