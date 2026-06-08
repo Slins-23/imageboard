@@ -95,6 +95,27 @@ def _list_from_dict(map: dict[str, Any], key: str) -> list[Any]:
     
     return cast(list[Any], value)
 
+def _inject_env(pod_spec: dict[str, Any]) -> None:
+    containers: Any = pod_spec.get("containers", [])
+
+    if not isinstance(containers, list) or not containers:
+        return
+    
+    containers = cast(list[dict[str, Any]], containers)
+    
+    variables: list[dict[str, Any]] = [
+        { "name": "NGINX_PORT", "value": os.environ.get("NGINX_PORT", 8080) }
+    ]
+    
+    for container in containers:
+        env: list[dict[str, Any]] = container.get("env", [])
+        
+        if env:
+            env.extend(variables)
+        else:
+            container["env"] = variables
+
+
 def _inject_mounts(pod_spec: dict[str, Any], mounts: list[dict[str, Any]]) -> None:
     #log.info(f"Injecting {len(mounts)} mounts...", debug=DEBUG, output_stream=OUTPUT_STREAM)
 
@@ -225,7 +246,10 @@ def _inject_jaeger_mounts(spec: dict[str, Any], mounts: list[dict[str, Any]]) ->
             "readOnly": read_only
         })
 
-def _inject_document(document: dict[str, Any], mounts: list[dict[str, Any]]) -> None:
+def _inject_document(serviceName: str | None, document: dict[str, Any], mounts: list[dict[str, Any]]) -> None:
+    if serviceName is None:
+        return
+
     kind = document.get("kind")
 
     if kind == "Jaeger":
@@ -243,7 +267,14 @@ def _inject_document(document: dict[str, Any], mounts: list[dict[str, Any]]) -> 
     pod_spec = _get_pod_spec(document, spec_path)
 
     if pod_spec is not None:
+
+        if kind == "Deployment" and serviceName.startswith("bff"):
+            _inject_env(pod_spec)
+
         _inject_mounts(pod_spec, mounts)
+
+        
+
 
 def _deduplicate_docs(documents: list[dict[str, Any]]) -> list[dict[str, Any]]:
     #log.info("Deduplicating potential duplicate documents...", debug=DEBUG, output_stream=OUTPUT_STREAM)
@@ -304,7 +335,7 @@ def main() -> int:
     input_docs = _get_input_docs()
 
     for document in input_docs:
-        _inject_document(document, mounts)
+        _inject_document(context.get("serviceName", None), document, mounts)
         output_docs.append(document)
 
     output_docs = _deduplicate_docs(output_docs)

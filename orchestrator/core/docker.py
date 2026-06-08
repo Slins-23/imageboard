@@ -19,13 +19,13 @@ def run(name: str, image: str, network: str = "host", mounts: dict[Path, Path] |
         ]
 
         if mounts is not None:
-            for host_path, name_path in mounts.items():
+            for host_path, container_path in mounts.items():
                 if log.cfg.debug:
-                    log.info(f"Mount detected for name '{name}' - Host: '{host_path}' | name: '{name_path}'")
+                    log.info(f"Mount detected for name '{name}' - Host: '{host_path}' | name: '{container_path}'")
 
                 cmd.extend([
                     "-v",
-                    f"{host_path}:{name_path}"
+                    f"{host_path}:{container_path}"
                     ])
 
         cmd.extend([

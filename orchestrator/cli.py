@@ -51,7 +51,7 @@ def down(
     with log.scoped(Scope.lifecycle):
         return lifecycle.down()
     
-    log.error("Scope was incorrectly ignored on CLI lifecycle down.")
+    log.error("Scope was unexpectedly ignored on CLI lifecycle down.")
 
     return 1
 

@@ -57,7 +57,9 @@ app.use(express.json());
 
 app.use(
     cors({
-        origin: ["http://swagger.localhost:8080"],
+        origin: [
+            `http://swagger.localhost:${process.env["NGINX_PORT"] || "8080"}`,
+        ],
     })
 );
 

@@ -9,7 +9,7 @@ def resolve_relative(*, raw: str | None = None, service_dir: Path | None = None,
 
     if raw is None or str(raw).strip() == "":
         if default_leaf is None:
-            log.info("Path resolved from '{raw}' to: 'None'.", debug=True)
+            log.info(f"Path resolved from '{raw}' to: 'None'.", debug=True)
 
             return None
     
@@ -31,7 +31,7 @@ def resolve_relative(*, raw: str | None = None, service_dir: Path | None = None,
     if raw in {".", "./"}:
         if default_leaf is None:
 
-            log.info("Path resolved from '{raw}' to: 'None'.", debug=True)
+            log.info(f"Path resolved from '{raw}' to: 'None'.", debug=True)
 
             return None
         

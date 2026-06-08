@@ -1,20 +1,7 @@
-import type { Metadata } from "next";
 import "./globals.css";
 import { fenixFont } from "@/app/fonts/types";
 import IconButton from "@/components/IconButton/iconButton";
-import {
-    faHouse,
-    faTags,
-    faGear,
-    faSearch,
-    faMessage,
-    faBell,
-    faUser,
-    faCircleHalfStroke,
-} from "@fortawesome/free-solid-svg-icons";
-import Link from "next/link";
-import CreatePostBtn from "./createPostBtn";
-import SearchIconBtn from "./searchIconBtn";
+import { faCircleHalfStroke } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "./navbar";
 import * as Modal from "@/components/Modal/modal";
 import ThemePicker from "@/components/ThemePicker/themePicker";

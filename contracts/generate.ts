@@ -11,7 +11,7 @@ const doc = generator.generateDocument({
     },
     servers: [
         {
-            url: "http://localhost:8080",
+            url: `http://localhost:${process.env["NGINX_PORT"] || "8080"}`,
             description: "Backend-for-frontend public API",
         },
     ],

@@ -360,7 +360,10 @@ def discover_services(type_name: str | None = None) -> list[Service]:
 
     services_discovered: int = len(services) if type_name else len(ALL_SERVICES.keys())
 
-    log.info(f"Discovered {services_discovered} service(s).")
+    if type_name is None:
+        log.info(f"Discovered {services_discovered} service(s).")
+    else:
+        log.info(f"Discovered {services_discovered} of type '{type_name}'")
 
     return services
 
@@ -407,7 +410,6 @@ def sort_services(services: list[Service]) -> list[Service]:
 def initialize() -> int:
     with log.scoped(Scope.deployment):
         log.info(f"Discovering all services ('{config.SERVICE_DESCRIPTOR_NAME}')...")
-        global ALL_SERVICES
         discover_services()
 
     return 0
@@ -510,10 +512,15 @@ def deploy(type_name: str | None) -> int:
 
         log.info(f"Context file path: {str(context_file)}", debug=True)
 
+        env: dict[str, str] = {}
+        env["NGINX_PORT"] = str(config.NGINX_PORT)
+        env["ISTIO_PORT"] = str(config.ISTIO_PORT)
+
         helm.install(
             service.name,
             service.chart,
             namespace=service.namespace,
+            env=env,
             values_file=service.file,
             wait=service.wait,
             post_renderer=Path(config.POST_RENDERER_PATH),

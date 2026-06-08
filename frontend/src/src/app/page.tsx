@@ -1,10 +1,6 @@
-import Image from "next/image";
-import styles from "./page.module.css";
-import { DropdownMenu } from "@/components/DropdownMenu/dropdownMenu";
-import Link from "next/link";
 import Checkbox from "@/components/Checkbox/checkbox";
 import IconButton from "@/components/IconButton/iconButton";
-import { faRefresh, faSearch } from "@fortawesome/free-solid-svg-icons";
+import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
     return (
