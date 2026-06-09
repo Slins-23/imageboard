@@ -39,9 +39,8 @@ export const Uncontrolled: StoryObj<typeof meta> = {
                     justifyContent: "center",
                 }}
             >
-                <BlurredButton {...args}>Click</BlurredButton>
+                <BlurredButton {...args}>CLICK</BlurredButton>
             </div>
         );
     },
 };
-

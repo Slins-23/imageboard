@@ -268,7 +268,7 @@ def _inject_document(serviceName: str | None, document: dict[str, Any], mounts: 
 
     if pod_spec is not None:
 
-        if kind == "Deployment" and serviceName.startswith("bff"):
+        if kind == "Deployment" and serviceName.startswith("bff") or serviceName == "frontend-dev":
             _inject_env(pod_spec)
 
         _inject_mounts(pod_spec, mounts)

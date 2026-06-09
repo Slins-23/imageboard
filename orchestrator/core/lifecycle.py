@@ -4,9 +4,99 @@ import os
 import orchestrator.core.log as log
 import orchestrator.config as config
 from orchestrator.tasks import cluster, networking, apps, infra, monitoring, storage
+import random
+
+def _handle_ports() -> int:
+    socket_data = shell.run([
+        "ss",
+        "-tlnp"
+    ])
+
+    if socket_data.returncode != 0:
+        log.error("Could not check ports.")
+        return socket_data.returncode
+    
+    grep_nginx = shell.run([
+        "grep",
+        "-q",
+        str(config.NGINX_PORT)
+    ], 
+        input=socket_data.stdout,
+        allow_fail=True
+    )
+
+    if grep_nginx.returncode == 0:
+        log.warn(f"Port set for NGINX '{config.NGINX_PORT}' is already in use, finding a new open port...")
+
+        new_nginx_port = random.randint(1024, 49151)
+
+        while shell.run([
+            "grep",
+            "-q",
+            str(new_nginx_port)
+        ],
+            input=socket_data.stdout,
+            allow_fail=True
+        ).returncode == 0:
+            new_nginx_port = random.randint(1024, 49151)
+
+        log.warn(f"Using free port '{new_nginx_port}' instead of busy port '{config.NGINX_PORT}' for NGINX.")
+
+        config.NGINX_PORT = new_nginx_port
+        os.environ.update({"NGINX_PORT": str(new_nginx_port)})
+
+        socket_data = shell.run([
+        "ss",
+        "-tlnp"
+        ])
+
+        if socket_data.returncode != 0:
+            log.error("Could not check ports.")
+            return socket_data.returncode
 
 
-def own_directories() -> int:
+        
+    grep_istio = shell.run([
+        "grep",
+        "-q",
+        str(config.ISTIO_PORT)
+    ], 
+        input=socket_data.stdout,
+        allow_fail=True
+    )
+
+    if grep_istio.returncode == 0:
+        log.warn(f"Port set for ISTIO '{config.ISTIO_PORT}' is already in use, finding a new open port...")
+
+        new_istio_port = random.randint(1024, 49151)
+
+        while shell.run([
+            "grep",
+            "-q",
+            str(new_istio_port)
+        ],
+            input=socket_data.stdout,
+            allow_fail=True
+        ).returncode == 0:
+            new_istio_port = random.randint(1024, 49151)
+
+        log.warn(f"Using free port '{new_istio_port}' instead of busy port '{config.ISTIO_PORT}' for ISTIO.")
+
+        config.ISTIO_PORT = new_istio_port
+        os.environ.update({"ISTIO_PORT": str(new_istio_port)})
+
+        socket_data = shell.run([
+            "ss",
+            "-tlnp"
+        ])
+
+        if socket_data.returncode != 0:
+            log.error("Could not check ports.")
+            return socket_data.returncode
+
+    return 0
+
+def _own_directories() -> int:
     log.info("Owning project root directory...")
     
     shell.run([
@@ -21,7 +111,7 @@ def own_directories() -> int:
 
     return 0
 
-def install_npm() -> int:
+def _install_npm() -> int:
     log.info("Installing root and workspaces npm packages...")
 
     shell.run([
@@ -31,7 +121,7 @@ def install_npm() -> int:
 
     return 0
 
-def generate_openapi() -> int:
+def _generate_openapi() -> int:
     log.info(f"Generating OpenAPI schema from Zod schemas at '{config.CONTRACTS_DIR}'...")
 
     result = shell.run([
@@ -56,9 +146,10 @@ def up() -> int:
     log.info("Removing previous resources...")
     
     down()
-    own_directories()
-    install_npm()
-    generate_openapi()
+    _handle_ports()
+    _own_directories()
+    _install_npm()
+    _generate_openapi()
 
     deployment.initialize()
     cluster.up()

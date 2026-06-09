@@ -24,6 +24,7 @@ def run(
         env: Mapping[str, str] | None = None,
         check: bool = True,
         capture_output: bool = True,
+        input: str | None = None,
         text: bool = True,
         allow_fail: bool = False,
 ) -> subprocess.CompletedProcess[str]:
@@ -39,6 +40,7 @@ def run(
                 env=merge_env(env),
                 check=check,
                 capture_output=capture_output,
+                input=input,
                 text=text
                 )
             

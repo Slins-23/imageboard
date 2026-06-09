@@ -9,6 +9,7 @@
 
 !contracts
 !contracts/**
+contracts/node_modules
 
 !frontend
 !frontend/**

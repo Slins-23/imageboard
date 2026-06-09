@@ -8,7 +8,6 @@ import orchestrator.core.kubectl as kubectl
 import orchestrator.core.shell as shell
 import orchestrator.core.log as log
 
-
 NGINX_DIR = config.NETWORKING_DIR / "nginx"
 NGINX_NAME = "nginx"
 NGINX_IMAGE = "nginx:mainline-alpine3.23-perl"
