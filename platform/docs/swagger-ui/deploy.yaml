@@ -3,6 +3,7 @@ enabled: true
 type: apps
 namespace: apps
 chart: ./chart
+file: ./values.yaml
 mounts:
   - name: swagger-json
     enabled: true

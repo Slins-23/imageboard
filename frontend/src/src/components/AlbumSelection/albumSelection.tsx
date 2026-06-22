@@ -4,7 +4,7 @@ import TextBox from "@/components/TextBox/textBox";
 import Button from "@/components/Button/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { ReactNode, useCallback, useRef, useState } from "react";
+import { useCallback, useRef, useState, type KeyboardEvent } from "react";
 import Image from "next/image";
 import { useControllableState } from "@/utils/utils";
 import DeleteAlbumDialog from "@/components/DialogCard/deleteAlbum";
@@ -14,7 +14,6 @@ import type { Album } from "@/types/album";
 import CreateAlbumDialog from "@/components/DialogCard/createAlbum";
 import type { PostBody } from "@/types/post";
 import { UserPII } from "@/types/user";
-import type { KeyboardEvent } from "react";
 
 interface AlbumSelectionArgs {
     post?: PostBody;
@@ -32,7 +31,6 @@ interface AlbumSelectionArgs {
         post?: PostBody,
         album?: Album
     ) => boolean; // true on success, false on failure
-    children?: ReactNode;
 }
 
 export default function AlbumSelection({
@@ -110,9 +108,8 @@ export default function AlbumSelection({
     onPostAdded = undefined,
     onAlbumDeleted = undefined,
     onAlbumCreated = undefined,
-    children = undefined,
 }: AlbumSelectionArgs) {
-    const [internalAlbums, setInternalAlbums] = useControllableState({
+    const [internalAlbums] = useControllableState({
         defaultValue: defaultAlbums,
         value: albums,
         onChange: onAlbumsChange,
@@ -123,7 +120,7 @@ export default function AlbumSelection({
         onChange: onTextChange,
     });
 
-    const albumRefs = useRef<(HTMLLIElement | null)[]>([]);
+    const albumRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
     const [selectedDeleteAlbum, setSelectedDeleteAlbum] =
         useState<Album | null>(null);
@@ -134,7 +131,7 @@ export default function AlbumSelection({
         useState(false);
 
     const setAlbumRef = useCallback(
-        (element: HTMLLIElement | null, index: number) => {
+        (element: HTMLButtonElement | null, index: number) => {
             if (!albumRefs.current) return;
 
             if (element && !albumRefs.current.includes(element)) {
@@ -173,109 +170,59 @@ export default function AlbumSelection({
                     ?.filter((album: Album) => {
                         if (internalSearchText?.trim() === "") {
                             return true;
-                        } else {
-                            return album.title.includes(
-                                (internalSearchText as string).trim()
-                            );
                         }
+
+                        return album.title.includes(
+                            (internalSearchText as string).trim()
+                        );
                     })
                     .map((album: Album, idx: number) => (
                         <li
-                            tabIndex={0}
                             key={album.id}
-                            ref={(element) => setAlbumRef(element, idx)}
-                            className={albumSelectionStyle.album}
-                            onClick={(event) => {
-                                event.preventDefault();
-
-                                // const success = onPostAdd?.(album);
-                                const success = Math.round(Math.random());
-
-                                if (success) {
-                                    // Placeholder for server-side function to add post to album
-                                    onPostAdded?.(album);
-                                    Tooltip(
-                                        `Successfully added the post to album "${album.title}"`
-                                    );
-                                } else {
-                                    Tooltip(
-                                        `Error: Could not add the post to album "${album.title}"`
-                                    );
-                                }
-                            }}
-                            onKeyDown={(event) => {
-                                switch (event.code) {
-                                    case "Enter":
-                                    case "Space": {
-                                        event.preventDefault();
-                                        albumRefs.current[idx]?.click();
-                                        break;
-                                    }
-                                    case "ArrowUp": {
-                                        event.preventDefault();
-                                        const elementAbove =
-                                            idx > 0
-                                                ? albumRefs.current[idx - 1]
-                                                : albumRefs.current[idx];
-                                        elementAbove?.focus();
-                                        break;
-                                    }
-                                    case "ArrowDown": {
-                                        event.preventDefault();
-                                        const elementBelow =
-                                            idx <
-                                            (albums !== undefined
-                                                ? albums.length - 1
-                                                : defaultAlbums.length - 1)
-                                                ? albumRefs.current[idx + 1]
-                                                : albumRefs.current[idx];
-                                        elementBelow?.focus();
-                                        break;
-                                    }
-                                    default: {
-                                        break;
-                                    }
-                                }
-                            }}
+                            // className={albumSelectionStyle.album}
                         >
-                            <Image
-                                className={albumSelectionStyle.albumCover}
-                                src={album.cover}
-                                alt={`Album ${album.title} cover image`}
-                                width={75}
-                                height={75}
-                            />
-                            <span className={albumSelectionStyle.albumTitle}>
-                                {album.title}
-                            </span>
-                            <FontAwesomeIcon
-                                className={albumSelectionStyle.albumTrash}
-                                icon={faTrash}
-                                tabIndex={0}
-                                aria-label="Delete"
-                                aria-hidden="false"
+                            <button
+                                ref={(element) => setAlbumRef(element, idx)}
+                                className={albumSelectionStyle.album}
                                 onClick={(event) => {
-                                    event.stopPropagation();
+                                    event.preventDefault();
 
-                                    setSelectedDeleteAlbum(album);
+                                    // const success = onPostAdd?.(album);
+                                    const success = Math.round(Math.random());
 
-                                    if (!isDeleteDialogOpen)
-                                        setIsDeleteDialogOpen(true);
+                                    if (success) {
+                                        // Placeholder for server-side function to add post to album
+                                        onPostAdded?.(album);
+                                        Tooltip(
+                                            `Successfully added the post to album "${album.title}"`
+                                        );
+                                    } else {
+                                        Tooltip(
+                                            `Error: Could not add the post to album "${album.title}"`
+                                        );
+                                    }
                                 }}
-                                onKeyDown={(
-                                    event: KeyboardEvent<SVGSVGElement>
-                                ) => {
+                                onKeyDown={(event) => {
                                     switch (event.code) {
-                                        case "Space":
-                                        case "Enter": {
+                                        case "ArrowUp": {
                                             event.preventDefault();
-                                            event.stopPropagation();
-
-                                            setSelectedDeleteAlbum(album);
-
-                                            if (!isDeleteDialogOpen)
-                                                setIsDeleteDialogOpen(true);
-
+                                            const elementAbove =
+                                                idx > 0
+                                                    ? albumRefs.current[idx - 1]
+                                                    : albumRefs.current[idx];
+                                            elementAbove?.focus();
+                                            break;
+                                        }
+                                        case "ArrowDown": {
+                                            event.preventDefault();
+                                            const elementBelow =
+                                                idx <
+                                                (albums === undefined
+                                                    ? defaultAlbums.length - 1
+                                                    : albums.length - 1)
+                                                    ? albumRefs.current[idx + 1]
+                                                    : albumRefs.current[idx];
+                                            elementBelow?.focus();
                                             break;
                                         }
                                         default: {
@@ -283,7 +230,56 @@ export default function AlbumSelection({
                                         }
                                     }
                                 }}
-                            />{" "}
+                            >
+                                <Image
+                                    className={albumSelectionStyle.albumCover}
+                                    src={album.cover}
+                                    alt={`Album ${album.title} cover image`}
+                                    width={75}
+                                    height={75}
+                                />
+                                <span
+                                    className={albumSelectionStyle.albumTitle}
+                                >
+                                    {album.title}
+                                </span>
+                                <FontAwesomeIcon
+                                    className={albumSelectionStyle.albumTrash}
+                                    icon={faTrash}
+                                    tabIndex={0}
+                                    aria-label="Delete"
+                                    aria-hidden="false"
+                                    onClick={(event) => {
+                                        event.stopPropagation();
+
+                                        setSelectedDeleteAlbum(album);
+
+                                        if (!isDeleteDialogOpen)
+                                            setIsDeleteDialogOpen(true);
+                                    }}
+                                    onKeyDown={(
+                                        event: KeyboardEvent<SVGSVGElement>
+                                    ) => {
+                                        switch (event.code) {
+                                            case "Space":
+                                            case "Enter": {
+                                                event.preventDefault();
+                                                event.stopPropagation();
+
+                                                setSelectedDeleteAlbum(album);
+
+                                                if (!isDeleteDialogOpen)
+                                                    setIsDeleteDialogOpen(true);
+
+                                                break;
+                                            }
+                                            default: {
+                                                break;
+                                            }
+                                        }
+                                    }}
+                                />
+                            </button>
                         </li>
                     ))}
             </ul>

@@ -54,7 +54,7 @@ interface RootArgs extends HTMLAttributes<HTMLDivElement> {
     children?: ReactNode;
 }
 
-export function Root({
+function Root({
     isOpen = undefined,
     defaultIsOpen = false,
     onOpenChange = undefined,
@@ -123,12 +123,7 @@ interface TriggerArgs extends ComponentProps<typeof Button> {
     children?: ReactElement<typeof Button>;
 }
 
-export function Trigger({
-    triggerValue,
-    asChild,
-    children,
-    ...args
-}: TriggerArgs) {
+function Trigger({ triggerValue, asChild, children, ...args }: TriggerArgs) {
     const { setInternalIsOpen } = useModalContext();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -257,7 +252,7 @@ function ModalOverlay({
     );
 }
 
-export function Content({ children, ...args }: ModalOverlayArgs) {
+function Content({ children, ...args }: ModalOverlayArgs) {
     const {
         internalIsOpen,
         internalIsDismissible,
@@ -387,3 +382,5 @@ export function Content({ children, ...args }: ModalOverlayArgs) {
         document.body
     );
 }
+
+export { Root, Trigger, Content };

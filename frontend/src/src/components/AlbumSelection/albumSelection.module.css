@@ -6,7 +6,8 @@
     height: 100%;
     overflow-x: hidden;
     overflow-y: auto;
-    padding: 0.75rem;
+    padding: 0.75rem 2rem;
+    list-style-type: none;
 }
 
 .album {
@@ -18,18 +19,20 @@
     width: 100%;
     padding: 0.625rem 0.8125rem;
     overflow: hidden;
-    white-space: nowrap;
-    text-overflow: clip;
+    /* white-space: nowrap; */
+    /* text-overflow: clip; */
     flex-shrink: 0;
     transition: 0.15s;
     outline-width: 0;
-    transition-property: background-color, color, outline-width, outline-style;
+    border: 0;
+    /* transition-property: background-color, color, outline-width, outline-style; */
     cursor: pointer;
     user-select: none;
 }
 
 .album:hover,
 .album:focus-visible {
+    transform: scale(1.1);
     background-color: var(--primary);
     color: var(--tertiary);
     outline-style: solid;
@@ -47,9 +50,11 @@
 
 .albumTitle {
     font-size: var(--font-size-lg);
+    white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
     transition: 0.25s;
+    line-height: 1.2;
 }
 
 .albumTrash {
@@ -58,23 +63,23 @@
     margin-left: auto;
     font-size: var(--font-size-xl);
     scale: 0.9 1;
-    transition: 0.15s;
+    transition: 0.1s;
     transition-property: color, transform;
 }
 
 .albumTrash:hover,
 .albumTrash:focus-visible {
-    transform: scale(1.15);
+    transform: scale(1.05);
     color: var(--tertiary);
 }
 
 .album:hover .albumCover,
 .album:focus-visible .albumCover {
-    width: 90px;
-    height: 90px;
+    /* width: 90px; */
+    /* height: 90px; */
     box-shadow: 0 0 25px 25px var(--secondary);
 }
 
 .album:hover .albumTitle {
-    font-size: var(--font-size-xl);
+    /* font-size: var(--font-size-xl); */
 }

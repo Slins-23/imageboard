@@ -13,15 +13,13 @@ import {
 import { usePathname } from "next/navigation";
 
 export interface NavigationItem {
-    text: string;
-    route: string;
+    readonly text: string;
+    readonly route: string;
 }
-
-export type NavigationItems = Array<Readonly<NavigationItem>>;
 
 interface GradientNavbarArgs extends HTMLAttributes<HTMLDivElement> {
     title: string;
-    items: NavigationItems;
+    items: NavigationItem[];
     listProps?: HTMLAttributes<HTMLUListElement>;
     itemProps?: LiHTMLAttributes<HTMLLIElement>;
 }

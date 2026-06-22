@@ -2,8 +2,6 @@
 
 import CreatePost from "@/components/CreatePost/createPost";
 import * as Modal from "@/components/Modal/modal";
-import { useState, useRef } from "react";
-import { Stage } from "@/components/CreatePost/types";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "@/components/IconButton/iconButton";
 

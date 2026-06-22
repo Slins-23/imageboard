@@ -2,6 +2,9 @@ fullnameOverride: "bff-users"
 
 replicaCount: 1
 
+podLabels:
+  app: bff-users
+
 image:
   repository: node
   tag: 24.15.0-bookworm

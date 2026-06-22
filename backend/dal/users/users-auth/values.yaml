@@ -2,6 +2,9 @@ fullnameOverride: "users-auth-dal"
 
 replicaCount: 1
 
+podLabels:
+  app: users-auth-dal
+
 image:
   repository: node
   tag: 24.15.0-bookworm

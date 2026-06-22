@@ -4,43 +4,23 @@ import {
     faHouse,
     faTags,
     faGear,
-    faSearch,
     faMessage,
     faBell,
     faUser,
-    faCircleHalfStroke,
 } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import CreatePostBtn from "./createPostBtn";
 import SearchIconBtn from "./searchIconBtn";
 import IconButton from "@/components/IconButton/iconButton";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
 
 export default function Navbar() {
     const pathname = usePathname();
 
-    /*
-    const [currentRoute, setCurrentRoute] = useState<string>(() =>
-        // items.findIndex((item) => item.route === slug)
-        "/"
-    );
-    */
-
-    useEffect(() => {
-        // setCurrentRouteIdx(items.findIndex((item) => item.route === slug));
-    }, [pathname]);
-
     return (
         <nav
             style={{
-                // top: 0,
-                // left: 0,
-                // zIndex: 999999999,
-                // width: "100%",
-                // position: "fixed",
                 display: "flex",
-                // gap: "10px",
                 marginTop: "10px",
                 marginLeft: "10px",
                 marginRight: "10px",

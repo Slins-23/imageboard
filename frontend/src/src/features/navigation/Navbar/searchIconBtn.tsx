@@ -1,6 +1,5 @@
 "use client";
 
-import CreatePost from "@/components/CreatePost/createPost";
 import { usePathname } from "next/navigation";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
 import IconButton from "@/components/IconButton/iconButton";
