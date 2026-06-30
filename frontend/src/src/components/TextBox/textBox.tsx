@@ -2,7 +2,8 @@
 
 import { type ChangeEvent, type InputHTMLAttributes } from "react";
 import textBoxStyle from "@/components/TextBox/textBox.module.css";
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
+import clsx from "clsx";
 
 interface textBoxArgs extends InputHTMLAttributes<HTMLInputElement> {
     defaultValue?: string;
@@ -50,9 +51,9 @@ export default function TextBox({
     return (
         <input
             type={type}
-            className={textBoxStyle.textBox}
             value={textState ?? ""}
             {...args}
+            className={clsx(textBoxStyle.textBox, args.className)}
             onChange={handleChange}
         />
     );

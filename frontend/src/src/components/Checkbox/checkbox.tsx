@@ -6,7 +6,7 @@ import {
     FontAwesomeIconProps,
 } from "@fortawesome/react-fontawesome";
 import { faCheck } from "@fortawesome/free-solid-svg-icons";
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 import {
     useRef,
     type MouseEvent,

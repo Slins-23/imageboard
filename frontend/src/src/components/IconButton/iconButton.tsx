@@ -10,7 +10,7 @@ import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import NotificationCount, {
     type NotificationArgs,
 } from "@/components/NotificationCount/notificationCount";
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 import type { MouseEvent, ButtonHTMLAttributes } from "react";
 
 interface IconButtonArgs extends ButtonHTMLAttributes<HTMLButtonElement> {

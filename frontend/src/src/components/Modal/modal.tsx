@@ -16,7 +16,7 @@ import {
     ComponentProps,
     RefObject,
 } from "react";
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 import modalStyle from "./modal.module.css";
 import Button from "@/components/Button/button";
 import { createPortal } from "react-dom";

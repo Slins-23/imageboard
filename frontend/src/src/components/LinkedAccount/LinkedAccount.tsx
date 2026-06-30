@@ -1,7 +1,9 @@
 "use client";
 
 import linkedAccountStyle from "./LinkedAccount.module.css";
-import { useControllableState, filledElementFromSVG } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
+import { filledElementFromSVG } from "@/utils/svg";
+
 import {
     useRef,
     type MouseEvent,

@@ -1,4 +1,4 @@
-.wrapper {
+:where(.wrapper) {
     font-size: var(--font-size-3xl);
     position: relative;
     width: 100%;
@@ -12,14 +12,14 @@
     text-align: center;
 }
 
-.wrapper button {
+:where(.wrapper) button {
     font-size: 0.889em;
     color: var(--tertiary);
     line-height: 0.75;
     padding: 0.35em 0.45em;
 }
 
-.wrapper button:hover,
-.wrapper button:focus-visible {
+:where(.wrapper) button:hover,
+:where(.wrapper) button:focus-visible {
     color: var(--accent);
 }

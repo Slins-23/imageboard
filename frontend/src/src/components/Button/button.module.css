@@ -1,4 +1,4 @@
-.button {
+:where(.button) {
     --bg-color: var(--secondary);
     --bg-color-hover: var(--tertiary);
     --text-color: var(--accent);
@@ -17,12 +17,12 @@
     transition-property: background-color, color, outline-width, outline-color;
 }
 
-.button:focus-visible,
-.button:hover {
+:where(.button):focus-visible,
+:where(.button):hover {
     background-color: var(--bg-color-hover);
     color: var(--text-color-hover);
 }
 
-.button:focus-visible {
+:where(.button):focus-visible {
     outline-width: 2px;
 }

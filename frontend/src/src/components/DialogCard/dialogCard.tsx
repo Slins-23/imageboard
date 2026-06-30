@@ -1,6 +1,7 @@
 import Card from "@/components/Card/card";
 import dialogStyle from "./dialogCard.module.css";
 import { ComponentProps, HTMLAttributes, ReactNode } from "react";
+import clsx from "clsx";
 
 type CardProps = ComponentProps<typeof Card>;
 
@@ -28,8 +29,8 @@ export default function DialogCard({
             }}
         >
             <div
-                className={dialogStyle.wrapper}
                 {...wrapperArgs}
+                className={clsx(dialogStyle.wrapper, wrapperArgs?.className)}
             >
                 {children}
             </div>

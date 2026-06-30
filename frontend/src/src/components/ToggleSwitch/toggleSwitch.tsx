@@ -8,7 +8,7 @@ import {
     type KeyboardEvent,
     type ButtonHTMLAttributes,
 } from "react";
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 
 interface SwitchArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
     isChecked?: boolean;

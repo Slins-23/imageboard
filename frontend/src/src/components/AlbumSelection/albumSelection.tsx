@@ -4,294 +4,339 @@ import TextBox from "@/components/TextBox/textBox";
 import Button from "@/components/Button/button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { useCallback, useRef, useState, type KeyboardEvent } from "react";
+import {
+    useCallback,
+    useRef,
+    useState,
+    type MouseEvent,
+    type KeyboardEvent,
+    type Dispatch,
+    type SetStateAction,
+    useMemo,
+} from "react";
 import Image from "next/image";
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 import DeleteAlbumDialog from "@/components/DialogCard/deleteAlbum";
 import * as Modal from "@/components/Modal/modal";
-import Tooltip from "@/components/Tooltip/tooltip";
-import type { Album } from "@/types/album";
 import CreateAlbumDialog from "@/components/DialogCard/createAlbum";
-import type { PostBody } from "@/types/post";
-import { UserPII } from "@/types/user";
 
-interface AlbumSelectionArgs {
-    post?: PostBody;
-    defaultAlbums?: Album[];
-    albums?: Album[];
-    onAlbumsChange?: (albums: Album[]) => void;
-    defaultSearchText?: string;
-    searchText?: string;
-    onTextChange?: (text: string) => void;
-    transformText?: (text: string) => string;
-    onPostAdded?: (album: Album) => boolean; // true on success, false on failure
-    onAlbumDeleted?: (deletedAlbum: Album) => boolean; // true on success, false on failure
-    onAlbumCreated?: (
-        user?: UserPII,
-        post?: PostBody,
-        album?: Album
-    ) => boolean; // true on success, false on failure
+export interface AlbumLike {
+    id: string;
+    title: string;
+    cover?: string;
 }
 
-export default function AlbumSelection({
-    defaultAlbums = [
-        {
-            title: "Cars",
-            id: "albumIdA",
-            cover: "/images/thumb/albumcars.png",
-            created_at: -1,
-            last_update: -1,
-            owner: "",
-            total_images: -1,
-        },
-        {
-            title: "Contrasting",
-            id: "albumIdB",
-            cover: "/images/thumb/albumcontrasting.png",
-            created_at: -1,
-            last_update: -1,
-            owner: "",
-            total_images: -1,
-        },
-        {
-            title: "Cozy images",
-            id: "albumIdC",
-            cover: "/images/thumb/albumcozyimages.jpg",
-            created_at: -1,
-            last_update: -1,
-            owner: "",
-            total_images: -1,
-        },
-        {
-            title: "Fantasy",
-            id: "albumIdD",
-            cover: "/images/thumb/albumfantasy.jpg",
-            created_at: -1,
-            last_update: -1,
-            owner: "",
-            total_images: -1,
-        },
-        {
-            title: "Nice wallpapers",
-            id: "albumIdE",
-            cover: "/images/thumb/albumnicewallpapers.png",
-            created_at: -1,
-            last_update: -1,
-            owner: "",
-            total_images: -1,
-        },
-        {
-            title: "Snowy places",
-            id: "albumIdF",
-            cover: "/images/thumb/albumsnowyplaces.jpg",
-            created_at: -1,
-            last_update: -1,
-            owner: "",
-            total_images: -1,
-        },
-        {
-            title: "Unique",
-            id: "albumIdG",
-            cover: "/images/thumb/albumunique.jpg",
-            created_at: -1,
-            last_update: -1,
-            owner: "",
-            total_images: -1,
-        },
-    ],
-    albums = undefined,
-    onAlbumsChange = undefined,
+export type AlbumEvent<TAlbum extends AlbumLike> =
+    | {
+          type: "create";
+          success: false;
+          title: string;
+          error: string;
+      }
+    | {
+          type: "create";
+          success: true;
+          album: TAlbum;
+      }
+    | {
+          type: "delete";
+          success: true;
+          album: TAlbum;
+      }
+    | {
+          type: "delete";
+          success: false;
+          album: TAlbum;
+          error: string;
+      };
+
+export type BookmarkEvent<TAlbum extends AlbumLike> =
+    | {
+          type: "bookmark";
+          success: true;
+          postId: string;
+          album: TAlbum;
+      }
+    | {
+          type: "bookmark";
+          success: false;
+          postId: string;
+          album: TAlbum;
+          error: string;
+      };
+
+interface AlbumSelectionArgs<TAlbum extends AlbumLike> {
+    postId: string;
+    defaultAlbums?: TAlbum[];
+    albums?: TAlbum[];
+    onAlbumsChange?: Dispatch<SetStateAction<TAlbum[] | undefined>>;
+    defaultSearchText?: string;
+    searchText?: string;
+    onTextChange?: Dispatch<SetStateAction<string | undefined>>;
+    transformText?: (text: string) => string;
+    onCreateAlbum?: (title: string) => AlbumEvent<TAlbum>;
+    onDeleteAlbum?: (album: TAlbum) => AlbumEvent<TAlbum>;
+    onAlbumEvent?: (event: AlbumEvent<TAlbum>) => void;
+    onBookmarkPost?: (postId: string, album: TAlbum) => BookmarkEvent<TAlbum>;
+    onBookmarkEvent?: (event: BookmarkEvent<TAlbum>) => void;
+}
+
+function defaultCreateAlbum(title: string): AlbumEvent<AlbumLike> {
+    const album: AlbumLike = {
+        id: crypto.randomUUID(),
+        title,
+    };
+
+    return {
+        type: "create",
+        success: true,
+        album,
+    };
+}
+
+function defaultDeleteAlbum<TAlbum extends AlbumLike>(
+    album: TAlbum
+): AlbumEvent<AlbumLike> {
+    return {
+        type: "delete",
+        album,
+        success: true,
+    };
+}
+
+function defaultBookmarkPost<TAlbum extends AlbumLike>(
+    postId: string,
+    album: TAlbum
+): BookmarkEvent<TAlbum> {
+    return {
+        type: "bookmark",
+        album,
+        postId,
+        success: true,
+    };
+}
+
+function AlbumRow<TAlbum extends AlbumLike>({}) {}
+
+export default function AlbumSelection<TAlbum extends AlbumLike>({
+    postId,
+    defaultAlbums = [],
+    albums,
+    onAlbumsChange,
+    onCreateAlbum,
+    onDeleteAlbum,
+    onAlbumEvent,
     defaultSearchText = "",
-    searchText = undefined,
-    onTextChange = undefined,
-    transformText = undefined,
-    onPostAdded = undefined,
-    onAlbumDeleted = undefined,
-    onAlbumCreated = undefined,
-}: AlbumSelectionArgs) {
-    const [internalAlbums] = useControllableState({
+    searchText,
+    onTextChange,
+    transformText,
+    onBookmarkPost,
+    onBookmarkEvent,
+}: AlbumSelectionArgs<TAlbum>) {
+    const coverWidth = 75;
+    const coverHeight = 75;
+
+    const [internalAlbums, setInternalAlbums] = useControllableState({
         defaultValue: defaultAlbums,
         value: albums,
         onChange: onAlbumsChange,
     });
+
     const [internalSearchText, setInternalSearchText] = useControllableState({
         defaultValue: defaultSearchText,
         value: searchText,
         onChange: onTextChange,
     });
 
-    const albumRefs = useRef<(HTMLButtonElement | null)[]>([]);
+    const visibleAlbums = useMemo(() => {
+        return internalAlbums.filter((album: TAlbum) => {
+            if (internalSearchText?.trim() === "") {
+                return true;
+            }
+
+            return album.title.includes(
+                (internalSearchText as string).trim().toLowerCase()
+            );
+        });
+    }, [internalAlbums, internalSearchText]);
+
+    const albumRefs = useRef<HTMLLIElement[]>([]);
 
     const [selectedDeleteAlbum, setSelectedDeleteAlbum] =
-        useState<Album | null>(null);
+        useState<TAlbum | null>(null);
 
-    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [deleteIsOpen, setDeleteIsOpen] = useState<boolean>(false);
 
     const [isCreateAlbumDialogOpen, setIsCreateAlbumDialogOpen] =
         useState(false);
 
-    const setAlbumRef = useCallback(
-        (element: HTMLButtonElement | null, index: number) => {
-            if (!albumRefs.current) return;
+    const handleBookmark = async (
+        event: MouseEvent<HTMLLIElement>,
+        album: TAlbum
+    ) => {
+        event.preventDefault();
+        event.stopPropagation();
 
-            if (element && !albumRefs.current.includes(element)) {
-                albumRefs.current[index] = element;
+        const result = onBookmarkPost
+            ? await onBookmarkPost(postId, album)
+            : defaultBookmarkPost(postId, album);
+
+        onBookmarkEvent?.(result);
+    };
+
+    const handleListFocus = (
+        event: KeyboardEvent<HTMLLIElement>,
+        idx: number
+    ) => {
+        if (!(event.target instanceof HTMLLIElement)) return;
+
+        switch (event.code) {
+            case "Space":
+            case "Enter": {
+                event.preventDefault();
+                albumRefs.current[idx].click();
+
+                break;
             }
-        },
-        []
-    );
+            case "ArrowUp": {
+                event.preventDefault();
+                const elementAbove =
+                    idx > 0
+                        ? albumRefs.current[idx - 1]
+                        : albumRefs.current[idx];
+                elementAbove?.focus();
+                break;
+            }
+            case "ArrowDown": {
+                event.preventDefault();
+                const elementBelow =
+                    idx < visibleAlbums.length - 1
+                        ? albumRefs.current[idx + 1]
+                        : albumRefs.current[idx];
+                elementBelow?.focus();
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    };
+
+    const handleTrashClick = (
+        event: MouseEvent<HTMLButtonElement>,
+        album: TAlbum
+    ) => {
+        event.stopPropagation();
+
+        setSelectedDeleteAlbum(album);
+
+        if (!deleteIsOpen) {
+            setDeleteIsOpen(true);
+        }
+    };
+
+    const handleAlbumCreation = async (title: string) => {
+        const result = onCreateAlbum
+            ? await onCreateAlbum(title)
+            : defaultCreateAlbum(title);
+
+        if (result?.success) {
+            setInternalAlbums([result.album as TAlbum, ...internalAlbums]);
+        }
+
+        setIsCreateAlbumDialogOpen(false);
+
+        onAlbumEvent?.(result as AlbumEvent<TAlbum>);
+    };
+
+    const handleAlbumDeletion = async () => {
+        if (!selectedDeleteAlbum) return;
+
+        const result = onDeleteAlbum
+            ? await onDeleteAlbum(selectedDeleteAlbum)
+            : defaultDeleteAlbum(selectedDeleteAlbum);
+
+        if (result.success) {
+            setInternalAlbums(
+                internalAlbums.filter(
+                    (album: TAlbum) => selectedDeleteAlbum?.id !== album.id
+                )
+            );
+        }
+
+        if (deleteIsOpen) setDeleteIsOpen(false);
+
+        onAlbumEvent?.(result as AlbumEvent<TAlbum>);
+    };
 
     return (
         <DialogCard
             cardProps={{ style: { padding: "0" } }}
-            wrapperArgs={{
-                style: {
-                    padding: "1.375rem 1.875rem",
-                    gap: "1.5625rem",
-                    width: "430px",
-                    height: "585px",
-                },
-            }}
+            wrapperArgs={{ className: albumSelectionStyle.dialogWrapper }}
         >
             <TextBox
                 placeholder="Search albums"
-                style={{
-                    borderRadius: "10px",
-                    padding: "1.15rem 1rem",
-                    flexShrink: "0",
-                    width: "100%",
-                }}
+                className={albumSelectionStyle.searchBox}
                 value={internalSearchText}
                 onTextChange={setInternalSearchText}
                 transformText={transformText}
             ></TextBox>
             <ul className={albumSelectionStyle.albumList}>
-                {internalAlbums
-                    ?.filter((album: Album) => {
-                        if (internalSearchText?.trim() === "") {
-                            return true;
-                        }
-
-                        return album.title.includes(
-                            (internalSearchText as string).trim()
-                        );
-                    })
-                    .map((album: Album, idx: number) => (
-                        <li
-                            key={album.id}
-                            // className={albumSelectionStyle.album}
+                {visibleAlbums.map((album: TAlbum, idx: number) => (
+                    <li
+                        ref={(element) => {
+                            if (element) albumRefs.current[idx] = element;
+                            else delete albumRefs.current[idx];
+                        }}
+                        className={albumSelectionStyle.album}
+                        role="button"
+                        aria-label={`Delete album ${album.title}`}
+                        key={album.id}
+                        tabIndex={0}
+                        onClick={(event) => handleBookmark(event, album)}
+                        onKeyDown={(event) => handleListFocus(event, idx)}
+                    >
+                        <div
+                            className={albumSelectionStyle.albumCover}
+                            style={{
+                                width: coverWidth,
+                                height: coverHeight,
+                            }}
                         >
-                            <button
-                                ref={(element) => setAlbumRef(element, idx)}
-                                className={albumSelectionStyle.album}
-                                onClick={(event) => {
-                                    event.preventDefault();
-
-                                    // const success = onPostAdd?.(album);
-                                    const success = Math.round(Math.random());
-
-                                    if (success) {
-                                        // Placeholder for server-side function to add post to album
-                                        onPostAdded?.(album);
-                                        Tooltip(
-                                            `Successfully added the post to album "${album.title}"`
-                                        );
-                                    } else {
-                                        Tooltip(
-                                            `Error: Could not add the post to album "${album.title}"`
-                                        );
-                                    }
-                                }}
-                                onKeyDown={(event) => {
-                                    switch (event.code) {
-                                        case "ArrowUp": {
-                                            event.preventDefault();
-                                            const elementAbove =
-                                                idx > 0
-                                                    ? albumRefs.current[idx - 1]
-                                                    : albumRefs.current[idx];
-                                            elementAbove?.focus();
-                                            break;
-                                        }
-                                        case "ArrowDown": {
-                                            event.preventDefault();
-                                            const elementBelow =
-                                                idx <
-                                                (albums === undefined
-                                                    ? defaultAlbums.length - 1
-                                                    : albums.length - 1)
-                                                    ? albumRefs.current[idx + 1]
-                                                    : albumRefs.current[idx];
-                                            elementBelow?.focus();
-                                            break;
-                                        }
-                                        default: {
-                                            break;
-                                        }
-                                    }
-                                }}
-                            >
+                            {album.cover ? (
                                 <Image
-                                    className={albumSelectionStyle.albumCover}
                                     src={album.cover}
                                     alt={`Album ${album.title} cover image`}
-                                    width={75}
-                                    height={75}
+                                    width={coverWidth}
+                                    height={coverHeight}
                                 />
+                            ) : (
                                 <span
-                                    className={albumSelectionStyle.albumTitle}
+                                    style={{
+                                        fontSize: "var(--font-size-4xl)",
+                                    }}
                                 >
-                                    {album.title}
+                                    ?
                                 </span>
-                                <FontAwesomeIcon
-                                    className={albumSelectionStyle.albumTrash}
-                                    icon={faTrash}
-                                    tabIndex={0}
-                                    aria-label="Delete"
-                                    aria-hidden="false"
-                                    onClick={(event) => {
-                                        event.stopPropagation();
+                            )}
+                        </div>
 
-                                        setSelectedDeleteAlbum(album);
-
-                                        if (!isDeleteDialogOpen)
-                                            setIsDeleteDialogOpen(true);
-                                    }}
-                                    onKeyDown={(
-                                        event: KeyboardEvent<SVGSVGElement>
-                                    ) => {
-                                        switch (event.code) {
-                                            case "Space":
-                                            case "Enter": {
-                                                event.preventDefault();
-                                                event.stopPropagation();
-
-                                                setSelectedDeleteAlbum(album);
-
-                                                if (!isDeleteDialogOpen)
-                                                    setIsDeleteDialogOpen(true);
-
-                                                break;
-                                            }
-                                            default: {
-                                                break;
-                                            }
-                                        }
-                                    }}
-                                />
-                            </button>
-                        </li>
-                    ))}
+                        <span className={albumSelectionStyle.albumTitle}>
+                            {album.title}
+                        </span>
+                        <button
+                            aria-label="Delete"
+                            aria-hidden="false"
+                            className={albumSelectionStyle.albumTrash}
+                            onClick={(event) => handleTrashClick(event, album)}
+                        >
+                            <FontAwesomeIcon icon={faTrash} />
+                        </button>
+                    </li>
+                ))}
             </ul>
             <Button
-                style={{
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "var(--font-size-lg)",
-                    padding: "0.625rem 0.7rem",
-                    flexShrink: "0",
-                }}
+                className={albumSelectionStyle.createAlbumBtn}
                 onClick={() => {
                     if (!isCreateAlbumDialogOpen)
                         setIsCreateAlbumDialogOpen(true);
@@ -304,33 +349,15 @@ export default function AlbumSelection({
                 />
             </Button>
             <Modal.Root
-                isOpen={isDeleteDialogOpen}
-                onOpenChange={setIsDeleteDialogOpen}
+                isOpen={deleteIsOpen}
+                onOpenChange={setDeleteIsOpen}
                 defaultIsDismissible={true}
             >
                 <Modal.Content>
                     <DeleteAlbumDialog
                         title={selectedDeleteAlbum?.title ?? "Unknown"}
-                        onYes={() => {
-                            if (selectedDeleteAlbum === null) return;
-
-                            // Placeholder for server-side function to delete the album
-                            // const success = onAlbumDelete(selectedDeleteAlbum);
-                            const success = Math.round(Math.random());
-
-                            if (success) {
-                                onAlbumDeleted?.(selectedDeleteAlbum);
-                                setIsDeleteDialogOpen(false);
-                                Tooltip(
-                                    `Successfully deleted album ${selectedDeleteAlbum.title}"`
-                                );
-                            } else {
-                                Tooltip(
-                                    `Error: Could not delete album "${selectedDeleteAlbum.title}"`
-                                );
-                            }
-                        }}
-                        onNo={() => setIsDeleteDialogOpen(false)}
+                        onYes={handleAlbumDeletion}
+                        onNo={() => setDeleteIsOpen(false)}
                     ></DeleteAlbumDialog>
                 </Modal.Content>
             </Modal.Root>
@@ -340,63 +367,7 @@ export default function AlbumSelection({
                 defaultIsDismissible={true}
             >
                 <Modal.Content>
-                    <CreateAlbumDialog
-                        onCreate={(albumTitle: string) => {
-                            // Placeholder for server-side function to create the album and add post
-                            //const success = onAlbumCreate?.(album)
-                            const success = Math.round(Math.random());
-
-                            if (success) {
-                                const user: UserPII = {
-                                    created_at: -1,
-                                    email: "",
-                                    id: "",
-                                    language: "",
-                                    last_login: -1,
-                                    username: "",
-                                    avatar: "",
-                                    birthdate: "",
-                                    country: "",
-                                    gender: "",
-                                };
-
-                                // Placeholder data
-                                const post: PostBody = {
-                                    id: "",
-                                    blurhash_full: "",
-                                    created_at: -1,
-                                    image: "/images/thumb/albumnew.jpg",
-                                    original_height: -1,
-                                    original_width: -1,
-                                    owner: "",
-                                    blurhash_feed: "",
-                                    feed_height: -1,
-                                    feed_width: -1,
-                                };
-
-                                const album: Album = {
-                                    cover: post.image,
-                                    created_at: -1,
-                                    id: "",
-                                    last_update: -1,
-                                    owner: "",
-                                    title: albumTitle,
-                                    total_images: -1,
-                                };
-
-                                onAlbumCreated?.(user, post, album);
-
-                                setIsCreateAlbumDialogOpen(false);
-                                Tooltip(
-                                    `Successfully created album "${albumTitle}" (including the post)`
-                                );
-                            } else {
-                                Tooltip(
-                                    `Error: Could not create album "${albumTitle}"`
-                                );
-                            }
-                        }}
-                    ></CreateAlbumDialog>
+                    <CreateAlbumDialog onCreate={handleAlbumCreation} />
                 </Modal.Content>
             </Modal.Root>
         </DialogCard>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 import { RadioGroupContext } from "./context";
 import { type ChangeEvent, ReactNode, useId } from "react";
 import { OptionValue } from "./types";

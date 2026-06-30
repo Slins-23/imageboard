@@ -4,7 +4,8 @@ import {
     type KeyboardEvent,
     ChangeEvent,
 } from "react";
-import { delay, useControllableState } from "@/utils/utils";
+import { sleep } from "@/utils/misc";
+import useControllableState from "@/hooks/useControllableState";
 import type { Stage, StageComponentArgs } from "./types";
 import uploadStyle from "./upload.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -60,7 +61,7 @@ export default function Upload({
         const maxDelay = 8000;
         const randomDelay = Math.round(Math.random() * maxDelay);
 
-        await delay(randomDelay);
+        await sleep(randomDelay);
 
         const randomResult = Math.round(Math.random());
 

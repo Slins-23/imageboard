@@ -5,7 +5,7 @@ import {
     useLayoutEffect,
     useRef,
 } from "react";
-import { filledElementFromSVG } from "@/utils/utils";
+import { filledElementFromSVG } from "@/utils/svg";
 import linkAccountStyle from "./linkAccount.module.css";
 
 interface LinkAccountArgs extends ComponentProps<typeof Button> {

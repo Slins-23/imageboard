@@ -7,7 +7,7 @@ import Loading from "./loading";
 import Failure from "./failure";
 import Success from "./success";
 import { PostProvider } from "./context";
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 import { useModalContext } from "@/components/Modal/modal";
 
 interface CreatePostArgs {

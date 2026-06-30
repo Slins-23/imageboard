@@ -1,6 +1,6 @@
 "use client";
 
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 import type { Stage, StageComponentArgs } from "./types";
 import { usePostContext } from "./context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -8,6 +8,7 @@ import {
     type KeyboardEvent,
     type ReactNode,
 } from "react";
+import clsx from "clsx";
 
 interface ButtonArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
     children?: ReactNode;
@@ -41,9 +42,9 @@ export default function Button({
     return (
         <button
             aria-label={ariaLabel}
-            className={buttonStyle.button}
             type={"button"}
             {...args}
+            className={clsx(buttonStyle.button, args.className)}
             ref={buttonRef}
             onClick={handleClick}
             onKeyDown={handleKeyDown}

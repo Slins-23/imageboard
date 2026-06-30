@@ -1,4 +1,4 @@
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 import Button from "@/components/Button/button";
 import type { Stage, StageComponentArgs } from "./types";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

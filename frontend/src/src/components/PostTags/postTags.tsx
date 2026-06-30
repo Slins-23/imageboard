@@ -3,7 +3,7 @@ import postTagsStyle from "./postTags.module.css";
 import Card from "@/components/Card/card";
 import Button from "@/components/Button/button";
 import Link from "next/link";
-import { makeKebabCase } from "@/utils/utils";
+import { makeKebabCase } from "@/utils/strings";
 
 interface PostTagsArgs {
     tags: string[];

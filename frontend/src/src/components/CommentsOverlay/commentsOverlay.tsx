@@ -14,11 +14,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { ReactNode, useCallback, useRef, useState } from "react";
 import Image from "next/image";
-import {
-    delay,
-    randomRecentUploadTimestamp,
-    useControllableState,
-} from "@/utils/utils";
+
+import useControllableState from "@/hooks/useControllableState";
+import { randomRecentUploadTimestamp } from "@/utils/mock";
+import { sleep } from "@/utils/misc";
+
 import DeleteAlbumDialog from "@/components/DialogCard/deleteAlbum";
 import * as Modal from "@/components/Modal/modal";
 import Tooltip from "@/components/Tooltip/tooltip";
@@ -343,7 +343,7 @@ export default function CommentsOverlay({
 
         // const success = onComment?.(post, reply_to);
 
-        await delay(Math.random() * 3000);
+        await sleep(Math.random() * 3000);
         // await delay(99000);
         // Placeholder for waiting network response for posting comment server-side
 

@@ -8,7 +8,7 @@ import {
     type TextareaHTMLAttributes,
 } from "react";
 import textAreaStyle from "./textArea.module.css";
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 
 interface textAreaArgs extends TextareaHTMLAttributes<HTMLTextAreaElement> {
     defaultValue?: string;

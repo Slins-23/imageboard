@@ -13,10 +13,10 @@ import {
     useRef,
     useId,
 } from "react";
-import {
-    randomRecentUploadTimestamp,
-    useControllableState,
-} from "@/utils/utils";
+
+import { randomRecentUploadTimestamp } from "@/utils/mock";
+import useControllableState from "@/hooks/useControllableState";
+
 import Link from "next/link";
 import Button from "@/components/Button/button";
 import UserPlaceholder from "@/components/UserPlaceholder/userPlaceholder";

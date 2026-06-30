@@ -1,6 +1,6 @@
 "use client";
 
-import { useControllableState } from "@/utils/utils";
+import useControllableState from "@/hooks/useControllableState";
 import notificationStyle from "./notification.module.css";
 import { type HTMLAttributes } from "react";
 

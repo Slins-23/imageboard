@@ -1,4 +1,4 @@
-.textBox {
+:where(.textBox) {
     background-color: var(--secondary);
     color: var(--accent);
     border: none;
@@ -15,25 +15,25 @@
     transition-property: outline-width, outline-color;
 }
 
-.textBox[type="date"] {
+:where(.textBox)[type="date"] {
     width: 16ch !important;
 }
 
-.textBox[type="number"] {
+:where(.textBox)[type="number"] {
     width: 6ch !important;
 }
 
-.textBox:focus {
+:where(.textBox):focus {
     outline-width: 2px;
     outline-color: var(--accent);
 }
 
-.textBox::placeholder {
+:where(.textBox)::placeholder {
     color: var(--accent);
     opacity: 0.25;
 }
 
-.textBox:disabled {
+:where(.textBox):disabled {
     filter: brightness(var(--disabled-brightness));
     pointer-events: none;
 }

@@ -4,7 +4,7 @@ import { UserPII } from "@/types/user";
 import { PostBody } from "@/types/post";
 import { Album } from "@/types/album";
 import { useArgs } from "storybook/internal/preview-api";
-import { randomRecentUploadTimestamp } from "@/utils/utils";
+import { randomRecentUploadTimestamp } from "@/utils/mock";
 import { CommentObject } from "@/components/Comment/types";
 import Tooltip from "@/components/Tooltip/tooltip";
 

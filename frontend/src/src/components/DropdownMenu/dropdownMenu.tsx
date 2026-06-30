@@ -14,7 +14,8 @@ import {
     type ButtonHTMLAttributes,
     type LiHTMLAttributes,
 } from "react";
-import { isMouseEvent, useControllableState } from "@/utils/utils";
+import { isMouseEvent } from "@/utils/events";
+import useControllableState from "@/hooks/useControllableState";
 
 interface DropdownEntry {
     value: string;
