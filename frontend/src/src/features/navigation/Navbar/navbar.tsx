@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import CreatePostBtn from "./createPostBtn";
 import SearchIconBtn from "./searchIconBtn";
-import IconButton from "@/components/IconButton/iconButton";
+import IconButton from "@/ui/components/IconButton/iconButton";
 import { usePathname } from "next/navigation";
 
 export default function Navbar() {

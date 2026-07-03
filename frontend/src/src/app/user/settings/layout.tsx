@@ -1,7 +1,7 @@
 import React from "react";
 import GradientNavbar, {
     NavigationItem,
-} from "@/components/GradientNavbar/gradientNavbar";
+} from "@/ui/components/GradientNavbar/gradientNavbar";
 import layoutStyle from "./layoutStyle.module.css";
 
 const sidebarTitle = "Account";

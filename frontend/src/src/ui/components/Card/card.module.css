@@ -1,0 +1,7 @@
+:where(.card) {
+    background-color: var(--secondary);
+    outline-style: solid;
+    outline-color: var(--tertiary);
+    outline-width: 1px;
+    font-size: var(--font-size-2xl);
+}

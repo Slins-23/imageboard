@@ -1,9 +1,9 @@
 "use client";
 
-import CreatePost from "@/components/CreatePost/createPost";
-import * as Modal from "@/components/Modal/modal";
+import CreatePost from "@/ui/components/CreatePost/createPost";
+import * as Modal from "@/ui/components/Modal/modal";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
-import IconButton from "@/components/IconButton/iconButton";
+import IconButton from "@/ui/components/IconButton/iconButton";
 
 export default function CreatePostBtn() {
     return (

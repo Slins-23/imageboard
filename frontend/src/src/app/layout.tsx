@@ -1,10 +1,10 @@
 import "./globals.css";
 import { fenixFont } from "@/app/fonts/types";
-import IconButton from "@/components/IconButton/iconButton";
+import IconButton from "@/ui/components/IconButton/iconButton";
 import { faCircleHalfStroke } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/features/navigation/Navbar/navbar";
-import * as Modal from "@/components/Modal/modal";
-import ThemePicker from "@/components/ThemePicker/themePicker";
+import * as Modal from "@/ui/components/Modal/modal";
+import ThemePicker from "@/ui/components/ThemePicker/themePicker";
 
 /*
 export const metadata: Metadata = {

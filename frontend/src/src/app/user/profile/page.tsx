@@ -1,13 +1,13 @@
 "use client";
-import LinkedAccount from "@/components/LinkedAccount/LinkedAccount";
-import * as Modal from "@/components/Modal/modal";
-import Card from "@/components/InterestCard/interestCard";
-import { DropdownMenu } from "@/components/DropdownMenu/dropdownMenu";
-import RadioButton from "@/components/RadioGroup/radioButton";
-import RadioGroup from "@/components/RadioGroup/radioGroup";
-import Button from "@/components/Button/button";
-import CreatePost from "@/components/CreatePost/createPost";
-import CommentsOverlay from "@/components/CommentsOverlay/commentsOverlay";
+import LinkedAccount from "@/ui/components/LinkedAccount/LinkedAccount";
+import * as Modal from "@/ui/components/Modal/modal";
+import Card from "@/ui/components/InterestCard/interestCard";
+import { DropdownMenu } from "@/ui/components/DropdownMenu/dropdownMenu";
+import RadioButton from "@/ui/components/RadioGroup/radioButton";
+import RadioGroup from "@/ui/components/RadioGroup/radioGroup";
+import Button from "@/ui/components/Button/button";
+import CreatePost from "@/ui/components/CreatePost/createPost";
+import CommentsOverlay from "@/ui/components/CommentsOverlay/commentsOverlay";
 
 export default function Profile() {
     return (

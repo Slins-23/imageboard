@@ -1,5 +1,5 @@
-import Checkbox from "@/components/Checkbox/checkbox";
-import IconButton from "@/components/IconButton/iconButton";
+import Checkbox from "@/ui/components/Checkbox/checkbox";
+import IconButton from "@/ui/components/IconButton/iconButton";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {

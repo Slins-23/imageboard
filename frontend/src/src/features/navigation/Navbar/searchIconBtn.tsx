@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import IconButton from "@/components/IconButton/iconButton";
+import IconButton from "@/ui/components/IconButton/iconButton";
 
 export default function SearchIconBtn() {
     const pathname = usePathname();

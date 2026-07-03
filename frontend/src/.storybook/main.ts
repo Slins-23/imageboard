@@ -1,6 +1,6 @@
 import type { StorybookConfig } from "@storybook/nextjs-vite";
 
-const nginxPort = Number(process.env["NGINX_PORT"] ?? 8080);
+const nginxPort = Number(process.env.NGINX_PORT ?? 8080);
 
 const config: StorybookConfig = {
     stories: ["../src/**/*.mdx", "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"],
