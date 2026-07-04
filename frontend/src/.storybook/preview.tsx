@@ -19,6 +19,13 @@ const preview: Preview = {
     ],
     */
     parameters: {
+        nextjs: {
+            appDirectory: true,
+            navigation: {
+                pathname: "/",
+            },
+        },
+
         backgrounds: {
             options: {
                 dark: { name: "Dark", value: "var(--primary)" },

@@ -1,19 +1,6 @@
 import React from "react";
-import GradientNavbar, {
-    NavigationItem,
-} from "@/ui/components/GradientNavbar/gradientNavbar";
+import GradientNavbar from "@/features/navigation/components/Sidebar/GradientNavbar";
 import layoutStyle from "./layoutStyle.module.css";
-
-const sidebarTitle = "Account";
-const sidebarItems: NavigationItem[] = [
-    { route: "/user/settings/profile", text: "Profile" },
-    { route: "/user/settings/credentials", text: "Credentials" },
-    { route: "/user/settings/interests", text: "Interests" },
-    { route: "/user/settings/history", text: "History" },
-    { route: "/user/settings/linked-accounts", text: "Linked accounts" },
-    { route: "/user/settings/notifications", text: "Notifications" },
-    { route: "/user/settings/delete", text: "Delete" },
-];
 
 export default function RootLayout({
     children,
@@ -23,10 +10,7 @@ export default function RootLayout({
     return (
         <div className={layoutStyle.layoutWrapper}>
             <aside className={layoutStyle.sidebarWrapper}>
-                <GradientNavbar
-                    title={sidebarTitle}
-                    items={sidebarItems}
-                />
+                <GradientNavbar />
             </aside>
             <section className={layoutStyle.contentWrapper}>{children}</section>
         </div>

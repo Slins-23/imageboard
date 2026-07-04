@@ -1,10 +1,10 @@
 import "./globals.css";
 import { fenixFont } from "@/app/fonts/types";
-import IconButton from "@/ui/components/IconButton/iconButton";
+import IconButton from "@/ui/components/Buttons/IconButton/IconButton";
 import { faCircleHalfStroke } from "@fortawesome/free-solid-svg-icons";
-import Navbar from "@/features/navigation/Navbar/navbar";
-import * as Modal from "@/ui/components/Modal/modal";
-import ThemePicker from "@/ui/components/ThemePicker/themePicker";
+import Navbar from "@/features/navigation/components/Navbar/Navbar";
+import * as Modal from "@/ui/components/Overlays/Modal/modal";
+import ThemePicker from "@/ui/components/Preferences/ThemePicker/ThemePicker";
 
 /*
 export const metadata: Metadata = {
@@ -42,7 +42,7 @@ export default function RootLayout({
                                 bottom: "10px",
                                 right: "10px",
                             }}
-                            btnIcon={faCircleHalfStroke}
+                            icon={faCircleHalfStroke}
                             width="50px"
                             height="50px"
                             iconSize="25px"

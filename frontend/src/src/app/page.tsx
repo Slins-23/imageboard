@@ -1,5 +1,5 @@
-import Checkbox from "@/ui/components/Checkbox/checkbox";
-import IconButton from "@/ui/components/IconButton/iconButton";
+import Checkbox from "@/ui/components/Input/Checkbox/Checkbox";
+import IconButton from "@/ui/components/Buttons/IconButton/IconButton";
 import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
@@ -18,7 +18,13 @@ export default function Home() {
                     marginTop: "60px",
                 }}
             >
-                <div style={{ textAlign: "center", marginTop: "60px" }}>
+                <div
+                    style={{
+                        lineHeight: 1.5,
+                        textAlign: "center",
+                        marginTop: "60px",
+                    }}
+                >
                     <span style={{ fontSize: "var(--font-size-lg)" }}>
                         Display tags, filters, and preferences
                     </span>
@@ -29,7 +35,7 @@ export default function Home() {
                 </div>
             </div>
             <IconButton
-                btnIcon={faRefresh}
+                icon={faRefresh}
                 style={{
                     position: "fixed",
                     left: "10px",

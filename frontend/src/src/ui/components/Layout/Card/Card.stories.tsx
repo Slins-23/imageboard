@@ -1,0 +1,15 @@
+import type { Meta, StoryObj } from "@storybook/nextjs-vite";
+import Card from "./Card.tsx";
+
+const meta: Meta<typeof Card> = {
+    title: "UI/Layout/Card",
+    component: Card,
+};
+
+export default meta;
+
+export const Primary: StoryObj<typeof meta> = {
+    args: {
+        style: { width: "150px", height: "150px" },
+    },
+};
