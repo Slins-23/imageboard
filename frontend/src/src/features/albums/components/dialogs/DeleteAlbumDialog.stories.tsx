@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import DeleteAlbumDialog from "./DeleteAlbumDialog";
 
 const meta: Meta<typeof DeleteAlbumDialog> = {
-    title: "Features/Albums/DeleteAlbumDialog",
+    title: "Features/Albums/Dialogs/DeleteAlbumDialog",
     component: DeleteAlbumDialog,
 };
 

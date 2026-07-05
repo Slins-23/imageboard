@@ -35,37 +35,37 @@ export default function Navbar() {
                     gap: "10px",
                 }}
             >
-                <Link href="/">
-                    <IconButton
-                        isActive={pathname === "/"}
-                        icon={faHouse}
-                        width="50px"
-                        height="50px"
-                        iconSize="25px"
-                    />
-                </Link>
-                <Link href="/tags">
-                    <IconButton
-                        isActive={pathname === "/tags"}
-                        icon={faTags}
-                        width="50px"
-                        height="50px"
-                        iconSize="25px"
-                    />
-                </Link>
-                <Link href="/user/settings/profile">
-                    <IconButton
-                        isActive={
-                            pathname.indexOf("/user/settings/") === -1
-                                ? false
-                                : true
-                        }
-                        icon={faGear}
-                        width="50px"
-                        height="50px"
-                        iconSize="25px"
-                    />
-                </Link>
+                <IconButton
+                    as={Link}
+                    href="/"
+                    isActive={pathname === "/"}
+                    icon={faHouse}
+                    width="50px"
+                    height="50px"
+                    iconSize="25px"
+                />
+                <IconButton
+                    as={Link}
+                    href="/tags"
+                    isActive={pathname === "/tags"}
+                    icon={faTags}
+                    width="50px"
+                    height="50px"
+                    iconSize="25px"
+                />
+                <IconButton
+                    as={Link}
+                    href="/user/settings/profile"
+                    isActive={
+                        pathname.indexOf("/user/settings/") === -1
+                            ? false
+                            : true
+                    }
+                    icon={faGear}
+                    width="50px"
+                    height="50px"
+                    iconSize="25px"
+                />
             </div>
 
             <SearchIconBtn />

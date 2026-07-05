@@ -5,6 +5,10 @@ import { faCircleHalfStroke } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "@/features/navigation/components/Navbar/Navbar";
 import * as Modal from "@/ui/components/Overlays/Modal/modal";
 import ThemePicker from "@/ui/components/Preferences/ThemePicker/ThemePicker";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config as fontAwesomeConfig } from "@fortawesome/fontawesome-svg-core";
+
+fontAwesomeConfig.autoAddCss = false;
 
 /*
 export const metadata: Metadata = {

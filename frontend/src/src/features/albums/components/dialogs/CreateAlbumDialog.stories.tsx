@@ -3,7 +3,7 @@ import CreateAlbumDialog from "./CreateAlbumDialog";
 import Toast from "@/ui/components/Overlays/Toast/toast";
 
 const meta: Meta<typeof CreateAlbumDialog> = {
-    title: "Features/Albums/CreateAlbumDialog",
+    title: "Features/Albums/Dialogs/CreateAlbumDialog",
     component: CreateAlbumDialog,
 };
 

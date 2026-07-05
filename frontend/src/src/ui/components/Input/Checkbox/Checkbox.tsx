@@ -105,7 +105,8 @@ export default function Checkbox({
                 icon={icon}
                 className={clsx(checkboxStyle.iconStyle, iconProps?.className)}
                 style={{
-                    fontSize: iconSize,
+                    width: iconSize,
+                    height: iconSize,
                     scale: `${iconWidthScale} ${iconHeightScale}`,
                     ...iconProps?.style,
                 }}

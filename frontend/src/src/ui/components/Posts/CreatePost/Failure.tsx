@@ -27,6 +27,10 @@ export default function Failure({
             <FontAwesomeIcon
                 icon={faWarning}
                 className={failureStyle.icon}
+                style={{
+                    width: "210px",
+                    height: "172.5px",
+                }}
             />
             <div className={failureStyle.secondaryWrapper}>
                 <span className={failureStyle.failText}>

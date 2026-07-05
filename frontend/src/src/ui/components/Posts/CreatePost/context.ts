@@ -1,9 +1,9 @@
 import { createContext, useContext, type RefObject } from "react";
 
-interface PostData {
+type PostData = {
     errorMessage?: string;
     postURL?: string;
-}
+};
 
 const PostContext = createContext<RefObject<PostData> | undefined>(undefined);
 

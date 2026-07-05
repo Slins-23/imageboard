@@ -1,5 +1,3 @@
-"use client";
-
 import CreatePost from "@/ui/components/Posts/CreatePost/CreatePost";
 import * as Modal from "@/ui/components/Overlays/Modal/modal";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";

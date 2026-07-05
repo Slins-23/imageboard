@@ -3,7 +3,7 @@ import SignupConfirmationDialog from "./SignupConfirmationDialog";
 import Toast from "@/ui/components/Overlays/Toast/toast";
 
 const meta: Meta<typeof SignupConfirmationDialog> = {
-    title: "Features/Account/SignupConfirmationDialog",
+    title: "Features/Account/Dialogs/SignupConfirmationDialog",
     component: SignupConfirmationDialog,
 };
 

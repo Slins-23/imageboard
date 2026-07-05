@@ -44,6 +44,10 @@ export default function Loading({
             <FontAwesomeIcon
                 icon={faCircleNotch}
                 className={loadingStyle.icon}
+                style={{
+                    width: "130px",
+                    height: "170px",
+                }}
             ></FontAwesomeIcon>
         </div>
     );

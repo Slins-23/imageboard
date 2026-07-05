@@ -11,9 +11,17 @@ import NotificationCount, {
     type NotificationArgs,
 } from "@/ui/components/Indicators/NotificationCount/NotificationCount";
 import useControllableState from "@/ui/hooks/useControllableState";
-import type { MouseEvent, ButtonHTMLAttributes } from "react";
+import type {
+    MouseEvent,
+    KeyboardEvent,
+    ButtonHTMLAttributes,
+    ReactNode,
+    ElementType,
+    ComponentPropsWithoutRef,
+} from "react";
 
-interface IconButtonArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
+type IconButtonProps<Component extends ElementType> = {
+    as?: Component;
     isActive?: boolean;
     defaultActive?: boolean;
     onActiveChange?: (isActive: boolean) => void;
@@ -26,9 +34,10 @@ interface IconButtonArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
     hasNotifications?: boolean;
     iconProps?: FontAwesomeIconProps;
     notificationProps?: NotificationArgs;
-}
+} & ComponentPropsWithoutRef<Component>;
 
-export default function IconButton({
+export default function IconButton<Component extends ElementType>({
+    as,
     isActive = undefined,
     defaultActive = false,
     icon = faHouse,
@@ -41,7 +50,9 @@ export default function IconButton({
     onActiveChange = undefined,
     notificationProps = undefined,
     ...props
-}: IconButtonArgs) {
+}: IconButtonProps<Component>) {
+    const Component = as ?? "button";
+
     const [internalIsActive, setInternalIsActive] =
         useControllableState<boolean>({
             value: isActive,
@@ -49,40 +60,63 @@ export default function IconButton({
             onChange: onActiveChange,
         });
 
-    const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    const handleClick = (event: MouseEvent<HTMLElement>) => {
         if (props.disabled) return;
 
         props?.onClick?.(event);
 
-        if (event.defaultPrevented) return;
-
         if (!internalIsActive) setInternalIsActive(true);
     };
 
+    const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+        if (props.disabled) return;
+
+        props?.onKeyDown?.(event);
+
+        switch (event.key) {
+            case " ": {
+                event.preventDefault();
+
+                (event.currentTarget as HTMLElement).click();
+
+                // handleTrigger(event);
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    };
+
     return (
-        <button
+        <Component
             type="button"
             className={buttonStyle.iconButton}
             aria-pressed={isActive === undefined ? false : internalIsActive}
             {...props}
             style={{ width, height, ...props.style }}
             onClick={handleClick}
+            onKeyDown={handleKeyDown}
         >
             <FontAwesomeIcon
                 icon={icon}
                 {...props.iconProps}
                 style={{
-                    ...(iconSize === undefined ? {} : { fontSize: iconSize }),
+                    ...(iconSize === undefined
+                        ? {}
+                        : { width: iconSize, height: iconSize }),
                     ...(iconWidthScale === undefined ||
                     iconHeightScale === undefined
                         ? {}
-                        : { scale: `${iconWidthScale} ${iconHeightScale}` }),
+                        : {
+                              scale: `${iconWidthScale} ${iconHeightScale}`,
+                          }),
                     color: "var(--accent)",
                     ...props.iconProps?.style,
                 }}
             />
 
             {hasNotifications && <NotificationCount {...notificationProps} />}
-        </button>
+        </Component>
     );
 }

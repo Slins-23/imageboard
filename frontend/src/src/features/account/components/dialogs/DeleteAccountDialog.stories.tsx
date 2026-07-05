@@ -3,7 +3,7 @@ import DeleteAccountDialog from "./DeleteAccountDialog";
 import Toast from "@/ui/components/Overlays/Toast/toast";
 
 const meta: Meta<typeof DeleteAccountDialog> = {
-    title: "Features/Account/DeleteAccountDialog",
+    title: "Features/Account/Dialogs/DeleteAccountDialog",
     component: DeleteAccountDialog,
 };
 

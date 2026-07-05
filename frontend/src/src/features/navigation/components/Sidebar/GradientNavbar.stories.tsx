@@ -3,7 +3,7 @@ import GradientNavbar from "./GradientNavbar";
 import Toast from "@/ui/components/Overlays/Toast/toast";
 
 const meta: Meta<typeof GradientNavbar> = {
-    title: "Features/Navigation/GradientNavbar",
+    title: "Features/Navigation/Sidebar",
     component: GradientNavbar,
 };
 

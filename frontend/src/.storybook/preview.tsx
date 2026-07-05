@@ -1,6 +1,10 @@
 import type { Preview } from "@storybook/nextjs-vite";
 import "@/app/globals.css";
+import "@fortawesome/fontawesome-svg-core/styles.css";
+import { config as fontAwesomeConfig } from "@fortawesome/fontawesome-svg-core";
 import { fenixFont } from "@/app/fonts/types";
+
+fontAwesomeConfig.autoAddCss = false;
 
 if (typeof document !== undefined) {
     document.body.classList.add(fenixFont.className);

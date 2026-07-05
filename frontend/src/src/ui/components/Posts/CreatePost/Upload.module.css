@@ -33,7 +33,5 @@
 */
 
 .icon {
-    width: 130px;
-    height: 170px;
     color: var(--tertiary);
 }

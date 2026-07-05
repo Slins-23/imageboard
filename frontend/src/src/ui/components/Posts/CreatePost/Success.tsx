@@ -30,6 +30,10 @@ export default function Success({
             <FontAwesomeIcon
                 icon={faCheck}
                 className={successStyle.icon}
+                style={{
+                    width: "210px",
+                    height: "172.5px",
+                }}
             />
             <div className={successStyle.secondaryWrapper}>
                 <span className={successStyle.successText}>

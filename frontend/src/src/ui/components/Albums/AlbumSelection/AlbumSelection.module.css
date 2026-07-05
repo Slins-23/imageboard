@@ -46,7 +46,7 @@
 
 .album:hover,
 .album:focus-visible {
-    transform: scale(1.1);
+    scale: 1.1;
     background-color: var(--primary);
     color: var(--tertiary);
     outline-style: solid;
@@ -90,7 +90,7 @@
 
 .albumTrash:hover,
 .albumTrash:focus-visible {
-    transform: scale(1.05);
+    scale: 1.05;
     color: var(--tertiary);
 }
 

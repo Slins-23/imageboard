@@ -68,6 +68,8 @@ export default function PostTags({
                 {tags.map((tag: string) => (
                     <li key={tag}>
                         <Button
+                            as={Link}
+                            href={`/tags/${makeKebabCase(tag)}`}
                             style={
                                 {
                                     "--bg-color": "var(--secondary)",
@@ -85,9 +87,7 @@ export default function PostTags({
                                 } as CSSProperties
                             }
                         >
-                            <Link href={`/tags/${makeKebabCase(tag)}`}>
-                                {tag}
-                            </Link>
+                            {tag}
                         </Button>
                     </li>
                 ))}

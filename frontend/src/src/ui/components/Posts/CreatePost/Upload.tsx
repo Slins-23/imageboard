@@ -94,6 +94,10 @@ export default function Upload({
             <FontAwesomeIcon
                 icon={faFileImage}
                 className={uploadStyle.icon}
+                style={{
+                    width: "130px",
+                    height: "170px",
+                }}
             />
             <span style={{ fontSize: "var(--font-size-3xl)" }}>
                 Select or drag image to upload (Max size{" "}
