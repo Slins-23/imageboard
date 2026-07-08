@@ -9,10 +9,12 @@ import {
     type MouseEvent,
     type KeyboardEvent,
     useLayoutEffect,
-    type HTMLAttributes,
+    type ComponentPropsWithoutRef,
+    type Dispatch,
+    type SetStateAction,
 } from "react";
 
-interface LinkedAccountArgs extends HTMLAttributes<HTMLDivElement> {
+interface LinkedAccountProps extends ComponentPropsWithoutRef<"div"> {
     iconSrc?: string;
     iconAlt?: string;
     width?: string;
@@ -21,7 +23,7 @@ interface LinkedAccountArgs extends HTMLAttributes<HTMLDivElement> {
     defaultIsConnected?: boolean;
     onDisconnected?: (isConnected?: boolean) => void;
     onConnected?: (isConnected?: boolean) => void;
-    onConnectedChange?: (isConnected?: boolean) => void;
+    onConnectedChange?: Dispatch<SetStateAction<boolean>>;
     wrapperWidth?: string;
 }
 
@@ -29,14 +31,14 @@ export default function LinkedAccount({
     iconSrc = "social-media/google.svg",
     width = "75px",
     height = "75px",
-    isConnected = undefined,
+    isConnected,
     defaultIsConnected = false,
-    onDisconnected = undefined,
-    onConnected = undefined,
-    onConnectedChange = undefined,
+    onDisconnected,
+    onConnected,
+    onConnectedChange,
     wrapperWidth = "900px",
     ...props
-}: LinkedAccountArgs) {
+}: LinkedAccountProps) {
     const [internalIsConnected, setInternalIsConnected] =
         useControllableState<boolean>({
             value: isConnected,

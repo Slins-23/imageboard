@@ -1,0 +1,13 @@
+.textField {
+    width: 186px;
+    background-color: rgba(0, 0, 0, 0);
+    padding: 0.75em 0.5em;
+    font-size: var(--font-size-lg);
+}
+
+.signupBtn {
+    font-size: var(--font-size-2xl);
+    --text-color: var(--tertiary);
+    --text-color-hover: var(--tertiary);
+    --bg-color-hover: var(--primary);
+}

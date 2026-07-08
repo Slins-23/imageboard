@@ -1,6 +1,6 @@
 import Button from "@/ui/components/Buttons/Button/Button";
 import stageStyle from "./stages.module.css";
-import type { CSSProperties } from "react";
+import signupConfirmationStyle from "./SignupConfirmation.module.css";
 
 export default function SignupConfirmation() {
     return (
@@ -15,18 +15,7 @@ export default function SignupConfirmation() {
                 browser to complete your registration.
             </div>
             <div className={stageStyle.buttonWrapper}>
-                <Button
-                    style={
-                        {
-                            fontSize: "var(--font-size-2xl)",
-                            "--text-color": "var(--tertiary)",
-                            "--text-color-hover": "var(--tertiary)",
-                            "--bg-color-hover": "var(--primary)",
-                        } as CSSProperties
-                    }
-                >
-                    OK
-                </Button>
+                <Button className={signupConfirmationStyle.okBtn}>OK</Button>
             </div>
         </div>
     );

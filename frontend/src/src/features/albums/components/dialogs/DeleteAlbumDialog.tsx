@@ -2,17 +2,17 @@ import Button from "@/ui/components/Buttons/Button/Button";
 import DialogCard from "@/ui/components/Layout/DialogCard/DialogCard";
 import type { KeyboardEvent } from "react";
 
-interface DeleteAlbumDialogArgs {
+interface DeleteAlbumDialogProps {
     title?: string;
-    onYes?: (...params: any[]) => void;
-    onNo?: (...params: any[]) => void;
+    onYes?: () => void;
+    onNo?: () => void;
 }
 
 export default function DeleteAlbumDialog({
     title,
     onYes,
     onNo,
-}: DeleteAlbumDialogArgs) {
+}: DeleteAlbumDialogProps) {
     return (
         <DialogCard cardProps={{ style: { width: "450px" } }}>
             <span>

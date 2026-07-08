@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import BlurredButton from "./BlurredButton";
+import type { DefaultButtonProps } from "@/ui/components/Buttons/Button/Button";
 
-const meta: Meta<typeof BlurredButton> = {
+const meta: Meta<DefaultButtonProps> = {
     title: "UI/Buttons/BlurredButton",
     component: BlurredButton,
 };
@@ -12,19 +13,7 @@ export const Uncontrolled: StoryObj<typeof meta> = {
     args: {
         "aria-label": "Click",
         onClick: () => alert("Clicked"),
-        onKeyDown: (event) => {
-            switch (event.key) {
-                case " ":
-                case "Enter": {
-                    event.preventDefault();
-                    alert("Changes saved! (KeyDown)");
-                    break;
-                }
-                default: {
-                    break;
-                }
-            }
-        },
+        onKeyDown: () => alert("Changes saved! (KeyDown)"),
     },
     render: (args) => {
         return (

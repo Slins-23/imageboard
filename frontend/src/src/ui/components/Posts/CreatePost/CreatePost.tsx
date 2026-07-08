@@ -1,7 +1,13 @@
 import createPostStyle from "./CreatePost.module.css";
 import DialogCard from "@/ui/components/Layout/DialogCard/DialogCard";
-import { useRef, useState, useContext, createContext, ReactNode } from "react";
-import type { Stage } from "./types";
+import {
+    useRef,
+    useState,
+    type ReactNode,
+    type Dispatch,
+    type SetStateAction,
+} from "react";
+import type { Stage } from "@/ui/types/stages";
 import Upload from "./Upload";
 import Loading from "./Loading";
 import Failure from "./Failure";
@@ -10,19 +16,18 @@ import { PostProvider } from "./context";
 import useControllableState from "@/ui/hooks/useControllableState";
 import { useModalContext } from "@/ui/components/Overlays/Modal/modal";
 
-interface CreatePostArgs {
+interface CreatePostProps {
     defaultStage?: Stage;
     currentStage?: Stage;
-    onStageChanged?: (next: Stage) => void;
+    onStageChange?: Dispatch<SetStateAction<Stage>>;
     children?: ReactNode;
 }
 
 export default function CreatePost({
     defaultStage = "Upload",
-    currentStage = undefined,
-    onStageChanged = undefined,
-    children = undefined,
-}: CreatePostArgs) {
+    currentStage,
+    onStageChange,
+}: CreatePostProps) {
     const { internalIsDismissible } = useModalContext();
 
     const stages = {
@@ -43,7 +48,7 @@ export default function CreatePost({
         useControllableState<Stage>({
             defaultValue: defaultStage,
             value: currentStage,
-            onChange: onStageChanged,
+            onChange: onStageChange,
         });
 
     const StageComponent = stages[internalCurrentStage ?? "Upload"];
@@ -53,7 +58,7 @@ export default function CreatePost({
         postURL: "https://posturl.com/POSTID=3984829",
     });
 
-    const onStageChange = (next: Stage) => {
+    const onNextStage = (next: SetStateAction<Stage>) => {
         if (next === "Loading") internalIsDismissible.current = false;
 
         transitionDuration.current = fadeOutDuration;
@@ -72,9 +77,6 @@ export default function CreatePost({
         <DialogCard
             cardProps={{
                 className: createPostStyle.card,
-                style: {
-                    backgroundColor: "var(--primary)",
-                },
             }}
             wrapperArgs={{
                 style: {
@@ -89,7 +91,7 @@ export default function CreatePost({
             <PostProvider value={postDataRef}>
                 <StageComponent
                     currentStage={internalCurrentStage}
-                    onStageChange={onStageChange}
+                    onNextStage={onNextStage}
                 />
             </PostProvider>
         </DialogCard>

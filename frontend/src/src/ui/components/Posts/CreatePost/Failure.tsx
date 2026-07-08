@@ -1,5 +1,5 @@
 import useControllableState from "@/ui/hooks/useControllableState";
-import type { Stage, StageComponentArgs } from "./types";
+import type { Stage, StageComponentProps } from "@/ui/types/stages";
 import { usePostContext } from "./context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWarning } from "@fortawesome/free-solid-svg-icons";
@@ -9,9 +9,9 @@ import { useModalContext } from "@/ui/components/Overlays/Modal/modal";
 
 export default function Failure({
     defaultStage = "Failure",
-    currentStage = undefined,
-    onStageChange = undefined,
-}: StageComponentArgs) {
+    currentStage,
+    onNextStage,
+}: StageComponentProps) {
     const postContext = usePostContext();
     const modalContext = useModalContext();
 
@@ -19,7 +19,7 @@ export default function Failure({
         useControllableState<Stage>({
             defaultValue: defaultStage,
             value: currentStage,
-            onChange: onStageChange,
+            onChange: onNextStage,
         });
 
     return (

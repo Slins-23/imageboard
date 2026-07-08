@@ -1,16 +1,14 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import Button from "./Button.tsx";
+import Button, { type DefaultButtonProps } from "./Button";
 
-const meta: Meta<typeof Button> = {
+const meta: Meta<DefaultButtonProps> = {
     title: "UI/Buttons/Button",
     component: Button,
 };
 
 export default meta;
 
-type Story = StoryObj<typeof meta>;
-
-export const SaveButton: Story = {
+export const SaveButton: StoryObj<typeof meta> = {
     args: {
         "aria-label": "Save changes",
         children: "Save changes",
@@ -32,7 +30,7 @@ export const SaveButton: Story = {
     },
 };
 
-export const UploadButton: Story = {
+export const UploadButton: StoryObj<typeof meta> = {
     args: {
         "aria-label": "Upload",
         children: "Upload",
@@ -40,7 +38,7 @@ export const UploadButton: Story = {
     },
 };
 
-export const Reset: Story = {
+export const Reset: StoryObj<typeof meta> = {
     args: {
         "aria-label": "Reset",
         children: "Reset",

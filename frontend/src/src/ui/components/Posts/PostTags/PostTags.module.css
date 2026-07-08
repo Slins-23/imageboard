@@ -1,3 +1,26 @@
+.card {
+    display: flex;
+    width: 400px;
+    height: 355px;
+    flex-direction: column;
+    gap: 1.6875rem;
+    align-items: center;
+    background-color: rgb(
+        from var(--primary) r g b / var(--foreground-blur-opacity)
+    );
+    backdrop-filter: blur(var(--background-blur-radius));
+    padding: 1.75rem 0 1.75rem 1.75rem;
+    border-radius: 10px;
+    box-shadow: 0px 0px 66.5px 26px
+        rgb(from var(--primary) r g b / var(--foreground-blur-opacity));
+    outline-style: none;
+}
+
+.title {
+    font-size: var(--font-size-3xl);
+    padding-right: 1.75rem;
+}
+
 .tagsList {
     display: flex;
     flex-direction: row;
@@ -11,4 +34,17 @@
     justify-content: center;
     list-style: none;
     padding: 0 1.75rem 0 0;
+}
+
+.tagBtn {
+    outline-width: 1.5px;
+    outline-color: var(--tertiary);
+    outline-style: solid;
+    outline-offset: -1px;
+    font-size: calc((var(--font-size-lg) + var(--font-size-md)) / 2);
+    padding: 0.3125em 0.625em;
+    overflow: hidden;
+    text-wrap: nowrap;
+    white-space: nowrap;
+    border-radius: 10px;
 }

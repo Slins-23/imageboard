@@ -5,8 +5,8 @@ export default function DeletePostDialog({
     onYes,
     onNo,
 }: {
-    onYes?: (...params: any[]) => void;
-    onNo?: (...params: any[]) => void;
+    onYes?: () => void;
+    onNo?: () => void;
 }) {
     return (
         <DialogCard cardProps={{ style: { width: "450px" } }}>

@@ -4,6 +4,7 @@ import { faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { CommentObject } from "./types";
 import {
     CSSProperties,
+    type ComponentPropsWithoutRef,
     type KeyboardEvent,
     type MouseEvent,
     type HTMLAttributes,
@@ -25,7 +26,7 @@ import Toast from "@/ui/components/Overlays/Toast/toast";
 import { CommentLike } from "@/ui/types/like";
 import placeholderStyle from "@/ui/components/Account/UserPlaceholder/UserPlaceholder.module.css";
 
-interface CommentArgs extends HTMLAttributes<HTMLDivElement> {
+interface CommentProps extends ComponentPropsWithoutRef<"div"> {
     defaultCommentObj?: CommentObject;
     commentObj?: CommentObject;
     defaultLikeData?: CommentLike;
@@ -116,7 +117,7 @@ export default function Comment({
     onUnliked = defaultOnUnliked,
     children,
     ...props
-}: CommentArgs) {
+}: CommentProps) {
     const [internalCommentObj, setInternalCommentObj] =
         useControllableState<CommentObject>({
             defaultValue: defaultCommentObj,

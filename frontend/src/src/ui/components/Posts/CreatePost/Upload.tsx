@@ -2,11 +2,11 @@ import {
     useRef,
     type MouseEvent,
     type KeyboardEvent,
-    ChangeEvent,
+    type ChangeEvent,
 } from "react";
 import { sleep } from "@/ui/utils/misc";
 import useControllableState from "@/ui/hooks/useControllableState";
-import type { Stage, StageComponentArgs } from "./types";
+import type { Stage, StageComponentProps } from "@/ui/types/stages";
 import uploadStyle from "./Upload.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileImage } from "@fortawesome/free-solid-svg-icons";
@@ -14,12 +14,11 @@ import { usePostContext } from "./context";
 
 export default function Upload({
     defaultStage = "Upload",
-    currentStage = undefined,
-    onStageChange = undefined,
-}: StageComponentArgs) {
+    currentStage,
+    onNextStage,
+}: StageComponentProps) {
     const postContext = usePostContext();
 
-    const wrapperRef = useRef<HTMLDivElement | null>(null);
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     const maxUploadSizeMB: number = 10;
@@ -28,7 +27,7 @@ export default function Upload({
         useControllableState<Stage>({
             defaultValue: defaultStage,
             value: currentStage,
-            onChange: onStageChange,
+            onChange: onNextStage,
         });
 
     const handleClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -47,7 +46,10 @@ export default function Upload({
         switch (event.key) {
             case "Enter":
             case " ": {
-                wrapperRef.current?.click();
+                inputRef.current?.click();
+                break;
+            }
+            default: {
                 break;
             }
         }
@@ -59,7 +61,7 @@ export default function Upload({
         setInternalCurrentStage("Loading");
 
         const maxDelay = 8000;
-        const randomDelay = Math.round(Math.random() * maxDelay);
+        const randomDelay = Math.round(Math.random()) * maxDelay;
 
         await sleep(randomDelay);
 
@@ -85,7 +87,7 @@ export default function Upload({
 
     return (
         <div
-            ref={wrapperRef}
+            role="button"
             className={uploadStyle.wrapper}
             tabIndex={0}
             onClick={handleClick}

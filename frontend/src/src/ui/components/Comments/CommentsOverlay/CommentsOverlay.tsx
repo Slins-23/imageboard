@@ -38,7 +38,7 @@ import type {
 } from "@/ui/components/Comments/Comment/types";
 import TextArea from "@/ui/components/Input/TextArea/TextArea";
 
-interface CommentsOverlayArgs {
+interface CommentsOverlayProps {
     defaultComments?: CommentObject[];
     comments?: CommentObject[];
 
@@ -266,7 +266,7 @@ export default function CommentsOverlay({
     onReply,
     onReplied,
     children,
-}: CommentsOverlayArgs) {
+}: CommentsOverlayProps) {
     const mockUserID = "1337"; // To mirror behavior of allowing user to delete their own comment and disallow liking it
 
     const [internalComments, setInternalComments] = useControllableState({

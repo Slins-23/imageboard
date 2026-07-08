@@ -10,9 +10,9 @@ import {
     useCallback,
     type MouseEvent,
     type KeyboardEvent as ReactKeyboardEvent,
-    type HTMLAttributes,
-    type ButtonHTMLAttributes,
-    type LiHTMLAttributes,
+    type Dispatch,
+    type SetStateAction,
+    type ComponentPropsWithoutRef,
 } from "react";
 import { isMouseEvent } from "@/ui/utils/events";
 import useControllableState from "@/ui/hooks/useControllableState";
@@ -24,20 +24,20 @@ interface DropdownEntry {
 
 type DropdownEntries = Array<Readonly<DropdownEntry>>;
 
-interface DropdownMenuArgs extends HTMLAttributes<HTMLDivElement> {
+interface DropdownMenuProps extends ComponentPropsWithoutRef<"div"> {
     dropdownEntries: DropdownEntries;
     selectedIdx?: number;
     defaultSelectedIdx?: number;
     onSelected?: (
         event: MouseEvent<HTMLLIElement> | ReactKeyboardEvent<HTMLLIElement>
     ) => void;
-    onSelectedChange?: (selectedIdx: number) => void;
+    onSelectedChange?: Dispatch<SetStateAction<number>>;
     responsive?: boolean;
     fontSize?: string;
     width?: string;
-    buttonProps?: ButtonHTMLAttributes<HTMLButtonElement>;
-    listProps?: HTMLAttributes<HTMLUListElement>;
-    itemProps?: LiHTMLAttributes<HTMLLIElement>;
+    buttonProps?: ComponentPropsWithoutRef<"button">;
+    listProps?: ComponentPropsWithoutRef<"ul">;
+    itemProps?: ComponentPropsWithoutRef<"li">;
 }
 
 export default function DropdownMenu({
@@ -60,7 +60,7 @@ export default function DropdownMenu({
     listProps = undefined,
     itemProps = undefined,
     ...props
-}: DropdownMenuArgs) {
+}: DropdownMenuProps) {
     const dropdownId = useId();
 
     const [isOpen, setIsOpen] = useState<boolean>(false);

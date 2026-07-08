@@ -1,7 +1,7 @@
 "use client";
 
 import useControllableState from "@/ui/hooks/useControllableState";
-import type { Stage, StageComponentArgs } from "./types";
+import type { Stage, StageComponentProps } from "@/ui/types/stages";
 import { usePostContext } from "./context";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheck, faLink } from "@fortawesome/free-solid-svg-icons";
@@ -12,9 +12,9 @@ import { useModalContext } from "@/ui/components/Overlays/Modal/modal";
 
 export default function Success({
     defaultStage = "Success",
-    currentStage = undefined,
-    onStageChange = undefined,
-}: StageComponentArgs) {
+    currentStage,
+    onNextStage,
+}: StageComponentProps) {
     const postContext = usePostContext();
     const modalContext = useModalContext();
 
@@ -22,7 +22,7 @@ export default function Success({
         useControllableState<Stage>({
             defaultValue: defaultStage,
             value: currentStage,
-            onChange: onStageChange,
+            onChange: onNextStage,
         });
 
     return (
@@ -49,8 +49,10 @@ export default function Success({
                     <Button
                         style={{ padding: "0.25em 0.4em" }}
                         onClick={async () => {
-                            if (postContext.current === undefined) return;
-                            if (postContext.current.postURL === undefined)
+                            if (
+                                postContext.current === undefined ||
+                                postContext.current.postURL === undefined
+                            )
                                 return;
 
                             await navigator.clipboard.writeText(

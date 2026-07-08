@@ -3,6 +3,7 @@
 import { type ReactNode, type InputEvent } from "react";
 import Button from "@/ui/components/Buttons/Button/Button";
 import DialogCard from "@/ui/components/Layout/DialogCard/DialogCard";
+import themePickerStyle from "./ThemePicker.module.css";
 
 function getColor(name: string): string {
     const rootStyle = window.getComputedStyle(document.documentElement);
@@ -58,26 +59,11 @@ export default function ThemePicker({
     return (
         <DialogCard>
             <h3>Theme</h3>
-            <div
-                className="themeRow"
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "1rem",
-                    textAlign: "left",
-                }}
-            >
-                <div style={{ width: "100%" }}>
+            <div className={themePickerStyle.wrapper}>
+                <div className={themePickerStyle.colorRow}>
                     <label htmlFor="colorPrimary">Primary: </label>
                     <input
-                        style={{
-                            float: "right",
-                            border: "none",
-                            borderRadius: "5px",
-                            outlineStyle: "solid",
-                            outlineColor: "var(--tertiary)",
-                            outlineWidth: "2px",
-                        }}
+                        className={themePickerStyle.colorOption}
                         type="color"
                         id="colorPrimary"
                         defaultValue={defaultPrimary}
@@ -87,17 +73,10 @@ export default function ThemePicker({
                     />
                 </div>
 
-                <div style={{ width: "100%" }}>
+                <div className={themePickerStyle.colorRow}>
                     <label htmlFor="colorSecondary">Secondary: </label>
                     <input
-                        style={{
-                            float: "right",
-                            border: "none",
-                            borderRadius: "5px",
-                            outlineStyle: "solid",
-                            outlineColor: "var(--tertiary)",
-                            outlineWidth: "2px",
-                        }}
+                        className={themePickerStyle.colorOption}
                         type="color"
                         id="colorSecondary"
                         defaultValue={defaultSecondary}
@@ -106,17 +85,10 @@ export default function ThemePicker({
                         }
                     />
                 </div>
-                <div style={{ width: "100%" }}>
+                <div className={themePickerStyle.colorRow}>
                     <label htmlFor="colorTertiary">Tertiary: </label>
                     <input
-                        style={{
-                            float: "right",
-                            border: "none",
-                            borderRadius: "5px",
-                            outlineStyle: "solid",
-                            outlineColor: "var(--tertiary)",
-                            outlineWidth: "2px",
-                        }}
+                        className={themePickerStyle.colorOption}
                         type="color"
                         id="colorTertiary"
                         defaultValue={defaultTertiary}
@@ -125,17 +97,10 @@ export default function ThemePicker({
                         }
                     />
                 </div>
-                <div style={{ width: "100%" }}>
+                <div className={themePickerStyle.colorRow}>
                     <label htmlFor="colorAccent">Accent: </label>
                     <input
-                        style={{
-                            float: "right",
-                            border: "none",
-                            borderRadius: "5px",
-                            outlineStyle: "solid",
-                            outlineColor: "var(--tertiary)",
-                            outlineWidth: "2px",
-                        }}
+                        className={themePickerStyle.colorOption}
                         type="color"
                         id="colorAccent"
                         defaultValue={defaultAccent}
@@ -145,14 +110,7 @@ export default function ThemePicker({
                     />
                 </div>
             </div>
-            <div
-                className="optionsRow"
-                style={{
-                    display: "flex",
-                    justifyContent: "center",
-                    gap: "1rem",
-                }}
-            >
+            <div className={themePickerStyle.buttons}>
                 <Button onClick={saveColors}>Save</Button>
                 <Button onClick={cancelColors}>Cancel</Button>
                 <Button onClick={resetColors}>Reset</Button>

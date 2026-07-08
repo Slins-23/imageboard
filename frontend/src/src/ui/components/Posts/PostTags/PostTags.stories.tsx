@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
-import PostTags from "./PostTags";
+import PostTags, { type TagLike } from "./PostTags";
 
 const meta: Meta<typeof PostTags> = {
     title: "UI/Posts/PostTags",
@@ -8,32 +8,47 @@ const meta: Meta<typeof PostTags> = {
 
 export default meta;
 
+const tagNames = [
+    "Anime",
+    "Rain",
+    "City",
+    "Mountains",
+    "Character",
+    "Melancholic",
+    "Sky",
+    "Night",
+    "Stars",
+    "Dawn",
+    "Ethereal",
+    "Dusk",
+    "Nebula",
+    "Female",
+    "Short hair",
+    "Staring",
+    "Solitude",
+    "Wanderlust",
+    "Woman",
+    "Skyscraper",
+    "Girl",
+    "Fiction",
+];
+
+type MockTag = TagLike & { randomNumber: number };
+
+const tags: MockTag[] = tagNames.map((tag) => {
+    return { id: crypto.randomUUID(), name: tag, randomNumber: Math.random() };
+});
+
 export const Primary: StoryObj<typeof meta> = {
     args: {
-        tags: [
-            "Anime",
-            "Rain",
-            "City",
-            "Mountains",
-            "Character",
-            "Melancholic",
-            "Sky",
-            "Night",
-            "Stars",
-            "Dawn",
-            "Ethereal",
-            "Dusk",
-            "Nebula",
-            "Female",
-            "Short hair",
-            "Staring",
-            "Solitude",
-            "Wanderlust",
-            "Woman",
-            "Skyscraper",
-            "Girl",
-            "Fiction",
-        ],
+        tags,
+        onTagSelect: (event, tag) => {
+            const wasMouseClick = event.type === "click";
+
+            alert(
+                `Tag "${tag.name}" selected through ${wasMouseClick ? "mouse click" : "key press"}.`
+            );
+        },
     },
     render: (args) => {
         return (

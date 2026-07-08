@@ -2,22 +2,23 @@ import userMenuStyle from "./UserMenu.module.css";
 // import Link from "next/link";
 import type { NavigationItem } from "@/ui/types/navigation";
 import {
-    HTMLAttributes,
-    LiHTMLAttributes,
     useCallback,
     useEffect,
     // useEffect,
     useRef,
     useState,
+    type MouseEvent,
+    type KeyboardEvent,
+    type ComponentPropsWithoutRef,
 } from "react";
 import clsx from "clsx";
 
-interface UserMenuArgs {
+interface UserMenuProps {
     currentRoute: string;
     onItemSelected?: (item: NavigationItem) => void;
     items: NavigationItem[];
-    listProps?: HTMLAttributes<HTMLUListElement>;
-    itemProps?: LiHTMLAttributes<HTMLLIElement>;
+    listProps?: ComponentPropsWithoutRef<"ul">;
+    itemProps?: ComponentPropsWithoutRef<"li">;
 }
 
 export default function UserMenu({
@@ -27,7 +28,7 @@ export default function UserMenu({
     listProps,
     itemProps,
     ...props
-}: UserMenuArgs) {
+}: UserMenuProps) {
     const menuOptionsRefs = useRef<HTMLLIElement[]>([]);
 
     const currentRouteIdx = items.findIndex(
@@ -69,6 +70,62 @@ export default function UserMenu({
         [currentRouteIdx]
     );
 
+    const handleClick = (
+        event: MouseEvent<HTMLLIElement>,
+        item: NavigationItem,
+        idx: number
+    ) => {
+        event.preventDefault();
+
+        focusElement(idx);
+
+        onItemSelected?.(item);
+    };
+
+    const handleKeyDown = (
+        event: KeyboardEvent<HTMLLIElement>,
+        item: NavigationItem,
+        idx: number
+    ) => {
+        switch (event.key) {
+            case "Enter":
+            case " ": {
+                event.preventDefault();
+
+                onItemSelected?.(item);
+
+                break;
+            }
+
+            case "ArrowUp": {
+                event.preventDefault();
+
+                const nextIdx = Math.max(0, idx - 1);
+
+                focusElement(nextIdx);
+
+                break;
+            }
+            case "Tab":
+            case "ArrowDown": {
+                event.preventDefault();
+
+                if (focusedIdx === items.length - 1) {
+                    focusElement(0);
+                } else {
+                    const nextIdx = Math.min(idx + 1, items.length - 1);
+
+                    focusElement(nextIdx);
+                }
+
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    };
+
     return (
         <nav {...props}>
             <ul
@@ -87,55 +144,8 @@ export default function UserMenu({
                         tabIndex={idx === focusedIdx ? 0 : -1}
                         ref={(element) => setItemRef(element, idx)}
                         key={item.route}
-                        onClick={(event) => {
-                            event.preventDefault();
-
-                            focusElement(idx);
-
-                            onItemSelected?.(item);
-                        }}
-                        onKeyDown={(event) => {
-                            switch (event.key) {
-                                case "Enter":
-                                case " ": {
-                                    event.preventDefault();
-
-                                    onItemSelected?.(item);
-
-                                    break;
-                                }
-
-                                case "ArrowUp": {
-                                    event.preventDefault();
-
-                                    const nextIdx = Math.max(0, idx - 1);
-
-                                    focusElement(nextIdx);
-
-                                    break;
-                                }
-                                case "Tab":
-                                case "ArrowDown": {
-                                    event.preventDefault();
-
-                                    if (focusedIdx === items.length - 1) {
-                                        focusElement(0);
-                                    } else {
-                                        const nextIdx = Math.min(
-                                            idx + 1,
-                                            items.length - 1
-                                        );
-
-                                        focusElement(nextIdx);
-                                    }
-
-                                    break;
-                                }
-                                default: {
-                                    break;
-                                }
-                            }
-                        }}
+                        onClick={(event) => handleClick(event, item, idx)}
+                        onKeyDown={(event) => handleKeyDown(event, item, idx)}
                     >
                         {item.text}
                     </li>

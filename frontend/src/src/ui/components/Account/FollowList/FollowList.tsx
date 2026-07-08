@@ -11,18 +11,23 @@ import Image from "next/image";
 import Button from "@/ui/components/Buttons/Button/Button";
 import UserPlaceholder from "@/ui/components/Account/UserPlaceholder/UserPlaceholder";
 import Toast from "@/ui/components/Overlays/Toast/toast";
-import { User } from "./types";
 
-interface FollowListArgs {
-    users: User[];
-    onFollow?: (user: User) => boolean;
-    onUnfollow?: (user: User) => boolean;
-    onFollowed?: (user: User) => void;
-    onUnfollowed?: (user: User) => void;
+type UserLike = {
+    avatar?: string;
+    name: string;
+    followed: boolean;
+};
+
+interface FollowListProps<TUser extends UserLike> {
+    users: TUser[];
+    onFollow?: (user: TUser) => boolean;
+    onUnfollow?: (user: TUser) => boolean;
+    onFollowed?: (user: TUser) => void;
+    onUnfollowed?: (user: TUser) => void;
     children?: ReactNode;
 }
 
-export default function FollowList({
+export default function FollowList<TUser extends UserLike>({
     users = [
         {
             avatar: undefined,
@@ -51,15 +56,15 @@ export default function FollowList({
     onUnfollow,
     onFollowed,
     onUnfollowed,
-}: FollowListArgs) {
-    const followStates = [...users.map((user) => useState(user.followed))];
+}: FollowListProps<TUser>) {
+    const followStates = users.map((user) => useState(user.followed));
 
     const debouncedFollowDelayMS = 1000;
     const followTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     const handleFollow = (
         event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>,
-        user: User,
+        user: TUser,
         idx: number
     ) => {
         const nextValue = !followStates[idx][0];
@@ -105,7 +110,7 @@ export default function FollowList({
             }}
         >
             <ul className={followListStyle.list}>
-                {users.map((user: User, idx: number) => (
+                {users.map((user: TUser, idx: number) => (
                     <li
                         key={user.name}
                         className={followListStyle.user}
@@ -156,15 +161,7 @@ export default function FollowList({
                                     }
                                 }
                             }}
-                            style={{
-                                flexShrink: "0",
-                                marginLeft: "auto",
-                                borderRadius: "5px",
-                                padding: "0.3em 0.1em",
-                                width: "9ch",
-                                transitionDuration: "0.15s",
-                                fontSize: "var(--font-size-lg)",
-                            }}
+                            className={followListStyle.followBtn}
                         >
                             {followStates[idx][0] ? "Following" : "Follow"}
                         </Button>

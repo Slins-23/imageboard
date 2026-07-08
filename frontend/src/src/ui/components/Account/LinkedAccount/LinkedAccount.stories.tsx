@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import LinkedAccount from "./LinkedAccount";
 import { useArgs } from "storybook/internal/preview-api";
+import { SetStateAction } from "react";
 
 const meta: Meta<typeof LinkedAccount> = {
     title: "UI/Account/LinkedAccount",
@@ -23,7 +24,7 @@ export const GoogleControlled: StoryObj<typeof meta> = {
     },
     render: (args) => {
         const [, setArgs] = useArgs();
-        const setConnectedChange = (isConnected?: boolean) =>
+        const setConnectedChange = (isConnected?: SetStateAction<boolean>) =>
             setArgs({ isConnected });
 
         return (

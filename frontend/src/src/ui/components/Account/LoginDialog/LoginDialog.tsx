@@ -2,7 +2,7 @@ import stageStyle from "@/ui/components/Account/SignupDialog/stages.module.css";
 import SignupDialog from "@/ui/components/Account/SignupDialog/SignupDialog";
 import Button from "@/ui/components/Buttons/Button/Button";
 import TextBox from "@/ui/components/Input/TextBox/TextBox";
-import { type CSSProperties, useState, useId } from "react";
+import { useState, useId } from "react";
 import LinkAccount from "./LinkAccount";
 import loginDialogStyle from "./LoginDialog.module.css";
 
@@ -72,12 +72,7 @@ export default function LoginDialog() {
                         <TextBox
                             id={userFieldId}
                             placeholder="E-mail or username"
-                            style={{
-                                backgroundColor: "rgba(0, 0, 0, 0)",
-                                padding: "1em 0.75em",
-                                width: "300px",
-                                fontSize: "var(--font-size-lg)",
-                            }}
+                            className={loginDialogStyle.textField}
                             maxLength={255}
                             value={userId}
                             onTextChange={setUserId}
@@ -85,12 +80,7 @@ export default function LoginDialog() {
                         <TextBox
                             id={passwordFieldId}
                             placeholder="Password"
-                            style={{
-                                backgroundColor: "rgba(0, 0, 0, 0)",
-                                padding: "1em 0.75em",
-                                width: "300px",
-                                fontSize: "var(--font-size-lg)",
-                            }}
+                            className={loginDialogStyle.textField}
                             maxLength={255}
                             value={password}
                             type="password"
@@ -115,15 +105,7 @@ export default function LoginDialog() {
                             {errorMessage ?? "None"}
                         </span>
                         <Button
-                            style={
-                                {
-                                    fontSize: "var(--font-size-2xl)",
-                                    "--text-color": "var(--tertiary)",
-                                    "--text-color-hover": "var(--tertiary)",
-                                    "--bg-color-hover": "var(--primary)",
-                                    transitionDuration: "0.1s",
-                                } as CSSProperties
-                            }
+                            className={loginDialogStyle.loginBtn}
                             onClick={() =>
                                 setErrorMessage("Error: Invalid credentials.")
                             }

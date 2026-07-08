@@ -14,17 +14,18 @@ import useControllableState from "@/ui/hooks/useControllableState";
 import type {
     MouseEvent,
     KeyboardEvent,
-    ButtonHTMLAttributes,
-    ReactNode,
     ElementType,
     ComponentPropsWithoutRef,
+    SetStateAction,
+    Dispatch,
 } from "react";
+import clsx from "clsx";
 
-type IconButtonProps<Component extends ElementType> = {
-    as?: Component;
+type IconButtonProps<C extends ElementType = "button"> = {
+    as?: C;
     isActive?: boolean;
     defaultActive?: boolean;
-    onActiveChange?: (isActive: boolean) => void;
+    onActiveChange?: Dispatch<SetStateAction<boolean>>;
     icon?: IconProp;
     width?: string;
     height?: string;
@@ -34,11 +35,11 @@ type IconButtonProps<Component extends ElementType> = {
     hasNotifications?: boolean;
     iconProps?: FontAwesomeIconProps;
     notificationProps?: NotificationArgs;
-} & ComponentPropsWithoutRef<Component>;
+} & ComponentPropsWithoutRef<C>;
 
-export default function IconButton<Component extends ElementType>({
+export default function IconButton<C extends ElementType = "button">({
     as,
-    isActive = undefined,
+    isActive,
     defaultActive = false,
     icon = faHouse,
     width = "50px",
@@ -47,11 +48,13 @@ export default function IconButton<Component extends ElementType>({
     iconWidthScale = 1,
     iconHeightScale = 1,
     hasNotifications = false,
-    onActiveChange = undefined,
-    notificationProps = undefined,
+    onActiveChange,
+    notificationProps,
     ...props
-}: IconButtonProps<Component>) {
-    const Component = as ?? "button";
+}: IconButtonProps<C>) {
+    const Component = (as || "button") as ElementType;
+
+    const p = props as ComponentPropsWithoutRef<"button">;
 
     const [internalIsActive, setInternalIsActive] =
         useControllableState<boolean>({
@@ -61,17 +64,17 @@ export default function IconButton<Component extends ElementType>({
         });
 
     const handleClick = (event: MouseEvent<HTMLElement>) => {
-        if (props.disabled) return;
+        if (p.disabled) return;
 
-        props?.onClick?.(event);
+        p?.onClick?.(event as MouseEvent<HTMLButtonElement>);
 
         if (!internalIsActive) setInternalIsActive(true);
     };
 
     const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-        if (props.disabled) return;
+        if (p.disabled) return;
 
-        props?.onKeyDown?.(event);
+        p?.onKeyDown?.(event as KeyboardEvent<HTMLButtonElement>);
 
         switch (event.key) {
             case " ": {
@@ -91,10 +94,10 @@ export default function IconButton<Component extends ElementType>({
     return (
         <Component
             type="button"
-            className={buttonStyle.iconButton}
             aria-pressed={isActive === undefined ? false : internalIsActive}
             {...props}
-            style={{ width, height, ...props.style }}
+            className={clsx(buttonStyle.iconButton, p.className)}
+            style={{ width, height, ...p.style }}
             onClick={handleClick}
             onKeyDown={handleKeyDown}
         >

@@ -1,7 +1,7 @@
 import Button from "@/ui/components/Buttons/Button/Button";
 import DialogCard from "@/ui/components/Layout/DialogCard/DialogCard";
 
-export default function CreateAlbumSuccessDialog({}: {}) {
+export default function CreateAlbumSuccessDialog() {
     return (
         <DialogCard cardProps={{ style: { width: "450px" } }}>
             <span style={{ fontSize: "var(--font-size-3xl)" }}>

@@ -1,11 +1,14 @@
 import Card from "@/ui/components/Layout/Card/Card";
 import type { ReactNode, ComponentProps } from "react";
 
-interface SignupDialogArgs extends ComponentProps<typeof Card> {
+interface SignupDialogProps extends ComponentProps<typeof Card> {
     children?: ReactNode;
 }
 
-export default function SignupDialog({ children, ...props }: SignupDialogArgs) {
+export default function SignupDialog({
+    children,
+    ...props
+}: SignupDialogProps) {
     return (
         <Card
             {...props}

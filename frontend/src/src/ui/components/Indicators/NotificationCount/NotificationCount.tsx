@@ -2,21 +2,20 @@
 
 import useControllableState from "@/ui/hooks/useControllableState";
 import notificationStyle from "./NotificationCount.module.css";
-import { type HTMLAttributes } from "react";
+import type { ComponentPropsWithoutRef, Dispatch, SetStateAction } from "react";
 
-export interface NotificationArgs extends HTMLAttributes<HTMLDivElement> {
+export interface NotificationProps extends ComponentPropsWithoutRef<"div"> {
     count?: number;
     defaultCount?: number;
-    onCountChange?: (count: number) => void;
-    onCount?: (count?: number) => void;
+    onCountChange?: Dispatch<SetStateAction<number>>;
 }
 
 export default function NotificationCount({
-    count = undefined,
+    count,
     defaultCount = 0,
-    onCountChange = undefined,
+    onCountChange,
     ...props
-}: NotificationArgs) {
+}: NotificationProps) {
     const [internalCount] = useControllableState<number>({
         defaultValue: defaultCount,
         value: count,

@@ -44,3 +44,13 @@
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+.followBtn {
+    flex-shrink: 0;
+    margin-left: auto;
+    border-radius: 5px;
+    padding: 0.3em 0.1em;
+    width: 9ch;
+    transition-duration: 0.15s;
+    font-size: var(--font-size-lg);
+}

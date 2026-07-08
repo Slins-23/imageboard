@@ -1,4 +1,5 @@
 .card {
+    background-color: var(--primary);
     width: 845px;
     height: 515px;
     outline-width: 2px;

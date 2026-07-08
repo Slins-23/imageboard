@@ -201,6 +201,7 @@ export default defineConfig([
             "no-duplicate-imports": "warn",
             "no-duplicate-case": "error",
             "no-dupe-keys": "error",
+            "unicorn/prefer-global-this": "off",
             "no-dupe-else-if": "error",
             "no-dupe-class-members": "error",
             "no-dupe-args": "error",
@@ -225,6 +226,12 @@ export default defineConfig([
             react: {
                 version: "19.1.0",
             },
+        },
+    },
+    {
+        files: ["**/*.tsx", "**/*.jsx"],
+        rules: {
+            "n/no-unsupported-features/node-builtins": "off",
         },
     },
     eslintNext.flatConfig.recommended as Linter.FlatConfig,

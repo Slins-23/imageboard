@@ -31,3 +31,18 @@
     flex-direction: column;
     gap: 1.5rem;
 }
+
+.textField {
+    background-color: rgba(0, 0, 0, 0);
+    padding: 1em 0.75em;
+    width: 300px;
+    font-size: var(--font-size-lg);
+}
+
+.loginBtn {
+    font-size: var(--font-size-2xl);
+    --text-color: var(--tertiary);
+    --text-color-hover: var(--tertiary);
+    --bg-color-hover: var(--primary);
+    transition-duration: 0.1s;
+}

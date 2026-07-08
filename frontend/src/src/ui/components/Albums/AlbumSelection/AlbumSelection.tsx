@@ -64,14 +64,14 @@ export type BookmarkEvent<TAlbum extends AlbumLike> =
           error: string;
       };
 
-interface AlbumSelectionArgs<TAlbum extends AlbumLike> {
+interface AlbumSelectionProps<TAlbum extends AlbumLike> {
     postId: string;
     defaultAlbums?: TAlbum[];
     albums?: TAlbum[];
-    onAlbumsChange?: Dispatch<SetStateAction<TAlbum[] | undefined>>;
+    onAlbumsChange?: Dispatch<SetStateAction<TAlbum[]>>;
     defaultSearchText?: string;
     searchText?: string;
-    onTextChange?: Dispatch<SetStateAction<string | undefined>>;
+    onTextChange?: Dispatch<SetStateAction<string>>;
     transformText?: (text: string) => string;
     onCreateAlbum?: (title: string) => AlbumEvent<TAlbum>;
     onDeleteAlbum?: (album: TAlbum) => AlbumEvent<TAlbum>;
@@ -129,7 +129,7 @@ export default function AlbumSelection<TAlbum extends AlbumLike>({
     transformText,
     onBookmarkPost,
     onBookmarkEvent,
-}: AlbumSelectionArgs<TAlbum>) {
+}: AlbumSelectionProps<TAlbum>) {
     const coverWidth = 75;
     const coverHeight = 75;
 

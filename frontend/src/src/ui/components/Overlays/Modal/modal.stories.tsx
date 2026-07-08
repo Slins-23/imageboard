@@ -3,7 +3,7 @@ import { useArgs } from "storybook/preview-api";
 import Button from "@/ui/components/Buttons/Button/Button";
 import Card from "@/ui/components/Layout/InterestCard/InterestCard";
 import * as Modal from "./modal";
-import { ComponentProps, useRef } from "react";
+import { ComponentProps, SetStateAction, useRef } from "react";
 
 type ModalArgs = ComponentProps<typeof Modal.Root> &
     ComponentProps<typeof Modal.Content>;
@@ -104,7 +104,8 @@ export const Controlled: StoryObj<typeof meta> = {
         const isDismissible = useRef(true);
 
         const [, setArgs] = useArgs();
-        const setIsOpen = (isOpen: boolean) => setArgs({ isOpen });
+        const setIsOpen = (isOpen: SetStateAction<boolean>) =>
+            setArgs({ isOpen });
         const setIsDismissible = (newIsDismissible: boolean) =>
             (isDismissible.current = newIsDismissible);
 

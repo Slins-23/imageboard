@@ -2,15 +2,21 @@
 
 import useControllableState from "@/ui/hooks/useControllableState";
 import { RadioGroupContext } from "./context";
-import { type ChangeEvent, ReactNode, useId } from "react";
+import {
+    type ChangeEvent,
+    type ReactNode,
+    type Dispatch,
+    type SetStateAction,
+    useId,
+} from "react";
 import { OptionValue } from "./types";
 import radioGroupStyle from "./RadioGroup.module.css";
 
-interface RadioGroupArgs {
+interface RadioGroupProps {
     groupName?: string;
     selectedValue?: OptionValue;
     defaultSelectedValue?: OptionValue;
-    onSelectedChange?: (selectedValue: OptionValue) => void;
+    onSelectedChange?: Dispatch<SetStateAction<OptionValue>>;
     onSelected?: (event: ChangeEvent<HTMLInputElement>) => void;
     itemGap?: string;
     buttonTextGap?: string;
@@ -19,15 +25,15 @@ interface RadioGroupArgs {
 
 // Labels and values are the same if one is omitted
 export default function RadioGroup({
-    groupName = undefined,
-    selectedValue = undefined,
-    defaultSelectedValue = undefined,
-    onSelectedChange = undefined,
-    onSelected = undefined,
+    groupName,
+    selectedValue,
+    defaultSelectedValue,
+    onSelectedChange,
+    onSelected,
     itemGap = "1.5rem",
     buttonTextGap = "0.7rem",
-    children = null,
-}: RadioGroupArgs) {
+    children,
+}: RadioGroupProps) {
     const groupId = groupName ?? useId();
 
     const [internalSelectedValue, setInternalSelectedValue] =

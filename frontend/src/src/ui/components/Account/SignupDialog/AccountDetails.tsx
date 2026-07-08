@@ -1,6 +1,7 @@
 import stageStyle from "./stages.module.css";
+import accountDetailsStyle from "./AccountDetails.module.css";
 import Button from "@/ui/components/Buttons/Button/Button";
-import { type CSSProperties, useState, useId } from "react";
+import { useState, useId } from "react";
 import TextBox from "@/ui/components/Input/TextBox/TextBox";
 
 export default function AccountDetails() {
@@ -38,12 +39,7 @@ export default function AccountDetails() {
                     </label>
                     <TextBox
                         id={emailId}
-                        style={{
-                            width: "186px",
-                            backgroundColor: "rgba(0, 0, 0, 0)",
-                            padding: "0.75em 0.5em",
-                            fontSize: "var(--font-size-lg)",
-                        }}
+                        className={accountDetailsStyle.textField}
                         maxLength={255}
                         value={email}
                         onTextChange={setEmail}
@@ -56,12 +52,7 @@ export default function AccountDetails() {
                     </label>
                     <TextBox
                         id={usernameId}
-                        style={{
-                            width: "186px",
-                            backgroundColor: "rgba(0, 0, 0, 0)",
-                            padding: "0.75em 0.5em",
-                            fontSize: "var(--font-size-lg)",
-                        }}
+                        className={accountDetailsStyle.textField}
                         maxLength={255}
                         value={username}
                         onTextChange={setUsername}
@@ -74,12 +65,7 @@ export default function AccountDetails() {
                     </label>
                     <TextBox
                         id={passwordId}
-                        style={{
-                            width: "186px",
-                            backgroundColor: "rgba(0, 0, 0, 0)",
-                            padding: "0.75em 0.5em",
-                            fontSize: "var(--font-size-lg)",
-                        }}
+                        className={accountDetailsStyle.textField}
                         maxLength={255}
                         value={password}
                         type="password"
@@ -93,12 +79,7 @@ export default function AccountDetails() {
                     </label>
                     <TextBox
                         id={passwordConfirmationId}
-                        style={{
-                            width: "186px",
-                            backgroundColor: "rgba(0, 0, 0, 0)",
-                            padding: "0.75em 0.5em",
-                            fontSize: "var(--font-size-lg)",
-                        }}
+                        className={accountDetailsStyle.textField}
                         maxLength={255}
                         value={passwordConfirmation}
                         type="password"
@@ -115,14 +96,7 @@ export default function AccountDetails() {
                 </span>
                 <div className={stageStyle.buttonWrapper}>
                     <Button
-                        style={
-                            {
-                                fontSize: "var(--font-size-2xl)",
-                                "--text-color": "var(--tertiary)",
-                                "--text-color-hover": "var(--tertiary)",
-                                "--bg-color-hover": "var(--primary)",
-                            } as CSSProperties
-                        }
+                        className={accountDetailsStyle.signupBtn}
                         onClick={() =>
                             setErrorMessage(
                                 "Error: Submission logic not yet implemented."

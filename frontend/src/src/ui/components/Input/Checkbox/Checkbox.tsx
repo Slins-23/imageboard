@@ -10,13 +10,13 @@ import useControllableState from "@/ui/hooks/useControllableState";
 import {
     type MouseEvent,
     type KeyboardEvent,
-    type ButtonHTMLAttributes,
     type Dispatch,
     type SetStateAction,
+    type ComponentPropsWithoutRef,
 } from "react";
 import clsx from "clsx";
 
-interface CheckboxArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface CheckboxProps extends ComponentPropsWithoutRef<"button"> {
     icon?: IconDefinition;
     iconSize: string;
     iconWidthScale?: number;
@@ -27,7 +27,7 @@ interface CheckboxArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
         isChecked: boolean,
         event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>
     ) => void;
-    onCheckedChange?: Dispatch<SetStateAction<boolean | undefined>>;
+    onCheckedChange?: Dispatch<SetStateAction<boolean>>;
     iconProps?: FontAwesomeIconProps;
 }
 
@@ -42,7 +42,7 @@ export default function Checkbox({
     iconHeightScale = 1,
     iconProps,
     ...props
-}: CheckboxArgs) {
+}: CheckboxProps) {
     const [internalIsChecked, setInternalIsChecked] = useControllableState({
         defaultValue: defaultChecked,
         value: isChecked,

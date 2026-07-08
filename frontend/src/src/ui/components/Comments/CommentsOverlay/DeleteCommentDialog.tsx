@@ -2,7 +2,7 @@ import Button from "@/ui/components/Buttons/Button/Button";
 import DialogCard from "@/ui/components/Layout/DialogCard/DialogCard";
 import type { KeyboardEvent } from "react";
 
-interface DeleteCommentDialogArgs {
+interface DeleteCommentDialogProps {
     title?: string;
     onYes?: (...params: any[]) => void;
     onNo?: (...params: any[]) => void;
@@ -12,7 +12,7 @@ export default function DeleteCommentDialog({
     title,
     onYes,
     onNo,
-}: DeleteCommentDialogArgs) {
+}: DeleteCommentDialogProps) {
     return (
         <DialogCard cardProps={{ style: { width: "450px" } }}>
             <span>Are you sure you want to delete this comment?</span>

@@ -6,20 +6,21 @@ import {
     useRef,
     useCallback,
     useEffect,
-    type HTMLAttributes,
-    type LiHTMLAttributes,
+    type MouseEvent,
+    type KeyboardEvent,
+    type ComponentPropsWithoutRef,
 } from "react";
 import type { NavigationItem } from "@/ui/types/navigation";
 import clsx from "clsx";
 
-interface GradientNavbarArgs extends HTMLAttributes<HTMLDivElement> {
+interface GradientNavbarProps extends ComponentPropsWithoutRef<"div"> {
     currentRoute: string;
     onItemSelected?: (item: NavigationItem) => void;
     title: string;
     items: NavigationItem[];
-    listProps?: HTMLAttributes<HTMLUListElement>;
-    itemProps?: LiHTMLAttributes<HTMLLIElement>;
-    titleProps?: HTMLAttributes<HTMLSpanElement>;
+    listProps?: ComponentPropsWithoutRef<"ul">;
+    itemProps?: ComponentPropsWithoutRef<"li">;
+    titleProps?: ComponentPropsWithoutRef<"span">;
 }
 
 export default function GradientNavbar({
@@ -31,7 +32,7 @@ export default function GradientNavbar({
     itemProps,
     titleProps,
     ...props
-}: GradientNavbarArgs) {
+}: GradientNavbarProps) {
     const currentRouteIdx = items.findIndex(
         (item) => item.route === currentRoute
     );
@@ -62,6 +63,59 @@ export default function GradientNavbar({
         () => setFocusedIdx(Math.max(currentRouteIdx, 0)),
         [currentRouteIdx]
     );
+
+    const handleClick = (
+        event: MouseEvent<HTMLLIElement>,
+        item: NavigationItem,
+        idx: number
+    ) => {
+        event.preventDefault();
+
+        onItemSelected?.(item);
+    };
+
+    const handleKeyDown = (
+        event: KeyboardEvent<HTMLLIElement>,
+        item: NavigationItem,
+        idx: number
+    ) => {
+        switch (event.key) {
+            case "Enter":
+            case " ": {
+                event.preventDefault();
+
+                onItemSelected?.(item);
+
+                break;
+            }
+            case "ArrowUp": {
+                event.preventDefault();
+
+                const nextIdx = Math.max(0, idx - 1);
+
+                focusItem(nextIdx);
+
+                break;
+            }
+            case "Tab":
+            case "ArrowDown": {
+                event.preventDefault();
+
+                if (focusedIdx === items.length - 1) {
+                    focusItem(0);
+                } else {
+                    const nextIdx = Math.min(idx + 1, items.length - 1);
+
+                    focusItem(nextIdx);
+                }
+
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    };
 
     return (
         <nav
@@ -94,52 +148,8 @@ export default function GradientNavbar({
                         {...itemProps}
                         ref={(element) => setItemRef(element, idx)}
                         key={item.route}
-                        onClick={(event) => {
-                            event.preventDefault();
-
-                            onItemSelected?.(item);
-                        }}
-                        onKeyDown={(event) => {
-                            switch (event.key) {
-                                case "Enter":
-                                case " ": {
-                                    event.preventDefault();
-
-                                    onItemSelected?.(item);
-
-                                    break;
-                                }
-                                case "ArrowUp": {
-                                    event.preventDefault();
-
-                                    const nextIdx = Math.max(0, idx - 1);
-
-                                    focusItem(nextIdx);
-
-                                    break;
-                                }
-                                case "Tab":
-                                case "ArrowDown": {
-                                    event.preventDefault();
-
-                                    if (focusedIdx === items.length - 1) {
-                                        focusItem(0);
-                                    } else {
-                                        const nextIdx = Math.min(
-                                            idx + 1,
-                                            items.length - 1
-                                        );
-
-                                        focusItem(nextIdx);
-                                    }
-
-                                    break;
-                                }
-                                default: {
-                                    break;
-                                }
-                            }
-                        }}
+                        onClick={(event) => handleClick(event, item, idx)}
+                        onKeyDown={(event) => handleKeyDown(event, item, idx)}
                     >
                         {item.text}
                     </li>

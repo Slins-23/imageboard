@@ -1,15 +1,20 @@
 "use client";
 
-import { type ChangeEvent, type InputHTMLAttributes } from "react";
+import {
+    type ChangeEvent,
+    type ComponentPropsWithoutRef,
+    type Dispatch,
+    type SetStateAction,
+} from "react";
 import textBoxStyle from "./TextBox.module.css";
 import useControllableState from "@/ui/hooks/useControllableState";
 import clsx from "clsx";
 
-interface textBoxArgs extends InputHTMLAttributes<HTMLInputElement> {
+interface TextBoxProps extends ComponentPropsWithoutRef<"input"> {
     defaultValue?: string;
     value?: string;
     transformText?: (value: string) => string;
-    onTextChange?: (value: string) => void;
+    onTextChange?: Dispatch<SetStateAction<string>>;
     type?:
         | "date"
         | "email"
@@ -25,12 +30,12 @@ interface textBoxArgs extends InputHTMLAttributes<HTMLInputElement> {
 
 export default function TextBox({
     defaultValue = "",
-    value = undefined,
-    transformText = undefined,
-    onTextChange = undefined,
+    value,
+    transformText,
+    onTextChange,
     type = "text",
     ...props
-}: textBoxArgs) {
+}: TextBoxProps) {
     const [textState, setTextState] = useControllableState<string>({
         value,
         defaultValue,

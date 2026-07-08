@@ -1,0 +1,25 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: left;
+}
+
+.colorRow {
+    width: 100%;
+}
+
+.colorOption {
+    float: right;
+    border: none;
+    border-radius: 5px;
+    outline-style: solid;
+    outline-color: var(--tertiary);
+    outline-width: 2px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}

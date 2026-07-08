@@ -1,14 +1,9 @@
 import Button from "@/ui/components/Buttons/Button/Button";
-import {
-    type ComponentProps,
-    CSSProperties,
-    useLayoutEffect,
-    useRef,
-} from "react";
+import { type ComponentProps, useLayoutEffect, useRef } from "react";
 import { filledElementFromSVG } from "@/ui/utils/svg";
 import linkAccountStyle from "./LinkAccount.module.css";
 
-interface LinkAccountArgs extends ComponentProps<typeof Button> {
+interface LinkAccountProps extends ComponentProps<typeof Button> {
     src?: string;
     name?: string;
     iconWidth?: string;
@@ -21,7 +16,7 @@ export default function LinkAccount({
     iconWidth = "2rem",
     iconHeight = "2rem",
     ...props
-}: LinkAccountArgs) {
+}: LinkAccountProps) {
     const iconWrapperRef = useRef<HTMLDivElement | null>(null);
 
     useLayoutEffect(() => {
@@ -45,17 +40,7 @@ export default function LinkAccount({
     return (
         <Button
             {...props}
-            style={
-                {
-                    "--bg-color-hover": "var(--primary)",
-                    "--text-color-hover": "var(--tertiary)",
-                    width: "300px",
-                    borderRadius: "10px",
-                    fontSize: "var(--font-size-xl)",
-                    padding: "0.3em 0.9em",
-                    transitionDuration: "0.1s",
-                } as CSSProperties
-            }
+            className={linkAccountStyle.linkBtn}
         >
             <div className={linkAccountStyle.contentWrapper}>
                 <div ref={iconWrapperRef}></div>

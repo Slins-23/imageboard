@@ -1,11 +1,11 @@
 "use client";
 
 import radioButtonStyle from "./RadioButton.module.css";
-import { ChangeEvent, InputHTMLAttributes, useId } from "react";
+import { type ComponentPropsWithoutRef, type ChangeEvent, useId } from "react";
 import { useRadioGroupContext } from "./context";
 import { OptionValue } from "./types";
 
-interface RadioButtonArgs extends InputHTMLAttributes<HTMLInputElement> {
+interface RadioButtonProps extends ComponentPropsWithoutRef<"input"> {
     label?: string;
     selectedValue?: OptionValue;
     onSelected?: (event: ChangeEvent<HTMLInputElement>) => void;
@@ -13,10 +13,10 @@ interface RadioButtonArgs extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export default function RadioButton({
-    label = undefined,
-    onSelected = undefined,
+    label,
+    onSelected,
     ...props
-}: RadioButtonArgs) {
+}: RadioButtonProps) {
     const context = useRadioGroupContext();
 
     const internalIsSelected =

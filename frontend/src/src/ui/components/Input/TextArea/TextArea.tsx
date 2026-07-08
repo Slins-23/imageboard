@@ -5,16 +5,18 @@ import {
     useCallback,
     useLayoutEffect,
     type ChangeEvent,
-    type TextareaHTMLAttributes,
+    type ComponentPropsWithoutRef,
+    type Dispatch,
+    type SetStateAction,
 } from "react";
 import textAreaStyle from "./TextArea.module.css";
 import useControllableState from "@/ui/hooks/useControllableState";
 
-interface textAreaArgs extends TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface TextAreaProps extends ComponentPropsWithoutRef<"textarea"> {
     defaultValue?: string;
     value?: string;
     transformText?: (value: string) => string;
-    onTextChange?: (value: string) => void;
+    onTextChange?: Dispatch<SetStateAction<string>>;
     resize?: "none" | "both" | "vertical" | "horizontal";
     scrollable?: boolean;
     responsive?: boolean;
@@ -22,14 +24,14 @@ interface textAreaArgs extends TextareaHTMLAttributes<HTMLTextAreaElement> {
 
 export default function TextArea({
     defaultValue = "",
-    value = undefined,
-    transformText = undefined,
-    onTextChange = undefined,
+    value,
+    transformText,
+    onTextChange,
     resize = "none",
     scrollable = true,
     responsive = false,
     ...props
-}: textAreaArgs) {
+}: TextAreaProps) {
     const textAreaElementRef = useRef<HTMLTextAreaElement | null>(null);
 
     const dynamicWidth = useRef<number | undefined>(undefined);

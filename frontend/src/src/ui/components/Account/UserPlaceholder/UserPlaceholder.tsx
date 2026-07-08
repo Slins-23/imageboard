@@ -4,14 +4,14 @@ import {
     FontAwesomeIconProps,
 } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
-import type { HTMLAttributes } from "react";
+import type { ComponentPropsWithoutRef } from "react";
 import clsx from "clsx";
 
-interface userPlaceholderArgs extends HTMLAttributes<HTMLDivElement> {
+interface userPlaceholderProps extends ComponentPropsWithoutRef<"div"> {
     size?: string;
     iconWidthScale?: number;
     iconHeightScale?: number;
-    wrapperProps?: HTMLAttributes<HTMLDivElement>;
+    wrapperProps?: ComponentPropsWithoutRef<"div">;
     iconProps?: FontAwesomeIconProps;
 }
 
@@ -21,7 +21,7 @@ export default function UserPlaceholder({
     iconHeightScale = 1,
     wrapperProps,
     iconProps,
-}: userPlaceholderArgs) {
+}: userPlaceholderProps) {
     return (
         <div
             {...wrapperProps}

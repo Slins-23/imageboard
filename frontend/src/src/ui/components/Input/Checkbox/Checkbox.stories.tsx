@@ -31,8 +31,8 @@ export const Controlled: StoryObj<typeof meta> = {
     },
     render: (args) => {
         const [, setArgs] = useArgs();
-        const setIsChecked: Dispatch<SetStateAction<boolean | undefined>> = (
-            isChecked: SetStateAction<boolean | undefined>
+        const setIsChecked: Dispatch<SetStateAction<boolean>> = (
+            isChecked: SetStateAction<boolean>
         ) => setArgs({ isChecked });
 
         return (

@@ -1,23 +1,22 @@
 import useControllableState from "@/ui/hooks/useControllableState";
-import Button from "@/ui/components/Buttons/Button/Button";
-import type { Stage, StageComponentArgs } from "./types";
+import type { Stage, StageComponentProps } from "@/ui/types/stages";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleNotch } from "@fortawesome/free-solid-svg-icons";
 import loadingStyle from "./Loading.module.css";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
 export default function Loading({
     defaultStage = "Loading",
-    currentStage = undefined,
-    onStageChange = undefined,
-}: StageComponentArgs) {
+    currentStage,
+    onNextStage,
+}: StageComponentProps) {
     const mainWrapperRef = useRef<HTMLDivElement | null>(null);
 
     const [internalCurrentStage, setInternalCurrentStage] =
         useControllableState<Stage>({
             defaultValue: defaultStage,
             value: currentStage,
-            onChange: onStageChange,
+            onChange: onNextStage,
         });
 
     // const [isVisible, setIsVisible] = useState(false);

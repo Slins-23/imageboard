@@ -1,21 +1,21 @@
 import Card from "@/ui/components/Layout/Card/Card";
 import dialogStyle from "./DialogCard.module.css";
-import { ComponentProps, HTMLAttributes, ReactNode } from "react";
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import clsx from "clsx";
 
-type CardProps = ComponentProps<typeof Card>;
+type CardProps = ComponentPropsWithoutRef<typeof Card>;
 
-interface DialogCardArgs extends CardProps {
+interface DialogCardProps extends CardProps {
     children?: ReactNode;
     cardProps?: CardProps;
-    wrapperArgs?: HTMLAttributes<HTMLDivElement>;
+    wrapperArgs?: ComponentPropsWithoutRef<"div">;
 }
 
 export default function DialogCard({
     children,
     cardProps,
     wrapperArgs,
-}: DialogCardArgs) {
+}: DialogCardProps) {
     return (
         <Card
             {...cardProps}

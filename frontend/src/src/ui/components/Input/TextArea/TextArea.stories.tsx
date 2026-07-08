@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import TextArea from "./TextArea";
 import { useArgs } from "storybook/preview-api";
+import { SetStateAction } from "react";
 
 const meta: Meta<typeof TextArea> = {
     title: "UI/Input/TextArea",
@@ -54,7 +55,8 @@ export const Controlled: StoryObj<typeof meta> = {
     },
     render: (args) => {
         const [, setArgs] = useArgs();
-        const setTextState = (text: string) => setArgs({ value: text });
+        const setTextState = (text: SetStateAction<string>) =>
+            setArgs({ value: text });
 
         return (
             <TextArea

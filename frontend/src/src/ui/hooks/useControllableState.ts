@@ -5,37 +5,32 @@ import {
     type SetStateAction,
 } from "react";
 
-export interface ControllableProps<T> {
-    value?: T;
+type ControllableProps<T> = {
     defaultValue?: T;
-    onChange?: Dispatch<SetStateAction<T | undefined>>;
-}
+    value?: T;
+    onChange?: Dispatch<SetStateAction<T>>;
+};
 
-function useControllableState<T>(
-    props: ControllableProps<T> & {
-        defaultValue: T;
-    }
-): [T, Dispatch<SetStateAction<T>>];
 function useControllableState<T>(
     props: ControllableProps<T>
-): [T | undefined, Dispatch<SetStateAction<T | undefined>>] {
+): [T, Dispatch<SetStateAction<T>>] {
+    // const isControllable = props.value !== undefined;
     const isControllable = props.value !== undefined;
 
-    const [internalValue, setInternalValue] = useState<T>(
-        props.defaultValue as T
-    );
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const [internalValue, setInternalValue] = useState<T>(props.defaultValue!);
 
-    const state = isControllable ? props.value : internalValue;
+    const state = isControllable ? (props.value as T) : internalValue;
 
-    const dispatch: Dispatch<SetStateAction<T | undefined>> = useCallback(
-        (stateAction: SetStateAction<T | undefined>) => {
+    const dispatch: Dispatch<SetStateAction<T>> = useCallback(
+        (stateAction: SetStateAction<T>) => {
             if (isControllable) {
                 props.onChange?.(stateAction);
             } else {
-                setInternalValue(stateAction as SetStateAction<T>);
+                setInternalValue(stateAction);
             }
         },
-        [isControllable, props.onChange]
+        [isControllable, props]
     );
 
     return [state, dispatch] as const;

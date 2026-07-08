@@ -2,8 +2,6 @@
 
 import buttonStyle from "./Button.module.css";
 import {
-    useRef,
-    type ButtonHTMLAttributes,
     type MouseEvent,
     type KeyboardEvent,
     type ReactNode,
@@ -12,39 +10,43 @@ import {
 } from "react";
 import clsx from "clsx";
 
-type ButtonProps<Component extends ElementType> = {
-    as?: Component;
+export type ButtonProps<C extends ElementType = "button"> = {
+    as?: C;
     children?: ReactNode;
-} & ComponentPropsWithoutRef<Component>;
+} & ComponentPropsWithoutRef<C>;
 
-export default function Button<Component extends ElementType>({
+export type DefaultButtonProps = ButtonProps<"button">;
+
+export default function Button<C extends ElementType = "button">({
     as,
     "aria-label": ariaLabel = "Save changes",
     children = "Save changes",
     ...props
-}: ButtonProps<Component>) {
-    const Component = as ?? "button";
+}: ButtonProps<C>) {
+    const Component = (as || "button") as ElementType;
+
+    const p = props as ComponentPropsWithoutRef<"button">;
 
     const handleClick = (event: MouseEvent<HTMLElement>) => {
-        if (props.disabled) return;
+        if (p.disabled) return;
 
-        props.onClick?.(event);
+        p.onClick?.(event as MouseEvent<HTMLButtonElement>);
 
         // eslint-disable-next-line no-useless-return
         if (event.defaultPrevented) return;
     };
 
     const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
-        if (props.disabled) return;
+        if (p.disabled) return;
 
-        props.onKeyDown?.(event);
+        p.onKeyDown?.(event as KeyboardEvent<HTMLButtonElement>);
 
         // eslint-disable-next-line no-useless-return
         if (event.defaultPrevented) return;
 
         if (
-            (Component !== "button" && event.key === " ") ||
-            event.key === "Enter"
+            Component !== "button" &&
+            (event.key === " " || event.key === "Enter")
         ) {
             event.preventDefault();
             event.currentTarget.click();
@@ -56,11 +58,10 @@ export default function Button<Component extends ElementType>({
             aria-label={ariaLabel}
             type={"button"}
             {...props}
-            className={clsx(buttonStyle.button, props.className)}
+            className={clsx(buttonStyle.button, p.className)}
             onClick={handleClick}
             onKeyDown={handleKeyDown}
         >
-            {/* <div style={{ position: "relative", zIndex: 1 }}>{children}</div> */}
             {children}
         </Component>
     );

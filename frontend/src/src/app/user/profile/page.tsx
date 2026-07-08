@@ -2,7 +2,7 @@
 import LinkedAccount from "@/ui/components/Account/LinkedAccount/LinkedAccount";
 import * as Modal from "@/ui/components/Overlays/Modal/modal";
 import Card from "@/ui/components/Layout/InterestCard/InterestCard";
-import DropdownMenu from "@/ui/components/DropdownMenu/DropdownMenu";
+import DropdownMenu from "@/ui/components/Input/DropdownMenu/DropdownMenu";
 import RadioButton from "@/ui/components/Input/RadioGroup/RadioButton";
 import RadioGroup from "@/ui/components/Input/RadioGroup/RadioGroup";
 import Button from "@/ui/components/Buttons/Button/Button";

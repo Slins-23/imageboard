@@ -12,9 +12,11 @@ import {
     type MouseEvent as ReactMouseEvent,
     type KeyboardEvent as ReactKeyboardEvent,
     type ReactNode,
-    type HTMLAttributes,
+    type Dispatch,
+    type SetStateAction,
     ComponentProps,
     RefObject,
+    ComponentPropsWithoutRef,
 } from "react";
 import useControllableState from "@/ui/hooks/useControllableState";
 import modalStyle from "./modal.module.css";
@@ -24,8 +26,8 @@ import { createPortal } from "react-dom";
 const ModalContext = createContext<
     | {
           internalIsOpen: boolean | undefined;
-          setInternalIsOpen: (isOpen: boolean) => void;
-          internalIsDismissible: RefObject<boolean | undefined>;
+          setInternalIsOpen: Dispatch<SetStateAction<boolean>>;
+          internalIsDismissible: RefObject<boolean>;
           fadeDuration: number;
       }
     | undefined
@@ -42,30 +44,30 @@ export function useModalContext() {
     return context;
 }
 
-interface RootArgs extends HTMLAttributes<HTMLDivElement> {
+interface RootProps extends ComponentPropsWithoutRef<"div"> {
     isOpen?: boolean;
     defaultIsOpen?: boolean;
-    onOpenChange?: (isOpen: boolean) => void;
+    onOpenChange?: Dispatch<SetStateAction<boolean>>;
     onOpen?: () => void;
     onClose?: () => void;
-    isDismissible?: RefObject<boolean | undefined>;
+    isDismissible?: RefObject<boolean>;
     defaultIsDismissible?: boolean;
     fadeDuration?: number;
     children?: ReactNode;
 }
 
 function Root({
-    isOpen = undefined,
+    isOpen,
     defaultIsOpen = false,
-    onOpenChange = undefined,
-    onOpen = undefined,
-    onClose = undefined,
-    isDismissible = undefined,
+    onOpenChange,
+    onOpen,
+    onClose,
+    isDismissible,
     defaultIsDismissible = true,
     fadeDuration = 500,
     children,
     ...props
-}: RootArgs) {
+}: RootProps) {
     const [internalIsOpen, setInternalIsOpen] = useControllableState<boolean>({
         value: isOpen,
         defaultValue: defaultIsOpen,
@@ -76,19 +78,19 @@ function Root({
 
     const modalId = useId();
 
-    const previousIsOpen = useRef<boolean | undefined>(null);
+    const previousIsOpen = useRef<boolean | null>(null);
 
     useEffect(() => {
-        if (previousIsOpen.current === undefined) {
+        if (previousIsOpen.current === null) {
             previousIsOpen.current = internalIsOpen;
             return;
         }
 
-        if (internalIsOpen === true && previousIsOpen.current === false) {
+        if (internalIsOpen && !previousIsOpen.current) {
             onOpen?.();
         }
 
-        if (internalIsOpen === false && previousIsOpen.current === true) {
+        if (!internalIsOpen && previousIsOpen.current) {
             onClose?.();
         }
 
@@ -116,14 +118,14 @@ function Root({
     );
 }
 
-interface TriggerArgs extends ComponentProps<typeof Button> {
+interface TriggerProps extends ComponentProps<typeof Button> {
     triggerValue: boolean;
     asChild?: boolean;
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    children?: ReactElement<typeof Button>;
+    children?: ReactElement;
 }
 
-function Trigger({ triggerValue, asChild, children, ...props }: TriggerArgs) {
+function Trigger({ triggerValue, asChild, children, ...props }: TriggerProps) {
     const { setInternalIsOpen } = useModalContext();
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -185,7 +187,7 @@ function Trigger({ triggerValue, asChild, children, ...props }: TriggerArgs) {
     );
 }
 
-interface ModalOverlayArgs extends HTMLAttributes<HTMLDivElement> {
+interface ModalOverlayProps extends ComponentPropsWithoutRef<"div"> {
     children?: ReactNode;
     backgroundColor?: string;
     backgroundBlurRadius?: string;
@@ -199,7 +201,9 @@ function ModalOverlay({
     backgroundBlurOpacity = "var(--background-blur-opacity)",
     contentWrapperRef,
     ...props
-}: ModalOverlayArgs & { contentWrapperRef: RefObject<HTMLDivElement | null> }) {
+}: ModalOverlayProps & {
+    contentWrapperRef: RefObject<HTMLDivElement | null>;
+}) {
     const { internalIsOpen, fadeDuration } = useModalContext();
 
     /*
@@ -252,7 +256,7 @@ function ModalOverlay({
     );
 }
 
-function Content({ children, ...props }: ModalOverlayArgs) {
+function Content({ children, ...props }: ModalOverlayProps) {
     const {
         internalIsOpen,
         internalIsDismissible,
@@ -356,14 +360,16 @@ function Content({ children, ...props }: ModalOverlayArgs) {
     function dismiss(event: ReactMouseEvent<HTMLDivElement>) {
         if (contentWrapperRef.current === null) return;
 
-        if (internalIsDismissible.current) {
-            if ((event.target as Node) === contentWrapperRef.current) {
-                setInternalIsOpen(false);
-            }
+        if (
+            internalIsDismissible.current &&
+            (event.target as Node) === contentWrapperRef.current
+        ) {
+            setInternalIsOpen(false);
         }
     }
 
     return createPortal(
+        // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
         <div
             id={modalId}
             ref={overlayWrapperRef}

@@ -6,26 +6,28 @@ import {
     useRef,
     type MouseEvent,
     type KeyboardEvent,
-    type ButtonHTMLAttributes,
+    type ComponentPropsWithoutRef,
+    type Dispatch,
+    type SetStateAction,
 } from "react";
 import useControllableState from "@/ui/hooks/useControllableState";
 
-interface SwitchArgs extends ButtonHTMLAttributes<HTMLButtonElement> {
+interface SwitchProps extends ComponentPropsWithoutRef<"button"> {
     isChecked?: boolean;
     defaultChecked?: boolean;
-    onCheckedChange?: (isChecked: boolean) => void;
+    onCheckedChange?: Dispatch<SetStateAction<boolean>>;
     width?: string;
     height?: string;
 }
 
 export default function ToggleSwitch({
-    isChecked = undefined,
+    isChecked,
     defaultChecked = false,
-    onCheckedChange = undefined,
+    onCheckedChange,
     width = "var(--font-size-2xl)",
     height = "var(--font-size-md)",
     ...props
-}: SwitchArgs) {
+}: SwitchProps) {
     const [internalChecked, setInternalChecked] = useControllableState<boolean>(
         {
             value: isChecked,

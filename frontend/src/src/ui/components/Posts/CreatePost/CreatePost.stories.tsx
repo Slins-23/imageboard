@@ -2,9 +2,9 @@ import type { Meta, StoryObj } from "@storybook/nextjs-vite";
 import CreatePost from "./CreatePost";
 import * as Modal from "@/ui/components/Overlays/Modal/modal";
 import { useArgs } from "storybook/internal/preview-api";
-import { Stage } from "./types";
+import { Stage } from "@/ui/types/stages";
 import Button from "@/ui/components/Buttons/Button/Button";
-import { useEffect, useRef } from "react";
+import { useRef, SetStateAction } from "react";
 import UploadComponent from "./Upload";
 import LoadingComponent from "./Loading";
 import SuccessComponent from "./Success";
@@ -28,7 +28,7 @@ export const Primary: Story = {
         const isDismissible = useRef(true);
 
         const [, setArgs] = useArgs();
-        const setStage = (next: Stage) => {
+        const setStage = (next: SetStateAction<Stage>) => {
             // isDismissible.current = false;
             setArgs({ currentStage: next });
         };
@@ -45,7 +45,7 @@ export const Primary: Story = {
                 <Modal.Content>
                     <CreatePost
                         currentStage={args.currentStage}
-                        onStageChanged={setStage}
+                        onStageChange={setStage}
                     />
                     {/* <Modal.Trigger triggerValue={false} /> */}
                 </Modal.Content>

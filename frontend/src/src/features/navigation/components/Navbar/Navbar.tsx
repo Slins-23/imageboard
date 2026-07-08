@@ -56,11 +56,7 @@ export default function Navbar() {
                 <IconButton
                     as={Link}
                     href="/user/settings/profile"
-                    isActive={
-                        pathname.indexOf("/user/settings/") === -1
-                            ? false
-                            : true
-                    }
+                    isActive={pathname.includes("/user/settings/")}
                     icon={faGear}
                     width="50px"
                     height="50px"
