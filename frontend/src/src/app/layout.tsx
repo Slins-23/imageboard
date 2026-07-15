@@ -1,10 +1,7 @@
 import "./globals.css";
-import { fenixFont } from "@/app/fonts/types";
-import IconButton from "@/ui/components/Buttons/IconButton/IconButton";
-import { faCircleHalfStroke } from "@fortawesome/free-solid-svg-icons";
+import { fenixFont } from "@/app/fonts/fonts";
 import Navbar from "@/features/navigation/components/Navbar/Navbar";
-import * as Modal from "@/ui/components/Overlays/Modal/modal";
-import ThemePicker from "@/ui/components/Preferences/ThemePicker/ThemePicker";
+import ThemePicker from "@/features/preferences/components/ThemePicker/ThemePicker";
 import "@fortawesome/fontawesome-svg-core/styles.css";
 import { config as fontAwesomeConfig } from "@fortawesome/fontawesome-svg-core";
 
@@ -22,53 +19,29 @@ export default function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const isSignedIn = true;
+
     return (
         <html lang="en">
-            <body className={fenixFont.className}>
+            <body
+                className={fenixFont.className}
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    height: "100vh",
+                }}
+            >
                 <Navbar />
                 <main
                     style={{
-                        position: "relative",
-                        // minHeight: "100%",
+                        display: "flex",
+                        flexGrow: 1,
+                        minHeight: 0,
                     }}
                 >
                     {children}
                 </main>
-
-                <Modal.Root>
-                    <Modal.Trigger
-                        triggerValue={true}
-                        asChild
-                    >
-                        <IconButton
-                            style={{
-                                position: "fixed",
-                                bottom: "10px",
-                                right: "10px",
-                            }}
-                            icon={faCircleHalfStroke}
-                            width="50px"
-                            height="50px"
-                            iconSize="25px"
-                        />
-                    </Modal.Trigger>
-                    <Modal.Content
-                        backgroundBlurOpacity="0"
-                        backgroundBlurRadius="0"
-                    >
-                        {/* <div
-                            style={{
-                                backgroundColor: "var(--primary)",
-                                outlineWidth: "2px",
-                                outlineStyle: "solid",
-                                outlineColor: "var(--tertiary)",
-                                backdropFilter: "blur(1px)",
-                            }}
-                        > */}
-                        <ThemePicker />
-                        {/* </div> */}
-                    </Modal.Content>
-                </Modal.Root>
+                <ThemePicker />
             </body>
         </html>
     );

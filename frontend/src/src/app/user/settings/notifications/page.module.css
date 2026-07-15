@@ -1,0 +1,32 @@
+.pageWrapper {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    align-items: center;
+}
+
+.title {
+    margin-top: var(--title-margin);
+    color: var(--tertiary);
+    font-size: var(--title-fontsize);
+}
+
+.inputWrapper {
+    margin-top: var(--option-margin);
+    display: grid;
+    grid-template-columns: 1fr max-content;
+    align-items: center;
+    /* justify-items: right; */
+    margin-left: -2rem;
+    row-gap: var(--input-row-gap);
+    column-gap: var(--input-column-gap);
+}
+
+.inputLabel {
+    font-size: var(--font-size-xl);
+    text-align: right;
+}
+
+.saveBtn {
+    margin-top: var(--option-margin);
+}

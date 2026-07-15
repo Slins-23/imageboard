@@ -28,7 +28,7 @@ export default function LoginDialog() {
                     }}
                 >
                     <span className={stageStyle.title}>
-                        Log into your account
+                        Sign into your account
                     </span>
                     <div className={loginDialogStyle.linkAccountWrapper}>
                         <LinkAccount
@@ -110,7 +110,7 @@ export default function LoginDialog() {
                                 setErrorMessage("Error: Invalid credentials.")
                             }
                         >
-                            Log in
+                            Sign in
                         </Button>
                     </div>
                 </div>

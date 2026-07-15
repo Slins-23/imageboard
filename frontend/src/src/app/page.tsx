@@ -4,7 +4,7 @@ import { faRefresh } from "@fortawesome/free-solid-svg-icons";
 
 export default function Home() {
     return (
-        <div>
+        <div style={{ flexGrow: 1 }}>
             <div
                 style={{
                     marginLeft: "20px",
@@ -13,6 +13,7 @@ export default function Home() {
             <div
                 style={{
                     display: "flex",
+                    flexGrow: 1,
                     flexDirection: "column",
                     gap: "20px",
                     marginTop: "60px",
@@ -21,6 +22,8 @@ export default function Home() {
                 <div
                     style={{
                         lineHeight: 1.5,
+                        alignSelf: "center",
+                        justifySelf: "center",
                         textAlign: "center",
                         marginTop: "60px",
                     }}

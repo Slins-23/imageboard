@@ -1,6 +1,7 @@
 import React from "react";
 import GradientNavbar from "@/features/navigation/components/Sidebar/GradientNavbar";
-import layoutStyle from "./layoutStyle.module.css";
+import layoutStyle from "./layout.module.css";
+import clsx from "clsx";
 
 export default function RootLayout({
     children,
@@ -12,7 +13,11 @@ export default function RootLayout({
             <aside className={layoutStyle.sidebarWrapper}>
                 <GradientNavbar />
             </aside>
-            <section className={layoutStyle.contentWrapper}>{children}</section>
+            <section
+                className={clsx(layoutStyle.contentWrapper, layoutStyle.vars)}
+            >
+                {children}
+            </section>
         </div>
     );
 }

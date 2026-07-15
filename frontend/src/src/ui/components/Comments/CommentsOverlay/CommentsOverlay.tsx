@@ -321,7 +321,7 @@ export default function CommentsOverlay({
                 created_at: Date.now(),
                 id: "generatenewcommentid",
                 post: "thispost",
-                posted_by: "loggedinuserid",
+                posted_by: "signedinuserid",
                 text: commentText,
                 reply_to: undefined,
             },
@@ -332,7 +332,7 @@ export default function CommentsOverlay({
             },
             userData: {
                 id: "1337",
-                username: "loggedinusername",
+                username: "signedinusername",
                 avatar: undefined,
             },
         };

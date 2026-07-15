@@ -1,3 +1,5 @@
+"use client";
+
 import createPostStyle from "./CreatePost.module.css";
 import DialogCard from "@/ui/components/Layout/DialogCard/DialogCard";
 import {

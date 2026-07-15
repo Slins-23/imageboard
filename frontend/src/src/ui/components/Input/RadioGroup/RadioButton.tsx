@@ -5,33 +5,37 @@ import { type ComponentPropsWithoutRef, type ChangeEvent, useId } from "react";
 import { useRadioGroupContext } from "./context";
 import { OptionValue } from "./types";
 
-interface RadioButtonProps extends ComponentPropsWithoutRef<"input"> {
+interface RadioButtonProps {
     label?: string;
-    selectedValue?: OptionValue;
+    value?: OptionValue;
     onSelected?: (event: ChangeEvent<HTMLInputElement>) => void;
     onSelectedChange?: (value: OptionValue) => void;
+    inputProps?: ComponentPropsWithoutRef<"input">;
+    labelProps?: ComponentPropsWithoutRef<"label">;
 }
 
 export default function RadioButton({
     label,
+    value,
     onSelected,
-    ...props
+    inputProps,
+    labelProps,
 }: RadioButtonProps) {
     const context = useRadioGroupContext();
 
     const internalIsSelected =
-        context.internalSelectedValue === (props.value ?? label);
+        context.internalSelectedValue === (value ?? label);
 
     const radioBtnId = useId();
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        if (props.disabled) return;
+        if (inputProps?.disabled) return;
 
-        props.onChange?.(event);
+        inputProps?.onChange?.(event);
 
         if (event.defaultPrevented) return;
 
-        context.setInternalSelectedValue?.(props.value ?? label);
+        context.setInternalSelectedValue?.(value ?? label);
 
         if (onSelected === undefined) {
             context.onSelected?.(event);
@@ -54,11 +58,17 @@ export default function RadioButton({
                 type="radio"
                 aria-checked={internalIsSelected}
                 checked={internalIsSelected}
-                value={props.value ?? label}
-                {...props}
+                value={value ?? label}
+                {...inputProps}
                 onChange={handleChange}
             />
-            <label htmlFor={radioBtnId}>{label}</label>
+            <label
+                style={{ fontSize: "var(--font-size-lg)" }}
+                htmlFor={radioBtnId}
+                {...labelProps}
+            >
+                {label}
+            </label>
         </div>
     );
 }

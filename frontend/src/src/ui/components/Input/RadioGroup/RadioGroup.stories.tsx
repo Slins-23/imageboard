@@ -4,6 +4,7 @@ import { useArgs } from "storybook/internal/preview-api";
 import Button from "@/ui/components/Buttons/Button/Button";
 import RadioGroup from "./RadioGroup";
 import type { OptionValue } from "./types";
+import { SetStateAction } from "react";
 
 const meta: Meta<typeof RadioGroup> = {
     title: "UI/Input/RadioGroup",
@@ -24,7 +25,7 @@ export const GroupControlled: StoryObj<typeof meta> = {
     },
     render: (args) => {
         const [, setArgs] = useArgs();
-        const setSelected = (selectedValue: OptionValue) =>
+        const setSelected = (selectedValue: SetStateAction<OptionValue>) =>
             setArgs({ selectedValue });
 
         return (

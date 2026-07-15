@@ -16,6 +16,7 @@ import {
 } from "react";
 import { isMouseEvent } from "@/ui/utils/events";
 import useControllableState from "@/ui/hooks/useControllableState";
+import clsx from "clsx";
 
 interface DropdownEntry {
     value: string;
@@ -354,7 +355,12 @@ export default function DropdownMenu({
             ref={rootNode}
         >
             <button
-                className={dropdownStyle.select}
+                data-isopen={isOpen}
+                aria-haspopup="listbox"
+                aria-expanded={isOpen}
+                aria-controls={dropdownId}
+                {...buttonProps}
+                className={clsx(dropdownStyle.select, buttonProps?.className)}
                 style={{
                     ...(responsive
                         ? {
@@ -366,16 +372,11 @@ export default function DropdownMenu({
                               borderBottomColor: isOpen
                                   ? "transparent"
                                   : "var(--tertiary)",
-                              width,
-                              maxWidth: width,
+                              //   width,
+                              //   maxWidth: width,
                           }),
                     ...buttonProps?.style,
                 }}
-                data-isopen={isOpen}
-                aria-haspopup="listbox"
-                aria-expanded={isOpen}
-                aria-controls={dropdownId}
-                {...buttonProps}
                 ref={buttonRef}
                 onClick={handleButtonClick}
                 onKeyDown={handleButtonKeyDown}
@@ -383,11 +384,19 @@ export default function DropdownMenu({
                 {dropdownEntries[internalSelectedIdx as number].value}
             </button>
             <ul
-                className={dropdownStyle.list}
                 role="listbox"
                 aria-hidden={!isOpen}
                 {...listProps}
-                style={responsive ? {} : { width, maxWidth: width }}
+                className={clsx(dropdownStyle.list, listProps?.className)}
+                style={
+                    responsive
+                        ? {}
+                        : {
+                              //width,
+                              // maxWidth: width
+                              ...listProps?.style,
+                          }
+                }
                 id={dropdownId}
                 ref={listRef}
             >
@@ -405,8 +414,8 @@ export default function DropdownMenu({
                                     responsive
                                         ? { ...itemProps?.style }
                                         : {
-                                              width,
-                                              maxWidth: width,
+                                              //   width,
+                                              //   maxWidth: width,
                                               ...itemProps?.style,
                                           }
                                 }

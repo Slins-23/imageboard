@@ -8,24 +8,40 @@ const meta: Meta<typeof UserMenu> = {
 
 export default meta;
 
-export const LoggedIn: StoryObj<typeof meta> = {
+export const signedIn: StoryObj<typeof meta> = {
     args: {
         items: [
             { text: "My profile", route: "/user/profile" },
             { text: "My likes", route: "/user/likes" },
             { text: "My albums", route: "/user/albums" },
-            { text: "Log out", route: "/user/logout" },
+            { text: "Sign out", route: "/user/signout" },
         ],
         listProps: { "aria-label": "list" },
     },
+    render: (args) => {
+        return (
+            <UserMenu
+                {...args}
+                navProps={{ style: { position: "relative" } }}
+            />
+        );
+    },
 };
 
-export const LoggedOut: StoryObj<typeof meta> = {
+export const signedOut: StoryObj<typeof meta> = {
     args: {
         items: [
-            { text: "Log in", route: "/user/login" },
+            { text: "Sign in", route: "/user/signin" },
             { text: "Sign up", route: "/user/signup" },
         ],
         listProps: { "aria-label": "list" },
+    },
+    render: (args) => {
+        return (
+            <UserMenu
+                {...args}
+                navProps={{ style: { position: "relative" } }}
+            />
+        );
     },
 };

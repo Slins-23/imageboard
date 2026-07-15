@@ -13,6 +13,7 @@ import {
     useState,
     useRef,
     useId,
+    SetStateAction,
 } from "react";
 
 import { randomRecentUploadTimestamp } from "@/ui/utils/mock";
@@ -40,7 +41,7 @@ interface CommentProps extends ComponentPropsWithoutRef<"div"> {
     onLiked?: (commentObj: CommentObject) => void;
     onUnlike?: (commentObj: CommentObject) => boolean;
     onUnliked?: (commentObj: CommentObject) => void;
-    onLikeChange?: (nextValue: CommentLike | null) => void;
+    onLikeChange?: (nextValue: SetStateAction<CommentLike | null>) => void;
     children?: ReactNode;
 }
 
@@ -134,9 +135,7 @@ export default function Comment({
             onChange: onLikeChange,
         });
 
-    const [isLiked, setIsLiked] = useState<boolean>(
-        internalLikeData ? true : false
-    );
+    const [isLiked, setIsLiked] = useState<boolean>(internalLikeData !== null);
 
     const likeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -148,7 +147,7 @@ export default function Comment({
         event.preventDefault();
         event.stopPropagation();
 
-        // if (mockLoggedInID === internalCommentObj?.userData.id) return;
+        // if (mockSignedInID === internalCommentObj?.userData.id) return;
 
         const nextValue = !isLiked;
 
@@ -185,7 +184,7 @@ export default function Comment({
         }, debouncedLikeDelayMS);
 
         // Make sure that user cannot like their own comment (automatically liked and does not change if it's own user's)
-        // Also, make sure that server-side likes are done relative to the logged-in user (can be infered, global shared state, or needs to be a explicit parameter?)
+        // Also, make sure that server-side likes are done relative to the signed-in user (can be infered, global shared state, or needs to be a explicit parameter?)
         //const success = onLike?.(internalCommentObj);
         // const success = Math.round(Math.random());
 
@@ -260,7 +259,7 @@ export default function Comment({
         setTimestampText(parseDateText());
     }, []);
 
-    const mockLoggedInID = "1337";
+    const mockSignedInID = "1337";
 
     const handleDeleteComment = (
         event: MouseEvent<SVGSVGElement> | KeyboardEvent<SVGSVGElement>
@@ -319,7 +318,7 @@ export default function Comment({
                     <span className={commentStyle.postTime}>
                         {timestampText}
                     </span>
-                    {internalCommentObj?.userData.id === mockLoggedInID && (
+                    {internalCommentObj?.userData.id === mockSignedInID && (
                         <FontAwesomeIcon
                             className={commentStyle.trashIcon}
                             icon={faTrash}
@@ -392,7 +391,7 @@ export default function Comment({
                     aria-label="Like"
                     aria-hidden="false"
                     aria-disabled={
-                        mockLoggedInID === internalCommentObj?.userData.id
+                        mockSignedInID === internalCommentObj?.userData.id
                     }
                     tabIndex={0}
                     data-isliked={isLiked}

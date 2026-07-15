@@ -8,7 +8,7 @@ import {
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { faHouse } from "@fortawesome/free-solid-svg-icons";
 import NotificationCount, {
-    type NotificationArgs,
+    type NotificationProps,
 } from "@/ui/components/Indicators/NotificationCount/NotificationCount";
 import useControllableState from "@/ui/hooks/useControllableState";
 import type {
@@ -21,7 +21,7 @@ import type {
 } from "react";
 import clsx from "clsx";
 
-type IconButtonProps<C extends ElementType = "button"> = {
+export type IconButtonProps<C extends ElementType = "button"> = {
     as?: C;
     isActive?: boolean;
     defaultActive?: boolean;
@@ -34,7 +34,7 @@ type IconButtonProps<C extends ElementType = "button"> = {
     iconHeightScale?: number;
     hasNotifications?: boolean;
     iconProps?: FontAwesomeIconProps;
-    notificationProps?: NotificationArgs;
+    notificationProps?: NotificationProps;
 } & ComponentPropsWithoutRef<C>;
 
 export default function IconButton<C extends ElementType = "button">({

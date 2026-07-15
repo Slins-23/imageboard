@@ -34,11 +34,7 @@ function resetColors() {
     updateVarFromColor("accent", "#acc4ee");
 }
 
-export default function ThemePicker({
-    children,
-}: {
-    children?: ReactNode;
-}): ReactNode {
+export default function ThemePicker(): ReactNode {
     const defaultPrimary = getColor("primary");
     const defaultSecondary = getColor("secondary");
     const defaultTertiary = getColor("tertiary");
@@ -65,7 +61,6 @@ export default function ThemePicker({
                     <input
                         className={themePickerStyle.colorOption}
                         type="color"
-                        id="colorPrimary"
                         defaultValue={defaultPrimary}
                         onInput={(event: InputEvent<HTMLInputElement>) =>
                             updateVarFromPicker(event, "primary")
@@ -78,7 +73,6 @@ export default function ThemePicker({
                     <input
                         className={themePickerStyle.colorOption}
                         type="color"
-                        id="colorSecondary"
                         defaultValue={defaultSecondary}
                         onInput={(event: InputEvent<HTMLInputElement>) =>
                             updateVarFromPicker(event, "secondary")
@@ -90,7 +84,6 @@ export default function ThemePicker({
                     <input
                         className={themePickerStyle.colorOption}
                         type="color"
-                        id="colorTertiary"
                         defaultValue={defaultTertiary}
                         onInput={(event: InputEvent<HTMLInputElement>) =>
                             updateVarFromPicker(event, "tertiary")
@@ -102,7 +95,6 @@ export default function ThemePicker({
                     <input
                         className={themePickerStyle.colorOption}
                         type="color"
-                        id="colorAccent"
                         defaultValue={defaultAccent}
                         onInput={(event: InputEvent<HTMLInputElement>) =>
                             updateVarFromPicker(event, "accent")

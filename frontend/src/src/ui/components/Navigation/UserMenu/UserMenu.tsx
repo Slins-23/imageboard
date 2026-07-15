@@ -19,6 +19,7 @@ interface UserMenuProps {
     items: NavigationItem[];
     listProps?: ComponentPropsWithoutRef<"ul">;
     itemProps?: ComponentPropsWithoutRef<"li">;
+    navProps?: ComponentPropsWithoutRef<"nav">;
 }
 
 export default function UserMenu({
@@ -27,7 +28,7 @@ export default function UserMenu({
     items,
     listProps,
     itemProps,
-    ...props
+    navProps,
 }: UserMenuProps) {
     const menuOptionsRefs = useRef<HTMLLIElement[]>([]);
 
@@ -127,7 +128,10 @@ export default function UserMenu({
     };
 
     return (
-        <nav {...props}>
+        <nav
+            {...navProps}
+            className={clsx(userMenuStyle.wrapper, navProps?.className)}
+        >
             <ul
                 role="menu"
                 {...listProps}

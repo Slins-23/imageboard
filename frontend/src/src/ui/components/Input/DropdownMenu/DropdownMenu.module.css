@@ -10,12 +10,13 @@
 
 .select {
     position: relative;
-    width: 100%;
+    /* width: 100%; */
     padding: 0.25em 1.5em 0.25em 0.5em;
     appearance: none;
     border: 0;
     background-color: var(--secondary);
-    font-size: 1em;
+    font-size: var(--font-size-lg);
+    /* font-size: 1em; */
     color: var(--tertiary);
     text-align: left;
     cursor: pointer;
@@ -84,7 +85,8 @@
 }
 
 .list li {
-    font-size: 1em;
+    font-size: var(--font-size-lg);
+    /* font-size: 1em; */
     padding: 0.25em 1.5em 0.25em 0.5em;
     white-space: nowrap;
     overflow: hidden;

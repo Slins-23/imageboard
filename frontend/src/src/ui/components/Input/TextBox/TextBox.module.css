@@ -5,8 +5,7 @@
     outline-color: var(--tertiary);
     outline-width: 1px;
     outline-style: solid;
-    padding-left: 0.3em;
-    padding-right: 0.2em;
+    padding: 0.25em 0.5em 0.25em 0.5em;
     width: auto;
     height: var(--font-size-2xl);
     font-size: var(--font-size-lg);

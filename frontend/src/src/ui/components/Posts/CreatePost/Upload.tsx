@@ -76,7 +76,7 @@ export default function Upload({
         } else {
             const messageA = "Connection interrupted.";
             const messageB = "File format not supported.";
-            const messageC = "You must be logged in.";
+            const messageC = "You must be signed in.";
             const msgIdx = Math.round(Math.random() * 2);
             const finalMsg = [messageA, messageB, messageC][msgIdx];
             postContext.current.errorMessage = finalMsg;
